@@ -1,4 +1,3 @@
-// api/types/Card.java
 package zadudoder.spmhelper.api.types;
 
 public record Card(String name, String id, String token) {

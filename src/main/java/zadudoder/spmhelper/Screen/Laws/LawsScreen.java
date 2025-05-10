@@ -6,7 +6,7 @@ import net.minecraft.text.Text;
 
 public class LawsScreen extends Screen {
     public LawsScreen() {
-        super(Text.of("Экран карты"));
+        super(Text.of("Экран законы"));
     }
 
     protected void init() {

@@ -64,7 +64,6 @@ public class MainScreen extends Screen {
             case 0: this.client.setScreen(new PayScreen()); break;
             case 1: this.client.setScreen(new MapScreen()); break;
             case 2: this.client.setScreen(new CallsScreen()); break;
-            case 3:
         }
     }
 

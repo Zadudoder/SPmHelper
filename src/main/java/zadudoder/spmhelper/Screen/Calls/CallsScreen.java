@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
-import static zadudoder.spmhelper.Config.SERVER_URL;
+import static zadudoder.spmhelper.URL.SERVER_URL;
 
 public class CallsScreen extends Screen {
 
