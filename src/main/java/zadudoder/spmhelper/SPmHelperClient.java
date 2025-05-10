@@ -7,8 +7,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
-import zadudoder.spmhelper.api.SPWorldsApi;
-import zadudoder.spmhelper.api.types.Card;
+import zadudoder.spmhelper.utils.SPWorldsApi;
+import zadudoder.spmhelper.utils.types.Card;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 
