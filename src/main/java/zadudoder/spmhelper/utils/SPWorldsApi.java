@@ -1,9 +1,9 @@
-package zadudoder.spmhelper.api;
+package zadudoder.spmhelper.utils;
 
 import com.google.gson.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zadudoder.spmhelper.api.types.Card;
+import zadudoder.spmhelper.utils.types.Card;
 
 import java.net.URI;
 import java.net.http.HttpClient;

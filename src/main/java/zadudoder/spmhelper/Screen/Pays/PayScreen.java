@@ -1,7 +1,6 @@
 package zadudoder.spmhelper.Screen.Pays;
 
 import com.google.gson.JsonObject;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -9,12 +8,9 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import zadudoder.spmhelper.api.SPWorldsApi;
-import zadudoder.spmhelper.api.types.Card;
+import zadudoder.spmhelper.utils.SPWorldsApi;
+import zadudoder.spmhelper.utils.types.Card;
 import zadudoder.spmhelper.config.SPmHelperConfig;
-
-import java.awt.*;
-import java.net.URI;
 
 public class PayScreen extends Screen {
     private TextFieldWidget receiverCardField ;

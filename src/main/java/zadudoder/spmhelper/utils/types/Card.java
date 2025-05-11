@@ -1,4 +1,4 @@
-package zadudoder.spmhelper.api.types;
+package zadudoder.spmhelper.utils.types;
 
 public record Card(String name, String id, String token) {
     public String getBase64Key() {
