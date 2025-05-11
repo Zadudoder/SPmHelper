@@ -91,12 +91,6 @@ public class CallsScreen extends Screen {
                 createServiceButton("Банкир", "banker", "банкира",
                         width / 2 - 150 + 2*buttonWidth + 30, buttonY, buttonWidth)
         );
-
-        this.addDrawableChild(
-                ButtonWidget.builder(Text.of("Закрыть"), button -> close())
-                        .dimensions(20, 20, 60, 20)
-                        .build()
-        );
     }
 
     private boolean checkServer() {
@@ -212,8 +206,7 @@ public class CallsScreen extends Screen {
             );
         }
         else if (!isOnCorrectServer) {
-            context.drawText(
-                    textRenderer,
+            context.drawText(textRenderer,
                     "⚠ Доступно только на сервере СПм",
                     width / 2 - textRenderer.getWidth("⚠ Доступно только на сервере СПм")/2,
                     height / 2 - 100,
@@ -265,8 +258,7 @@ public class CallsScreen extends Screen {
 
 
         Identifier CallsText = Identifier.of("spmhelper", "titles/callstextrender.png");
-        startY = height / 2 - 30;
-        int imageY = startY - 100 - 100;
+        int imageY = height / 2 - 180;
         int originalWidth = 704/2;
         int originalHeight = 152/2;
         int availableWidth = width - 40;

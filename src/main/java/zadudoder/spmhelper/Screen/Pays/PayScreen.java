@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import zadudoder.spmhelper.api.SPWorldsApi;
 import zadudoder.spmhelper.api.types.Card;
@@ -37,7 +38,7 @@ public class PayScreen extends Screen {
         this.receiverCardField  = new TextFieldWidget(
                 this.textRenderer,
                 this.width / 2 - 100,
-                this.height / 2 - 50,
+                this.height / 2 - 70,
                 200, 20,
                 Text.of("Номер карты получателя")
         );
@@ -47,7 +48,7 @@ public class PayScreen extends Screen {
         this.amountField = new TextFieldWidget(
                 this.textRenderer,
                 this.width / 2 - 100,
-                this.height / 2 - 25,
+                this.height / 2 - 35,
                 200, 20,
                 Text.of("Сумма (AR)")
         );
@@ -73,7 +74,7 @@ public class PayScreen extends Screen {
         // Кнопка подтверждения (изначально скрыта)
         this.confirmButton = ButtonWidget.builder(Text.of("Подтвердить перевод"), button -> {
             confirmTransfer();
-        }).dimensions(width/2-100, height/2+60, 200, 20).build();
+        }).dimensions(width/2-100, height/2+100, 200, 20).build();
         this.confirmButton.active = false;
         addDrawableChild(confirmButton);
     }
@@ -179,21 +180,15 @@ public class PayScreen extends Screen {
                     width/2, height/2+70, 0x55FF55);
         }
 
-        // Заголовок
-        context.drawCenteredTextWithShadow(
-                this.textRenderer,
-                Text.of("Перевод СП").asOrderedText(),
-                this.width / 2,
-                this.height / 2 - 70,
-                0xFFFFFF
-        );
+
 
         // Подписи к полям
         context.drawTextWithShadow(
                 this.textRenderer,
                 Text.of("Номер карты:"),
                 this.width / 2 - 100,
-                this.height / 2 - 65,
+                this.height / 2 - 80,
+
                 0xA0A0A0
         );
 
@@ -201,7 +196,7 @@ public class PayScreen extends Screen {
                 this.textRenderer,
                 Text.of("Сумма (AR):"),
                 this.width / 2 - 100,
-                this.height / 2 - 40,
+                this.height / 2 - 45,
                 0xA0A0A0
         );
 
@@ -209,7 +204,7 @@ public class PayScreen extends Screen {
                 this.textRenderer,
                 Text.of("Комментарий:"),
                 this.width / 2 - 100,
-                this.height / 2 - 15,
+                this.height / 2 - 10,
                 0xA0A0A0
         );
 
@@ -223,5 +218,21 @@ public class PayScreen extends Screen {
                     statusColor
             );
         }
+
+        Identifier CallsText = Identifier.of("spmhelper", "titles/paystextrender.png");
+        int imageY = height / 2 - 180;
+        int originalWidth = 674/2;
+        int originalHeight = 123/2;
+        int availableWidth = width - 40;
+        int finalWidth = originalWidth;
+        int finalHeight = originalHeight;
+        if (originalWidth > availableWidth) {
+            float scale = (float)availableWidth / originalWidth;
+            finalWidth = availableWidth;
+            finalHeight = (int)(originalHeight * scale);
+        }
+        int imageX = (width - finalWidth) / 2;
+        context.drawTexture(CallsText, imageX, imageY, 0, 0, finalWidth, finalHeight, finalWidth, finalHeight);
+
     }
 }
