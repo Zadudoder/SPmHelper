@@ -14,6 +14,8 @@ import zadudoder.spmhelper.Screen.Laws.LawsScreen;
 import zadudoder.spmhelper.Screen.MainScreen;
 import zadudoder.spmhelper.Screen.Map.MapScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
+import zadudoder.spmhelper.config.SPmHelperConfig;
+import zadudoder.spmhelper.utils.types.User;
 
 public class SPmHelper implements ModInitializer {
 	public static final String MOD_ID = "spmhelper";

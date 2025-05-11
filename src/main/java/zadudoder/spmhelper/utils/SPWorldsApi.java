@@ -19,12 +19,10 @@ public class SPWorldsApi {
 
     public static int getBalance(Card card) {
         try {
-            String authHeader = "Bearer " + Base64.getEncoder()
-                    .encodeToString((card.id() + ":" + card.token()).getBytes());
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(API_URL + "card"))
-                    .header("Authorization", authHeader)
+                    .header("Authorization", getAuthorizationHeader(card))
                     .timeout(Duration.ofSeconds(10))
                     .build();
 
@@ -62,8 +60,7 @@ public class SPWorldsApi {
             // 2. Отправляем от имени карты-отправителя
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(API_URL + "payments"))
-                    .header("Authorization", "Bearer " +
-                            Base64.getEncoder().encodeToString((senderCard.id() + ":" + senderCard.token()).getBytes()))
+                    .header("Authorization", getAuthorizationHeader(senderCard))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
                     .build();
@@ -86,7 +83,7 @@ public class SPWorldsApi {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(API_URL + "card"))
-                    .header("Authorization", "Bearer " + card.getBase64Key())
+                    .header("Authorization", getAuthorizationHeader(card))
                     .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -96,5 +93,9 @@ public class SPWorldsApi {
             error.addProperty("error", e.getMessage());
             return error;
         }
+    }
+
+    private static String getAuthorizationHeader(Card card){
+        return "Bearer " + card.getBase64Key();
     }
 }

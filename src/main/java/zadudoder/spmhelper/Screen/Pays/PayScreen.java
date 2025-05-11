@@ -8,6 +8,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import zadudoder.spmhelper.SPmHelperClient;
 import zadudoder.spmhelper.utils.SPWorldsApi;
 import zadudoder.spmhelper.utils.types.Card;
 import zadudoder.spmhelper.config.SPmHelperConfig;
@@ -90,13 +91,13 @@ public class PayScreen extends Screen {
             }
 
             // Получаем карту-отправителя из конфига
-            String senderId = SPmHelperConfig.getId();
-            String senderToken = SPmHelperConfig.getToken();
+            String senderId = SPmHelperClient.config.getID();
+            String senderToken = SPmHelperClient.config.getTOKEN();
             if (senderId == null || senderToken == null) {
                 setStatus("❌ Привяжите карту (/spmhelper)", 0xFF5555);
                 return;
             }
-            Card senderCard = new Card("Sender", senderId, senderToken);
+            Card senderCard = new Card(senderId, senderToken);
 
             // Проверяем, что это не перевод самому себе
             JsonObject senderInfo = SPWorldsApi.getCardInfo(senderCard);
@@ -126,15 +127,15 @@ public class PayScreen extends Screen {
     }
 
     private void loadSenderCard() {
-        String id = SPmHelperConfig.getId();
-        String token = SPmHelperConfig.getToken();
+        String id = SPmHelperClient.config.getID();
+        String token = SPmHelperClient.config.getTOKEN();
 
         if (id == null || token == null) {
             setStatus("❌ Карта не привязана", 0xFF5555);
             return;
         }
 
-        Card card = new Card("Sender", id, token);
+        Card card = new Card(id, token);
         JsonObject cardInfo = SPWorldsApi.getCardInfo(card);
 
         if (cardInfo.has("error")) {

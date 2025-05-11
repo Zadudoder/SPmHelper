@@ -2,7 +2,6 @@ package zadudoder.spmhelper.Screen.Calls;
 
 import com.google.gson.JsonObject;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -11,12 +10,11 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import zadudoder.spmhelper.config.SPmHelperConfig;
+import zadudoder.spmhelper.SPmHelperClient;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
@@ -49,7 +47,7 @@ public class CallsScreen extends Screen {
         super.init();
 
         // Проверяем наличие токена при инициализации экрана
-        hasToken = SPmHelperConfig.getToken() != null && SPmHelperConfig.getId() != null;
+        hasToken = SPmHelperClient.config.getTOKEN() != null && SPmHelperClient.config.getID() != null;
         isOnCorrectServer = checkServer();
 
         if (client != null && client.player != null) {
@@ -163,8 +161,8 @@ public class CallsScreen extends Screen {
     }
 
     private boolean sendToServer(String serviceType, String message, String coordinates) throws Exception {
-        String cardId = SPmHelperConfig.getId();
-        String token = SPmHelperConfig.getToken();
+        String cardId = SPmHelperClient.config.getID();
+        String token = SPmHelperClient.config.getTOKEN();
 
         if (cardId == null || token == null) {
             throw new Exception("Карта не привязана");

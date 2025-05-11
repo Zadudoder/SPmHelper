@@ -1,8 +1,11 @@
 package zadudoder.spmhelper;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
@@ -13,9 +16,15 @@ import zadudoder.spmhelper.utils.types.Card;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 
 public class SPmHelperClient implements ClientModInitializer {
+    public static SPmHelperConfig config = null;
 
     @Override
     public void onInitializeClient() {
+            if(FabricLoader.getInstance().isModLoaded("cloth-config")){
+                AutoConfig.register(SPmHelperConfig.class, JanksonConfigSerializer::new);
+                config = AutoConfig.getConfigHolder(SPmHelperConfig.class).getConfig();
+            }
+
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             // Команда для привязки карты
             dispatcher.register(
@@ -26,8 +35,10 @@ public class SPmHelperClient implements ClientModInitializer {
                                                 String id = StringArgumentType.getString(context, "id");
                                                 String token = StringArgumentType.getString(context, "token");
 
-                                                SPmHelperConfig.setToken(id, token);
-                                                Card card = new Card("PlayerCard", id, token);
+                                                //SPmHelperConfig.setToken(id, token);
+                                                SPmHelperClient.config.setID(id);
+                                                SPmHelperClient.config.setTOKEN(token);
+                                                Card card = new Card(id, token);
 
                                                 int balance = SPWorldsApi.getBalance(card);
                                                 if (balance >= 0) {
@@ -45,8 +56,8 @@ public class SPmHelperClient implements ClientModInitializer {
             dispatcher.register(
                     literal("sptransfer")
                             .executes(context -> {
-                                String id = SPmHelperConfig.getId();
-                                String token = SPmHelperConfig.getToken();
+                                String id = SPmHelperClient.config.getID();
+                                String token = SPmHelperClient.config.getTOKEN();
 
                                 if (id == null || token == null) {
                                     context.getSource().sendError(Text.literal(
