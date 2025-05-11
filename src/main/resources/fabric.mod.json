@@ -18,16 +18,10 @@
 		"main": [
 			"zadudoder.spmhelper.SPmHelper"
 		],
-		"fabric-datagen": [
-			"zadudoder.spmhelper.SPmHelperDataGenerator"
-		],
 		"client": [
 			"zadudoder.spmhelper.SPmHelperClient"
 		]
 	},
-	"mixins": [
-		"spmhelper.mixins.json"
-	],
 	"depends": {
 		"fabricloader": ">=0.16.14",
 		"minecraft": "~1.21.1",
