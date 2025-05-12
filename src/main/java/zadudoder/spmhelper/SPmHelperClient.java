@@ -2,6 +2,7 @@ package zadudoder.spmhelper;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -20,10 +21,10 @@ public class SPmHelperClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-            if(FabricLoader.getInstance().isModLoaded("cloth-config")){
-                AutoConfig.register(SPmHelperConfig.class, JanksonConfigSerializer::new);
-                config = AutoConfig.getConfigHolder(SPmHelperConfig.class).getConfig();
-            }
+        if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
+            AutoConfig.register(SPmHelperConfig.class, GsonConfigSerializer::new);
+            config = AutoConfig.getConfigHolder(SPmHelperConfig.class).getConfig();
+        }
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             // Команда для привязки карты
@@ -36,8 +37,9 @@ public class SPmHelperClient implements ClientModInitializer {
                                                 String token = StringArgumentType.getString(context, "token");
 
                                                 //SPmHelperConfig.setToken(id, token);
-                                                SPmHelperClient.config.setID(id);
-                                                SPmHelperClient.config.setTOKEN(token);
+                                                SPmHelperClient.config.setSpID(id);
+                                                SPmHelperClient.config.setSpTOKEN(token);
+                                                AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
                                                 Card card = new Card(id, token);
 
                                                 int balance = SPWorldsApi.getBalance(card);
@@ -53,17 +55,13 @@ public class SPmHelperClient implements ClientModInitializer {
                             ));
 
             // Команда для открытия экрана перевода
+            //Я сломал @R4mBLe_
             dispatcher.register(
                     literal("sptransfer")
                             .executes(context -> {
-                                String id = SPmHelperClient.config.getID();
                                 String token = SPmHelperClient.config.getTOKEN();
-
-                                if (id == null || token == null) {
-                                    context.getSource().sendError(Text.literal(
-                                            "❌ Сначала привяжите карту: /spmhelper <id> <token>"));
-                                    return 1;
-                                }
+                                context.getSource().sendError(Text.literal(
+                                        "❌ Сначала привяжите карту: /spmhelper <id> <token>"));
 
                                 MinecraftClient.getInstance().setScreen(new PayScreen());
                                 return 1;
