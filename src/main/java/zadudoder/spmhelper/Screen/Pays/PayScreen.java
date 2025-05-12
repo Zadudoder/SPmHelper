@@ -31,6 +31,11 @@ public class PayScreen extends Screen {
     protected void init() {
         super.init();
 
+        ButtonWidget SPmGroup = ButtonWidget.builder(Text.of("✈"), (btn) -> {
+            Util.getOperatingSystem().open("https://spworlds.ru/spm/groups/06c25d05-b370-47d4-8416-fa1011ea69a1");
+        }).dimensions(width-20, 10, 15, 15).build();
+        this.addDrawableChild(SPmGroup);
+
         // Поле для номера карты получателя
         this.receiverCardField  = new TextFieldWidget(
                 this.textRenderer,
@@ -47,7 +52,7 @@ public class PayScreen extends Screen {
                 this.width / 2 - 100,
                 this.height / 2 - 35,
                 200, 20,
-                Text.of("Сумма (AR)")
+                Text.of("Сумма (АР):")
         );
         this.addDrawableChild(amountField);
 
@@ -180,29 +185,31 @@ public class PayScreen extends Screen {
 
 
         // Подписи к полям
-        context.drawTextWithShadow(
+        context.drawText(
                 this.textRenderer,
                 Text.of("Номер карты:"),
                 this.width / 2 - 100,
                 this.height / 2 - 80,
-
-                0xA0A0A0
+                0xA0A0A0,
+                true
         );
 
-        context.drawTextWithShadow(
+        context.drawText(
                 this.textRenderer,
-                Text.of("Сумма (AR):"),
+                Text.of("Сумма (АР):"),
                 this.width / 2 - 100,
                 this.height / 2 - 45,
-                0xA0A0A0
+                0xA0A0A0,
+                true
         );
 
-        context.drawTextWithShadow(
+        context.drawText(
                 this.textRenderer,
                 Text.of("Комментарий:"),
                 this.width / 2 - 100,
                 this.height / 2 - 10,
-                0xA0A0A0
+                0xA0A0A0,
+                true
         );
 
         // Отображение статуса

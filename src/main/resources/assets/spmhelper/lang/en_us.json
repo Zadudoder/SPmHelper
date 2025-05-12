@@ -4,5 +4,8 @@
   "key.spmhelper.open_pay_screen": "Открыть меню оплаты",
   "key.spmhelper.open_map_screen": "Открыть карту",
   "key.spmhelper.open_laws_screen": "Открыть законы",
-  "category.spmhelper": "SPmHelper"
+  "category.spmhelper": "SPmHelper",
+  "text.autoconfig.spmhelper.title": "Настройки мода SPmHelper",
+  "text.autoconfig.spmhelper.option.ID": "Ваш ID:",
+  "text.autoconfig.spmhelper.option.TOKEN": "Ваш TOKEN:"
 }

@@ -4,9 +4,6 @@ public class User {
     public String username;
     public String ID;
     public Card[] cards;
+    public City[] cities;
 
-    public User(String id, String token)
-    {
-
-    }
 }

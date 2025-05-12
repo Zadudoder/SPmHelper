@@ -9,6 +9,7 @@ import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import zadudoder.spmhelper.SPmHelperClient;
 
@@ -74,7 +75,11 @@ public class CallsScreen extends Screen {
         int buttonY = height / 2 + 10;
         int buttonWidth = 90;
 
-        // Создаем кнопки с проверкой токена
+        ButtonWidget SPmGroup = ButtonWidget.builder(Text.of("✈"), (btn) -> {
+            Util.getOperatingSystem().open("https://spworlds.ru/spm/groups/06c25d05-b370-47d4-8416-fa1011ea69a1");
+        }).dimensions(width-20, 10, 15, 15).build();
+        this.addDrawableChild(SPmGroup);
+
         this.addDrawableChild(
                 createServiceButton("Детектив", "detective", "детектива",
                         width / 2 - 150, buttonY, buttonWidth)
@@ -93,6 +98,7 @@ public class CallsScreen extends Screen {
 
     private boolean checkServer() {
         MinecraftClient client = MinecraftClient.getInstance();
+
         if (client == null || client.getCurrentServerEntry() == null) {
             return false;
         }
@@ -111,9 +117,8 @@ public class CallsScreen extends Screen {
         return false;
     }
 
-    private ButtonWidget createServiceButton(String buttonText, String serviceType, String personName,
-                                             int x, int y, int width) {
-        return ButtonWidget.builder(Text.of(buttonText), button -> {
+    private ButtonWidget createServiceButton(String buttonText, String serviceType, String personName, int x, int y, int width) {
+        ButtonWidget ServiceButton = ButtonWidget.builder(Text.of(buttonText), button -> {
                     if (!hasToken) {
                         lastStatus = "Ошибка: сначала привяжите карту (/spmhelper)";
                         isSuccess = false;
@@ -123,19 +128,23 @@ public class CallsScreen extends Screen {
                         lastStatus = "Ошибка: доступно только на сервере СПм";
                         isSuccess = false;
                         return;
+
                     }
                     callPerson(serviceType, personName);
                 })
                 .dimensions(x, y, width, 20)
                 .build();
+        ServiceButton.active = hasToken && isOnCorrectServer;
+        return ServiceButton;
     }
 
     private void callPerson(String serviceType, String personName) {
         String comment = commentField.getText().trim();
-        if (comment.isEmpty()) {
+        if (comment.isEmpty() && !sendCoordinates) {
             lastStatus = "Ошибка: введите комментарий!";
             isSuccess = false;
             return;
+
         }
 
         String playerName = client != null && client.player != null
@@ -198,7 +207,7 @@ public class CallsScreen extends Screen {
                     textRenderer,
                     "⚠ Сначала привяжите карту (/spmhelper)",
                     width / 2 - textRenderer.getWidth("⚠ Сначала привяжите карту (/spmhelper)")/2,
-                    height / 2 - 100,
+                    height / 2 - 95,
                     0xFF5555,
                     true
             );
@@ -207,7 +216,7 @@ public class CallsScreen extends Screen {
             context.drawText(textRenderer,
                     "⚠ Доступно только на сервере СПм",
                     width / 2 - textRenderer.getWidth("⚠ Доступно только на сервере СПм")/2,
-                    height / 2 - 100,
+                    height / 2 - 95,
                     0xFF5555,
                     true
             );
@@ -217,7 +226,8 @@ public class CallsScreen extends Screen {
         context.drawText(
                 textRenderer,
                 "Отправить координаты:",
-                width / 2 - 150, height / 2 - 75,
+                width / 2 - 150,
+                height / 2 - 75,
                 0xFFFFFF,
                 false
         );
@@ -226,7 +236,8 @@ public class CallsScreen extends Screen {
             context.drawText(
                     textRenderer,
                     "Координаты: X:" + playerPos.getX() + " Y:" + playerPos.getY() + " Z:" + playerPos.getZ(),
-                    width / 2 - 150 + textRenderer.getWidth("Отправить координаты:") + 40, height / 2 - 75,
+                    width / 2 - 150,
+                    height / 2 - 60,
                     0xFFFFFF,
                     false
             );
