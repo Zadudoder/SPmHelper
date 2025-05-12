@@ -42,36 +42,24 @@ public class SPWorldsApi {
     public static JsonObject createTransfer(Card senderCard, String receiverCardNumber, int amount, String comment) {
         try {
             // 1. Формируем запрос для СП
-            JsonObject item = new JsonObject();
-            item.addProperty("name", "Перевод средств");
-            item.addProperty("count", 1);
-            item.addProperty("price", amount);
-            if (comment != null && comment.length() >= 3) {
-                item.addProperty("comment", comment);
-            }
-
             JsonObject requestBody = new JsonObject();
-            requestBody.add("items", new JsonArray());
-            requestBody.getAsJsonArray("items").add(item);
-            requestBody.addProperty("redirectUrl", "https://spworlds.ru/transfer/success");
-            requestBody.addProperty("webhookUrl", "https://your-site.com/webhook");
-            requestBody.addProperty("data", "to:" + receiverCardNumber); // Указываем получателя
+            requestBody.addProperty("receiver", receiverCardNumber);
+            requestBody.addProperty("amount", amount);
+            if (comment.isEmpty()) {
+                comment = " ";
+            }
+            requestBody.addProperty("comment", comment);
 
             // 2. Отправляем от имени карты-отправителя
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(API_URL + "payments"))
+                    .uri(URI.create(API_URL + "transactions"))
                     .header("Authorization", getAuthorizationHeader(senderCard))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
                     .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-            // 3. Проверяем ответ
-            if (response.statusCode() == 201) {
-                return JsonParser.parseString(response.body()).getAsJsonObject();
-            }
-            throw new RuntimeException("Ошибка API: " + response.body());
+            return JsonParser.parseString(response.body()).getAsJsonObject();
         } catch (Exception e) {
             JsonObject error = new JsonObject();
             error.addProperty("error", e.getMessage());
@@ -95,7 +83,7 @@ public class SPWorldsApi {
         }
     }
 
-    private static String getAuthorizationHeader(Card card){
+    private static String getAuthorizationHeader(Card card) {
         return "Bearer " + card.getBase64Key();
     }
 }

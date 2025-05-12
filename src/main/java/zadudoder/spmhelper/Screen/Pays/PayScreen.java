@@ -8,20 +8,17 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import zadudoder.spmhelper.SPmHelper;
 import zadudoder.spmhelper.SPmHelperClient;
 import zadudoder.spmhelper.utils.SPWorldsApi;
 import zadudoder.spmhelper.utils.types.Card;
-import zadudoder.spmhelper.config.SPmHelperConfig;
 
 public class PayScreen extends Screen {
-    private TextFieldWidget receiverCardField ;
+    private TextFieldWidget receiverCardField;
     private TextFieldWidget amountField;
     private TextFieldWidget commentField;
     private String statusMessage;
-    private ButtonWidget confirmButton;
     private int statusColor;
-    private String confirmationUrl;
-    private String senderCardNumber;
 
     public PayScreen() {
         super(Text.of("Перевод СП"));
@@ -30,14 +27,14 @@ public class PayScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-
+        loadSenderCard();
         ButtonWidget SPmGroup = ButtonWidget.builder(Text.of("✈"), (btn) -> {
             Util.getOperatingSystem().open("https://spworlds.ru/spm/groups/06c25d05-b370-47d4-8416-fa1011ea69a1");
-        }).dimensions(width-20, 10, 15, 15).build();
+        }).dimensions(width - 20, 10, 15, 15).build();
         this.addDrawableChild(SPmGroup);
 
         // Поле для номера карты получателя
-        this.receiverCardField  = new TextFieldWidget(
+        this.receiverCardField = new TextFieldWidget(
                 this.textRenderer,
                 this.width / 2 - 100,
                 this.height / 2 - 70,
@@ -74,11 +71,6 @@ public class PayScreen extends Screen {
                 .build();
         this.addDrawableChild(transferButton);
         // Кнопка подтверждения (изначально скрыта)
-        this.confirmButton = ButtonWidget.builder(Text.of("Подтвердить перевод"), button -> {
-            confirmTransfer();
-        }).dimensions(width/2-100, height/2+100, 200, 20).build();
-        this.confirmButton.active = false;
-        addDrawableChild(confirmButton);
     }
 
     private void processTransfer() {
@@ -88,26 +80,33 @@ public class PayScreen extends Screen {
                 setStatus("❌ Введите номер карты получателя", 0xFF5555);
                 return;
             }
+            if (amountField.getText().isEmpty()) {
+                setStatus("❌ Сумма не указана", 0xFF5555);
+                return;
+            }
+            int amount;
+            try { //переписать
+                amount = Integer.parseInt(amountField.getText());
+            } catch (Exception ex) {
+                setStatus("❌ Сумма не указана", 0xFF5555);
+                return;
+            }
 
-            int amount = Integer.parseInt(amountField.getText());
             if (amount <= 0) {
                 setStatus("❌ Сумма должна быть > 0", 0xFF5555);
                 return;
             }
 
             // Получаем карту-отправителя из конфига
-            String senderId = SPmHelperClient.config.getID();
-            String senderToken = SPmHelperClient.config.getTOKEN();
+            String senderId = SPmHelperClient.config.getSpID();
+            String senderToken = SPmHelperClient.config.getSpTOKEN();
             if (senderId == null || senderToken == null) {
                 setStatus("❌ Привяжите карту (/spmhelper)", 0xFF5555);
                 return;
             }
             Card senderCard = new Card(senderId, senderToken);
-
-            // Проверяем, что это не перевод самому себе
-            JsonObject senderInfo = SPWorldsApi.getCardInfo(senderCard);
-            if (senderInfo.get("number").getAsString().equals(receiverCard)) {
-                setStatus("❌ Нельзя перевести на ту же карту", 0xFF5555);
+            if (SPWorldsApi.getBalance(senderCard) < amount) {
+                setStatus("❌Слишком большая сумма для перевода", 0xFF5555);
                 return;
             }
 
@@ -118,13 +117,17 @@ public class PayScreen extends Screen {
                     amount,
                     commentField.getText()
             );
-
             if (response.has("error")) {
-                setStatus("❌ " + response.get("error").getAsString(), 0xFF5555);
+                String error = response.get("error").toString();
+                if (error.contains("receiverIsSender")) {
+                    setStatus("❌ Нельзя отправить деньги самому себе", 0xFF5555);
+                } else if (error.contains("receiverCardNotFound")) {
+                    setStatus("❌ Неправильно указан номер карты", 0xFF5555);
+                } else {
+                    setStatus("❌ Ошибка API: " + response.get("error").getAsString(), 0xFF5555);
+                }
             } else {
-                this.confirmationUrl = response.get("url").getAsString();
-                setStatus("✅ Подтвердите перевод", 0x55FF55);
-                confirmButton.active = true;
+                setStatus("✔ Успешно переведено " + amount + " АР", 0x55FF55);
             }
         } catch (Exception e) {
             setStatus("❌ Ошибка: " + e.getMessage(), 0xFF5555);
@@ -132,8 +135,8 @@ public class PayScreen extends Screen {
     }
 
     private void loadSenderCard() {
-        String id = SPmHelperClient.config.getID();
-        String token = SPmHelperClient.config.getTOKEN();
+        String id = SPmHelperClient.config.getSpID();
+        String token = SPmHelperClient.config.getSpTOKEN();
 
         if (id == null || token == null) {
             setStatus("❌ Карта не привязана", 0xFF5555);
@@ -146,18 +149,7 @@ public class PayScreen extends Screen {
         if (cardInfo.has("error")) {
             setStatus("❌ Ошибка загрузки карты", 0xFF5555);
         } else {
-            this.senderCardNumber = cardInfo.get("number").getAsString();
-            setStatus("✔ Ваша карта: " + senderCardNumber, 0x55FF55);
-        }
-    }
-
-    private void confirmTransfer() {
-        try {
-            Util.getOperatingSystem().open(confirmationUrl);
-            setStatus("✅ Открыта страница подтверждения", 0x55FF55);
-            confirmButton.active = false;
-        } catch (Exception e) {
-            setStatus("❌ Ошибка открытия ссылки", 0xFF5555);
+            setStatus("✔ Ваша карта привязана. Текущий баланс: " + cardInfo.get("balance").getAsString() + " АР", 0x55FF55);
         }
     }
 
@@ -169,20 +161,6 @@ public class PayScreen extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-
-        if (confirmButton.active) {
-            context.drawCenteredTextWithShadow(
-                    textRenderer,
-                    Text.of("Подтвердите перевод на карту:"),
-                    width/2, height/2+50, 0xFFFFFF);
-
-            context.drawCenteredTextWithShadow(
-                    textRenderer,
-                    Text.of(receiverCardField.getText()),
-                    width/2, height/2+70, 0x55FF55);
-        }
-
-
 
         // Подписи к полям
         context.drawText(
@@ -225,15 +203,15 @@ public class PayScreen extends Screen {
 
         Identifier CallsText = Identifier.of("spmhelper", "titles/paystextrender.png");
         int imageY = height / 2 - 180;
-        int originalWidth = 674/2;
-        int originalHeight = 123/2;
+        int originalWidth = 674 / 2;
+        int originalHeight = 123 / 2;
         int availableWidth = width - 40;
         int finalWidth = originalWidth;
         int finalHeight = originalHeight;
         if (originalWidth > availableWidth) {
-            float scale = (float)availableWidth / originalWidth;
+            float scale = (float) availableWidth / originalWidth;
             finalWidth = availableWidth;
-            finalHeight = (int)(originalHeight * scale);
+            finalHeight = (int) (originalHeight * scale);
         }
         int imageX = (width - finalWidth) / 2;
         context.drawTexture(CallsText, imageX, imageY, 0, 0, finalWidth, finalHeight, finalWidth, finalHeight);

@@ -13,17 +13,15 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import zadudoder.spmhelper.SPmHelperClient;
 
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
-import static zadudoder.spmhelper.URL.SERVER_URL;
-
 public class CallsScreen extends Screen {
 
+    private static final List<String> ALLOWED_SERVERS = Arrays.asList(
+            "spm.spworlds.org",
+            "spm.spworlds.ru"
+    );
     private TextFieldWidget commentField;
     private boolean sendCoordinates = false;
     private String lastStatus = "";
@@ -32,12 +30,6 @@ public class CallsScreen extends Screen {
     private int startY;
     private boolean hasToken;
     private boolean isOnCorrectServer;
-
-
-    private static final List<String> ALLOWED_SERVERS = Arrays.asList(
-            "spm.spworlds.org",
-            "spm.spworlds.ru"
-    );
 
     public CallsScreen() {
         super(Text.of("Экран вызова"));
@@ -48,7 +40,7 @@ public class CallsScreen extends Screen {
         super.init();
 
         // Проверяем наличие токена при инициализации экрана
-        hasToken = SPmHelperClient.config.getTOKEN() != null && SPmHelperClient.config.getID() != null;
+        hasToken = SPmHelperClient.config.getTOKEN() != null;
         isOnCorrectServer = checkServer();
 
         if (client != null && client.player != null) {
@@ -77,7 +69,7 @@ public class CallsScreen extends Screen {
 
         ButtonWidget SPmGroup = ButtonWidget.builder(Text.of("✈"), (btn) -> {
             Util.getOperatingSystem().open("https://spworlds.ru/spm/groups/06c25d05-b370-47d4-8416-fa1011ea69a1");
-        }).dimensions(width-20, 10, 15, 15).build();
+        }).dimensions(width - 20, 10, 15, 15).build();
         this.addDrawableChild(SPmGroup);
 
         this.addDrawableChild(
@@ -92,7 +84,7 @@ public class CallsScreen extends Screen {
 
         this.addDrawableChild(
                 createServiceButton("Банкир", "banker", "банкира",
-                        width / 2 - 150 + 2*buttonWidth + 30, buttonY, buttonWidth)
+                        width / 2 - 150 + 2 * buttonWidth + 30, buttonY, buttonWidth)
         );
     }
 
@@ -120,15 +112,9 @@ public class CallsScreen extends Screen {
     private ButtonWidget createServiceButton(String buttonText, String serviceType, String personName, int x, int y, int width) {
         ButtonWidget ServiceButton = ButtonWidget.builder(Text.of(buttonText), button -> {
                     if (!hasToken) {
-                        lastStatus = "Ошибка: сначала привяжите карту (/spmhelper)";
+                        lastStatus = "Токен неверный или отсутсвует";
                         isSuccess = false;
                         return;
-                    }
-                    if (!isOnCorrectServer) {
-                        lastStatus = "Ошибка: доступно только на сервере СПм";
-                        isSuccess = false;
-                        return;
-
                     }
                     callPerson(serviceType, personName);
                 })
@@ -169,8 +155,7 @@ public class CallsScreen extends Screen {
         }).start();
     }
 
-    private boolean sendToServer(String serviceType, String message, String coordinates) throws Exception {
-        String cardId = SPmHelperClient.config.getID();
+    private boolean sendToServer(String serviceType, String message, String coordinates) throws Exception { /*
         String token = SPmHelperClient.config.getTOKEN();
 
         if (cardId == null || token == null) {
@@ -193,8 +178,9 @@ public class CallsScreen extends Screen {
             os.write(payload.toString().getBytes(StandardCharsets.UTF_8));
         }
 
-        int responseCode = connection.getResponseCode();
-        return responseCode == 200;
+        return responseCode == 200;*/
+        //int responseCode = connection.getResponseCode();
+        return true;
     }
 
     @Override
@@ -206,16 +192,15 @@ public class CallsScreen extends Screen {
             context.drawText(
                     textRenderer,
                     "⚠ Сначала привяжите карту (/spmhelper)",
-                    width / 2 - textRenderer.getWidth("⚠ Сначала привяжите карту (/spmhelper)")/2,
+                    width / 2 - textRenderer.getWidth("⚠ Сначала привяжите карту (/spmhelper)") / 2,
                     height / 2 - 95,
                     0xFF5555,
                     true
             );
-        }
-        else if (!isOnCorrectServer) {
+        } else if (!isOnCorrectServer) {
             context.drawText(textRenderer,
                     "⚠ Доступно только на сервере СПм",
-                    width / 2 - textRenderer.getWidth("⚠ Доступно только на сервере СПм")/2,
+                    width / 2 - textRenderer.getWidth("⚠ Доступно только на сервере СПм") / 2,
                     height / 2 - 95,
                     0xFF5555,
                     true
@@ -257,7 +242,7 @@ public class CallsScreen extends Screen {
             context.drawText(
                     textRenderer,
                     lastStatus,
-                    width / 2 - textRenderer.getWidth(lastStatus)/2,
+                    width / 2 - textRenderer.getWidth(lastStatus) / 2,
                     height / 2 + 40,
                     color,
                     true
@@ -265,18 +250,17 @@ public class CallsScreen extends Screen {
         }
 
 
-
         Identifier CallsText = Identifier.of("spmhelper", "titles/callstextrender.png");
         int imageY = height / 2 - 180;
-        int originalWidth = 704/2;
-        int originalHeight = 152/2;
+        int originalWidth = 704 / 2;
+        int originalHeight = 152 / 2;
         int availableWidth = width - 40;
         int finalWidth = originalWidth;
         int finalHeight = originalHeight;
         if (originalWidth > availableWidth) {
-            float scale = (float)availableWidth / originalWidth;
+            float scale = (float) availableWidth / originalWidth;
             finalWidth = availableWidth;
-            finalHeight = (int)(originalHeight * scale);
+            finalHeight = (int) (originalHeight * scale);
         }
         int imageX = (width - finalWidth) / 2;
         context.drawTexture(CallsText, imageX, imageY, 0, 0, finalWidth, finalHeight, finalWidth, finalHeight);
