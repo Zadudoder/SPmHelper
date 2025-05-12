@@ -8,7 +8,6 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import zadudoder.spmhelper.SPmHelper;
 import zadudoder.spmhelper.SPmHelperClient;
 import zadudoder.spmhelper.utils.SPWorldsApi;
 import zadudoder.spmhelper.utils.types.Card;
@@ -138,7 +137,7 @@ public class PayScreen extends Screen {
         String id = SPmHelperClient.config.getSpID();
         String token = SPmHelperClient.config.getSpTOKEN();
 
-        if (id == null || token == null) {
+        if (id.isEmpty() || token.isEmpty()) {
             setStatus("❌ Карта не привязана", 0xFF5555);
             return;
         }

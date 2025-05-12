@@ -2,7 +2,6 @@ package zadudoder.spmhelper;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -22,7 +21,7 @@ public class SPmHelperClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
-            AutoConfig.register(SPmHelperConfig.class, GsonConfigSerializer::new);
+            AutoConfig.register(SPmHelperConfig.class, JanksonConfigSerializer::new);
             config = AutoConfig.getConfigHolder(SPmHelperConfig.class).getConfig();
         }
 
