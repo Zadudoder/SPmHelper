@@ -17,11 +17,23 @@ public class PayScreen extends Screen {
     private TextFieldWidget receiverCardField;
     private TextFieldWidget amountField;
     private TextFieldWidget commentField;
+    private String p_number;
+    private String p_amount;
+    private String p_comment;
+    private boolean isSPmPay = false;
     private String statusMessage;
     private int statusColor;
 
     public PayScreen() {
         super(Text.of("Перевод СП"));
+    }
+
+    public PayScreen(String number, String amount, String comment) {
+        super(Text.of("Перевод СП"));
+        p_number = number;
+        p_amount = amount;
+        p_comment = comment;
+        isSPmPay = true;
     }
 
     @Override
@@ -62,6 +74,11 @@ public class PayScreen extends Screen {
                 Text.of("Комментарий (не обязательно)")
         );
         this.addDrawableChild(commentField);
+        if (isSPmPay) {
+            receiverCardField.setText(p_number);
+            amountField.setText(p_amount);
+            commentField.setText(p_comment);
+        }
 
         // Кнопка перевода
         ButtonWidget transferButton = ButtonWidget.builder(Text.of("Перевести"), button -> {
