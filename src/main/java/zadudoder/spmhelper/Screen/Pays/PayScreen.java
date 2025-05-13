@@ -86,7 +86,7 @@ public class PayScreen extends Screen {
             int amount;
             try { //переписать
                 amount = Integer.parseInt(amountField.getText());
-            } catch (Exception ex) {
+            } catch (NumberFormatException ex) {
                 setStatus("❌ Сумма не указана", 0xFF5555);
                 return;
             }
@@ -109,7 +109,7 @@ public class PayScreen extends Screen {
                 return;
             }
 
-            if ((MinecraftClient.getInstance().getSession().getUsername().length() + commentField.getText().length())>32) {
+            if ((MinecraftClient.getInstance().getSession().getUsername().length() + commentField.getText().length()) > 32) {
                 setStatus("❌ Слишком длинный комментарий, максимум: " + (32 - MinecraftClient.getInstance().getSession().getUsername().length()), 0xFF5555);
                 return;
             }
