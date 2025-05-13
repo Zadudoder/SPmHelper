@@ -41,7 +41,7 @@ public class CallsScreen extends Screen {
         super.init();
 
         // Проверяем наличие токена при инициализации экрана
-        hasToken = SPmHelperClient.config.getTOKEN() != null;
+        hasToken = SPmHelperClient.config.getAPI_TOKEN() != null;
         isOnCorrectServer = checkServer();
 
         if (client != null && client.player != null) {
@@ -205,8 +205,7 @@ public class CallsScreen extends Screen {
                     0xFF5555,
                     true
             );
-        }
-        else if (!isOnCorrectServer) {
+        } else if (!isOnCorrectServer) {
             context.drawText(textRenderer,
                     "⚠ Координаты можно ввести играя только на СПм",
                     width / 2 - textRenderer.getWidth("⚠ Координаты можно ввести играя только на СПм") / 2,
@@ -247,13 +246,13 @@ public class CallsScreen extends Screen {
 
         if (commentField.getText().isEmpty()) {
             context.drawText(
-                textRenderer,
-                "Введите сюда текст",
-                width / 2 - 145,
-                height / 2 + 16,
-                0xbbbbbb,
-                false
-        );
+                    textRenderer,
+                    "Введите сюда текст",
+                    width / 2 - 145,
+                    height / 2 + 16,
+                    0xbbbbbb,
+                    false
+            );
         }
 
         if (!lastStatus.isEmpty()) {
