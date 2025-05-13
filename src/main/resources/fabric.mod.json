@@ -1,37 +1,37 @@
 {
-	"schemaVersion": 1,
-	"id": "spmhelper",
-	"version": "${version}",
-	"name": "SPmHelper",
-	"description": "Это клиентский мод для помощи игрокам СПм! Открыть меню - нажми \"H\"",
-	"authors": [
-		"Zadudoder - t.me/zadudoderTG"
-	],
-	"contact": {
-		"homepage": "https://t.me/zadudoderTG",
-		"sources": "https://github.com/Zadudoder/SPmHelper"
-	},
-	"license": "CC0-1.0",
-	"icon": "assets/spmhelper/SPmHelperLogo.png",
-	"environment": "*",
-	"entrypoints": {
-		"main": [
-			"zadudoder.spmhelper.SPmHelper"
-		],
-		"client": [
-			"zadudoder.spmhelper.SPmHelperClient"
-		],
-		"modmenu": [
-			"zadudoder.spmhelper.ModMenuIntegration"
-		]
-	},
-	"depends": {
-		"fabricloader": ">=0.16.14",
-		"minecraft": "~1.21.1",
-		"java": ">=21",
-		"fabric-api": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
-	}
+  "schemaVersion": 1,
+  "id": "spmhelper",
+  "version": "${version}",
+  "name": "SPmHelper",
+  "description": "Это клиентский мод для помощи игрокам СПм! Открыть меню - нажми \"H\"",
+  "authors": [
+    "Zadudoder - t.me/zadudoderTG"
+  ],
+  "contact": {
+    "homepage": "https://t.me/zadudoderTG",
+    "sources": "https://github.com/Zadudoder/SPmHelper"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/spmhelper/SPmHelperLogo.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "zadudoder.spmhelper.SPmHelper"
+    ],
+    "client": [
+      "zadudoder.spmhelper.SPmHelperClient"
+    ],
+    "modmenu": [
+      "zadudoder.spmhelper.ModMenuIntegration"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.14",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
 }
