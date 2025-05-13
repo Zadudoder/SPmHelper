@@ -5,16 +5,16 @@ import me.shedaniel.autoconfig.annotation.Config;
 
 @Config(name = "spmhelper")
 public class SPmHelperConfig implements ConfigData {
-    String TOKEN = null;
+    String API_TOKEN = null;
     String SP_TOKEN = null;
     String SP_ID = null;
 
-    public String getTOKEN() {
-        return TOKEN;
+    public String getAPI_TOKEN() {
+        return API_TOKEN;
     }
 
     public void setTOKEN(String TOKEN) {
-        this.TOKEN = TOKEN;
+        this.API_TOKEN = TOKEN;
     }
 
     public String getSpTOKEN() {
