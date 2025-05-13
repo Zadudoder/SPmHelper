@@ -5,10 +5,12 @@
   "name": "SPmHelper",
   "description": "Это клиентский мод для помощи игрокам СПм! Открыть меню - нажми \"H\"",
   "authors": [
-    "Zadudoder - t.me/zadudoderTG"
+    "Zadudoder",
+    "R4mBLe_",
+    "TonyAleksandr"
   ],
   "contact": {
-    "homepage": "https://t.me/zadudoderTG",
+    "homepage": "https://spworlds.ru/spm/groups/06c25d05-b370-47d4-8416-fa1011ea69a1",
     "sources": "https://github.com/Zadudoder/SPmHelper"
   },
   "license": "CC0-1.0",

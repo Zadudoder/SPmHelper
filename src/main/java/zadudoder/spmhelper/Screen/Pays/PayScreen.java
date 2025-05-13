@@ -122,7 +122,7 @@ public class PayScreen extends Screen {
             }
             Card senderCard = new Card(senderId, senderToken);
             if (SPWorldsApi.getBalance(senderCard) < amount) {
-                setStatus("❌Слишком большая сумма для перевода", 0xFF5555);
+                setStatus("❌ У вас не достаточно денег на карте", 0xFF5555);
                 return;
             }
 

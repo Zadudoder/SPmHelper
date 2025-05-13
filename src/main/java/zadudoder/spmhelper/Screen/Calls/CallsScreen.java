@@ -207,8 +207,8 @@ public class CallsScreen extends Screen {
             );
         } else if (!isOnCorrectServer) {
             context.drawText(textRenderer,
-                    "⚠ Координаты можно ввести играя только на СПм",
-                    width / 2 - textRenderer.getWidth("⚠ Координаты можно ввести играя только на СПм") / 2,
+                    "❗ Координаты можно вводить только на СПм",
+                    width / 2 - textRenderer.getWidth("❗ Координаты можно вводить только на СПм") / 2,
                     height / 2 - 60,
                     0xFFFF55,
                     false
