@@ -9,7 +9,7 @@ public class Card {
     public Card(String id,String token){
         this.id = id;
         this.token = token;
-        //Здесь надо реализацию добавления имени карты(потом)
+        // Здесь надо реализацию добавления имени карты(потом)
     }
     public String getBase64Key() {
         return java.util.Base64.getEncoder().encodeToString((id + ":" + token).getBytes());

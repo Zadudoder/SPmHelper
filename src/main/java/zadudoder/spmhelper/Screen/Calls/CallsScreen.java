@@ -23,6 +23,7 @@ public class CallsScreen extends Screen {
             "spm.spworlds.ru"
     );
     private TextFieldWidget commentField;
+    private CheckboxWidget coordinatesCheckbox;
     private boolean sendCoordinates = false;
     private String lastStatus = "";
     private boolean isSuccess = false;
@@ -47,24 +48,28 @@ public class CallsScreen extends Screen {
             playerPos = client.player.getBlockPos();
         }
 
-        CheckboxWidget coordinatesCheckbox = CheckboxWidget.builder(Text.of(""), textRenderer)
-                .pos(width / 2 - 150 + textRenderer.getWidth("Отправить координаты:") + 10, height / 2 - 80)
+        this.coordinatesCheckbox = CheckboxWidget.builder(Text.of(""), textRenderer)
+
+                .pos(width / 2 - 10, height / 2 - 40)
                 .checked(false) // Начальное состояние
                 .callback((checkbox, checked) -> sendCoordinates = checked)
                 .build();
+
         this.addDrawableChild(coordinatesCheckbox);
+        //checkbox.active = false;
+
 
         // Поле для комментария
         commentField = new TextFieldWidget(
                 textRenderer,
-                width / 2 - 150, height / 2 - 30,
+                width / 2 - 150, height / 2 + 10,
                 300, 20,
                 Text.of("Введите комментарий для вызова:")
         );
         this.addDrawableChild(commentField);
 
         // Кнопки вызова
-        int buttonY = height / 2 + 10;
+        int buttonY = height / 2 + 40;
         int buttonWidth = 90;
 
         ButtonWidget SPmGroup = ButtonWidget.builder(Text.of("✈"), (btn) -> {
@@ -120,7 +125,7 @@ public class CallsScreen extends Screen {
                 })
                 .dimensions(x, y, width, 20)
                 .build();
-        ServiceButton.active = hasToken && isOnCorrectServer;
+        ServiceButton.active = hasToken;
         return ServiceButton;
     }
 
@@ -130,7 +135,6 @@ public class CallsScreen extends Screen {
             lastStatus = "Ошибка: введите комментарий!";
             isSuccess = false;
             return;
-
         }
 
         String playerName = client != null && client.player != null
@@ -155,7 +159,8 @@ public class CallsScreen extends Screen {
         }).start();
     }
 
-    private boolean sendToServer(String serviceType, String message, String coordinates) throws Exception { /*
+    private boolean sendToServer(String serviceType, String message, String coordinates) throws Exception {
+        /*
         String token = SPmHelperClient.config.getTOKEN();
 
         if (cardId == null || token == null) {
@@ -178,8 +183,9 @@ public class CallsScreen extends Screen {
             os.write(payload.toString().getBytes(StandardCharsets.UTF_8));
         }
 
-        return responseCode == 200;*/
+        return responseCode == 200;
         //int responseCode = connection.getResponseCode();
+        */
         return true;
     }
 
@@ -187,32 +193,34 @@ public class CallsScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
+        coordinatesCheckbox.active = isOnCorrectServer;
+
         // Показываем статус привязки карты
         if (!hasToken) {
             context.drawText(
                     textRenderer,
                     "⚠ Сначала привяжите карту (/spmhelper)",
                     width / 2 - textRenderer.getWidth("⚠ Сначала привяжите карту (/spmhelper)") / 2,
-                    height / 2 - 95,
-                    0xFF5555,
-                    true
-            );
-        } else if (!isOnCorrectServer) {
-            context.drawText(textRenderer,
-                    "⚠ Доступно только на сервере СПм",
-                    width / 2 - textRenderer.getWidth("⚠ Доступно только на сервере СПм") / 2,
-                    height / 2 - 95,
+                    height / 2 - 60,
                     0xFF5555,
                     true
             );
         }
+        else if (!isOnCorrectServer) {
+            context.drawText(textRenderer,
+                    "⚠ Координаты можно ввести играя только на СПм",
+                    width / 2 - textRenderer.getWidth("⚠ Координаты можно ввести играя только на СПм") / 2,
+                    height / 2 - 60,
+                    0xFFFF55,
+                    false
+            );
+        }
 
-        // Остальной рендеринг...
         context.drawText(
                 textRenderer,
                 "Отправить координаты:",
                 width / 2 - 150,
-                height / 2 - 75,
+                height / 2 - 35,
                 0xFFFFFF,
                 false
         );
@@ -222,7 +230,7 @@ public class CallsScreen extends Screen {
                     textRenderer,
                     "Координаты: X:" + playerPos.getX() + " Y:" + playerPos.getY() + " Z:" + playerPos.getZ(),
                     width / 2 - 150,
-                    height / 2 - 60,
+                    height / 2 - 20,
                     0xFFFFFF,
                     false
             );
@@ -232,10 +240,21 @@ public class CallsScreen extends Screen {
                 textRenderer,
                 "Комментарий:",
                 width / 2 - 150,
-                height / 2 - 45,
+                height / 2 - 5,
                 0xFFFFFF,
                 false
         );
+
+        if (commentField.getText().isEmpty()) {
+            context.drawText(
+                textRenderer,
+                "Введите сюда текст",
+                width / 2 - 145,
+                height / 2 + 16,
+                0xbbbbbb,
+                false
+        );
+        }
 
         if (!lastStatus.isEmpty()) {
             int color = isSuccess ? 0x55FF55 : 0xFFFF55;
@@ -243,7 +262,7 @@ public class CallsScreen extends Screen {
                     textRenderer,
                     lastStatus,
                     width / 2 - textRenderer.getWidth(lastStatus) / 2,
-                    height / 2 + 40,
+                    height / 2 + 70,
                     color,
                     true
             );
@@ -251,9 +270,9 @@ public class CallsScreen extends Screen {
 
 
         Identifier CallsText = Identifier.of("spmhelper", "titles/callstextrender.png");
-        int imageY = height / 2 - 180;
-        int originalWidth = 704 / 2;
-        int originalHeight = 152 / 2;
+        int imageY = height / 2 - 110;
+        int originalWidth = 704 / 4;
+        int originalHeight = 152 / 4;
         int availableWidth = width - 40;
         int finalWidth = originalWidth;
         int finalHeight = originalHeight;

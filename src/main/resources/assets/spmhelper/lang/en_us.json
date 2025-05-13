@@ -1,11 +1,15 @@
 {
+  "category.spmhelper": "SPmHelper",
+
   "key.spmhelper.open_main_screen": "Открыть главное меню",
   "key.spmhelper.open_calls_screen": "Открыть меню вызовов",
   "key.spmhelper.open_pay_screen": "Открыть меню оплаты",
   "key.spmhelper.open_map_screen": "Открыть карту",
   "key.spmhelper.open_laws_screen": "Открыть законы",
-  "category.spmhelper": "SPmHelper",
+
   "text.autoconfig.spmhelper.title": "Настройки мода SPmHelper",
-  "text.autoconfig.spmhelper.option.ID": "Ваш ID:",
-  "text.autoconfig.spmhelper.option.TOKEN": "Ваш TOKEN:"
+  "text.autoconfig.spmhelper.option.TOKEN": "Ваш SPmHelper токен:",
+  "text.autoconfig.spmhelper.option.SP_TOKEN": "Ваш TOKEN от SPw:",
+  "text.autoconfig.spmhelper.option.SP_ID": "Ваш ID от SPw:",
+  "text.autoconfig.spmhelper.search": "Поиск:"
 }

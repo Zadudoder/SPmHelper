@@ -1,6 +1,7 @@
 package zadudoder.spmhelper.utils;
 
 import com.google.gson.*;
+import net.minecraft.client.MinecraftClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zadudoder.spmhelper.utils.types.Card;
@@ -48,7 +49,7 @@ public class SPWorldsApi {
             if (comment.isEmpty()) {
                 comment = " ";
             }
-            requestBody.addProperty("comment", comment);
+            requestBody.addProperty("comment", MinecraftClient.getInstance().getSession().getUsername() + ": " + comment);
 
             // 2. Отправляем от имени карты-отправителя
             HttpRequest request = HttpRequest.newBuilder()

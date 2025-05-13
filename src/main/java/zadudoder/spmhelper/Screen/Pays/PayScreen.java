@@ -1,6 +1,7 @@
 package zadudoder.spmhelper.Screen.Pays;
 
 import com.google.gson.JsonObject;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -36,7 +37,7 @@ public class PayScreen extends Screen {
         this.receiverCardField = new TextFieldWidget(
                 this.textRenderer,
                 this.width / 2 - 100,
-                this.height / 2 - 70,
+                this.height / 2 - 50,
                 200, 20,
                 Text.of("Номер карты получателя")
         );
@@ -46,7 +47,7 @@ public class PayScreen extends Screen {
         this.amountField = new TextFieldWidget(
                 this.textRenderer,
                 this.width / 2 - 100,
-                this.height / 2 - 35,
+                this.height / 2 - 15,
                 200, 20,
                 Text.of("Сумма (АР):")
         );
@@ -56,7 +57,7 @@ public class PayScreen extends Screen {
         this.commentField = new TextFieldWidget(
                 this.textRenderer,
                 this.width / 2 - 100,
-                this.height / 2,
+                this.height / 2 + 20,
                 200, 20,
                 Text.of("Комментарий (не обязательно)")
         );
@@ -66,10 +67,9 @@ public class PayScreen extends Screen {
         ButtonWidget transferButton = ButtonWidget.builder(Text.of("Перевести"), button -> {
                     processTransfer();
                 })
-                .dimensions(this.width / 2 - 100, this.height / 2 + 30, 200, 20)
+                .dimensions(this.width / 2 - 100, this.height / 2 + 50, 200, 20)
                 .build();
         this.addDrawableChild(transferButton);
-        // Кнопка подтверждения (изначально скрыта)
     }
 
     private void processTransfer() {
@@ -92,7 +92,7 @@ public class PayScreen extends Screen {
             }
 
             if (amount <= 0) {
-                setStatus("❌ Сумма должна быть > 0", 0xFF5555);
+                setStatus("❌ Сумма должна быть больше 0", 0xFF5555);
                 return;
             }
 
@@ -106,6 +106,11 @@ public class PayScreen extends Screen {
             Card senderCard = new Card(senderId, senderToken);
             if (SPWorldsApi.getBalance(senderCard) < amount) {
                 setStatus("❌Слишком большая сумма для перевода", 0xFF5555);
+                return;
+            }
+
+            if ((MinecraftClient.getInstance().getSession().getUsername().length() + commentField.getText().length())>32) {
+                setStatus("❌ Слишком длинный комментарий, максимум: " + (32 - MinecraftClient.getInstance().getSession().getUsername().length()), 0xFF5555);
                 return;
             }
 
@@ -128,6 +133,7 @@ public class PayScreen extends Screen {
             } else {
                 setStatus("✔ Успешно переведено " + amount + " АР", 0x55FF55);
             }
+
         } catch (Exception e) {
             setStatus("❌ Ошибка: " + e.getMessage(), 0xFF5555);
         }
@@ -137,7 +143,7 @@ public class PayScreen extends Screen {
         String id = SPmHelperClient.config.getSpID();
         String token = SPmHelperClient.config.getSpTOKEN();
 
-        if (id.isEmpty() || token.isEmpty()) {
+        if (id == null || token == null) {
             setStatus("❌ Карта не привязана", 0xFF5555);
             return;
         }
@@ -166,44 +172,74 @@ public class PayScreen extends Screen {
                 this.textRenderer,
                 Text.of("Номер карты:"),
                 this.width / 2 - 100,
-                this.height / 2 - 80,
+                this.height / 2 - 60,
                 0xA0A0A0,
                 true
         );
+
+        if (receiverCardField.getText().isEmpty()) {
+            context.drawText(
+                    textRenderer,
+                    "Пример: 00001",
+                    width / 2 - 95,
+                    height / 2 - 44,
+                    0xbbbbbb,
+                    false
+            );
+        }
 
         context.drawText(
                 this.textRenderer,
                 Text.of("Сумма (АР):"),
                 this.width / 2 - 100,
-                this.height / 2 - 45,
+                this.height / 2 - 25,
                 0xA0A0A0,
                 true
         );
+
+        if (amountField.getText().isEmpty()) {
+            context.drawText(
+                    textRenderer,
+                    "От 1 до 10000",
+                    width / 2 - 95,
+                    height / 2 - 9,
+                    0xbbbbbb,
+                    false
+            );
+        }
 
         context.drawText(
                 this.textRenderer,
                 Text.of("Комментарий:"),
                 this.width / 2 - 100,
-                this.height / 2 - 10,
+                this.height / 2 + 10,
                 0xA0A0A0,
                 true
         );
 
-        // Отображение статуса
-        if (statusMessage != null) {
-            context.drawCenteredTextWithShadow(
-                    this.textRenderer,
-                    Text.of(statusMessage),
-                    this.width / 2,
-                    this.height / 2 + 60,
-                    statusColor
+        if (commentField.getText().isEmpty()) {
+            context.drawText(
+                    textRenderer,
+                    "Можно оставить пустым",
+                    width / 2 - 95,
+                    height / 2 + 26,
+                    0xbbbbbb,
+                    false
             );
         }
 
-        Identifier CallsText = Identifier.of("spmhelper", "titles/paystextrender.png");
-        int imageY = height / 2 - 180;
-        int originalWidth = 674 / 2;
-        int originalHeight = 123 / 2;
+        context.drawCenteredTextWithShadow(
+                this.textRenderer,
+                Text.of(statusMessage),
+                this.width / 2,
+                this.height / 2 + 80,
+                statusColor
+        );
+
+        Identifier PayText = Identifier.of("spmhelper", "titles/paystextrender.png");
+        int imageY = height / 2 - 110;
+        int originalWidth = 674 / 4;
+        int originalHeight = 123 / 4;
         int availableWidth = width - 40;
         int finalWidth = originalWidth;
         int finalHeight = originalHeight;
@@ -213,7 +249,7 @@ public class PayScreen extends Screen {
             finalHeight = (int) (originalHeight * scale);
         }
         int imageX = (width - finalWidth) / 2;
-        context.drawTexture(CallsText, imageX, imageY, 0, 0, finalWidth, finalHeight, finalWidth, finalHeight);
+        context.drawTexture(PayText, imageX, imageY, 0, 0, finalWidth, finalHeight, finalWidth, finalHeight);
 
     }
 }
