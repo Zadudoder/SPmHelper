@@ -3,10 +3,17 @@ package zadudoder.spmhelper.Screen;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Settings extends Screen {
+    private boolean cardsExpanded = false;
+    private final List<String> testCards = Arrays.asList("Хайл карта", "Тест карта");
+    private String selectedCard = null;
     private static final Identifier SETTINGS_TEXT = Identifier.of("spmhelper", "titles/settingstextrender.png");
 
     public Settings() {
@@ -20,27 +27,72 @@ public class Settings extends Screen {
         int startY = this.height / 2;
         int centerX = this.width / 2 - buttonWidth / 2;
 
-        // Кнопки управления
+        // Основная кнопка выбора карт
+        this.addDrawableChild(ButtonWidget.builder(
+                Text.of(selectedCard != null ? selectedCard : "Выберите карты ⬇"),
+                button -> toggleCards()
+        ).dimensions(centerX - 80, startY - 50, buttonWidth, buttonHeight).build());
+
+        // Кнопки карт (изначально скрыты)
+        for (int i = 0; i < testCards.size(); i++) {
+            String card = testCards.get(i);
+            ButtonWidget cardBtn = ButtonWidget.builder(
+                    Text.of(card),
+                    btn -> selectCard(card)
+            ).dimensions(centerX - 80, startY - 50 + (i + 1) * 25, buttonWidth, buttonHeight).build();
+            cardBtn.visible = cardsExpanded;
+            this.addDrawableChild(cardBtn);
+        }
+
+        // Ваши оригинальные кнопки управления
         this.addDrawableChild(ButtonWidget.builder(Text.of("Удалить"), button -> {
-            // Логика удаления карты
-        }).dimensions(centerX+80, startY - 50, buttonWidth, buttonHeight).build());
+            if (selectedCard != null) {
+                // Логика удаления
+            }
+        }).dimensions(centerX + 80, startY - 50, buttonWidth, buttonHeight).build());
 
         this.addDrawableChild(ButtonWidget.builder(Text.of("Изменить имя"), button -> {
-            // Логика изменения имени
-        }).dimensions(centerX+80, startY - 25, buttonWidth, buttonHeight).build());
+            if (selectedCard != null) {
+                // Логика изменения имени
+            }
+        }).dimensions(centerX + 80, startY - 25, buttonWidth, buttonHeight).build());
 
         this.addDrawableChild(ButtonWidget.builder(Text.of("Выбрать для оплаты"), button -> {
-            // Логика выбора карты
-        }).dimensions(centerX+80, startY, buttonWidth, buttonHeight).build());
+            if (selectedCard != null) {
+                // Логика выбора для оплаты
+            }
+        }).dimensions(centerX + 80, startY, buttonWidth, buttonHeight).build());
 
-        // Кнопки внизу
+        // Кнопки внизу экрана
         this.addDrawableChild(ButtonWidget.builder(Text.of("Сохранить"), button -> {
             // Логика сохранения
-        }).dimensions(centerX+80, startY + 50, buttonWidth, buttonHeight).build());
+        }).dimensions(centerX + 80, startY + 50, buttonWidth, buttonHeight).build());
 
         this.addDrawableChild(ButtonWidget.builder(Text.of("Авторизоваться в моде"), button -> {
             // Логика авторизации
-        }).dimensions(centerX-15, startY + 100, buttonWidth+30, buttonHeight).build());
+        }).dimensions(centerX - 15, startY + 80, buttonWidth + 30, buttonHeight).build());
+    }
+
+    private void toggleCards() {
+        cardsExpanded = !cardsExpanded;
+        updateCardsVisibility();
+    }
+
+    private void selectCard(String card) {
+        selectedCard = card;
+        cardsExpanded = false;
+        updateCardsVisibility();
+        this.clearAndInit(); // Пересоздаем экран чтобы обновить текст кнопки
+    }
+
+    private void updateCardsVisibility() {
+        for (int i = 0; i < testCards.size(); i++) {
+            int btnIndex = 1 + i; // 0 - основная кнопка
+            if (btnIndex < this.children().size()) {
+                ClickableWidget btn = (ClickableWidget) this.children().get(btnIndex);
+                btn.visible = cardsExpanded;
+            }
+        }
     }
 
     @Override
