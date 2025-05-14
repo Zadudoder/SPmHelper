@@ -59,7 +59,7 @@ SPmHelper — мод, который облегчит твою игру на [С
 </details>
 
 <details>
-<summary> <a name="get-token-and-id"> </a>🫸 Как получить token и id ? </summary>
+<summary> <a name="get-token-and-id"> </a>✋ Как получить token и id ? </summary>
 
 **Как получить Token и id:**
 1. Войдите на сервер СПм в майнкрафте.
@@ -148,7 +148,7 @@ But if you show or share your token and ID with someone, that person can take ad
 </details>
 
 <details> 
-<summary> <a name="get-token-and-id"> </a>🫸 How to get token and id? </summary>
+<summary> <a name="get-token-and-id"> </a>✋ How to get token and id? </summary>
 
 **How to get Token and id:**
 1. Log into the SPb server in Minecraft.
