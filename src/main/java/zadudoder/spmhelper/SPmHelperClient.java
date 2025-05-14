@@ -1,16 +1,26 @@
 package zadudoder.spmhelper;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
+import net.minecraft.util.Util;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.lwjgl.glfw.GLFW;
 import zadudoder.spmhelper.Screen.Calls.CallsScreen;
 import zadudoder.spmhelper.Screen.Laws.LawsScreen;
@@ -22,6 +32,11 @@ import zadudoder.spmhelper.events.ModEvents;
 import zadudoder.spmhelper.utils.SPWorldsApi;
 import zadudoder.spmhelper.utils.types.Card;
 
+import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 
 public class SPmHelperClient implements ClientModInitializer {
@@ -32,6 +47,10 @@ public class SPmHelperClient implements ClientModInitializer {
     private static KeyBinding keyOpenPayScreen;
     private static KeyBinding keyOpenMapScreen;
     private static KeyBinding keyOpenLawsScreen;
+
+    private static final String API_BASE = "https://api-spmhelpers.sp-mini.ru/api";
+    private static String authToken = null;
+    private static ScheduledExecutorService executorService;
 
     @Override
     public void onInitializeClient() {
@@ -71,23 +90,133 @@ public class SPmHelperClient implements ClientModInitializer {
                                                             "❌ Ошибка: неверный токен или ID"));
                                                 }
                                                 return 1;
-                                            }))
-                            ));
-
-            // Команда для открытия экрана перевода
-            //Я сломал @R4mBLe_
-            dispatcher.register(
-                    literal("sptransfer")
-                            .executes(context -> {
-                                String token = SPmHelperClient.config.getAPI_TOKEN();
-                                context.getSource().sendError(Text.literal(
-                                        "❌ Сначала привяжите карту: /spmhelper <id> <token>"));
-
-                                MinecraftClient.getInstance().setScreen(new PayScreen());
-                                return 1;
-                            })
-            );
+                                            })
+                                    )
+                            )
+                            .then(literal("auth")
+                                    .executes(context -> {
+                                        startAuthProcess(context.getSource());
+                                        return 1;
+                                    }))
+                            .then(literal("status")
+                                    .executes(context -> {
+                                        checkAuthStatus(context.getSource());
+                                        return 1;
+                                    }))
+                    );
         });
+    }
+
+    private static void startAuthProcess(FabricClientCommandSource source) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        // Получаем UUID и удаляем дефисы
+        String playerUuid = client.player.getUuid().toString().replace("-", "");
+        System.out.println("Starting auth process for UUID: " + playerUuid);
+
+        executorService = Executors.newSingleThreadScheduledExecutor();
+        source.sendFeedback(Text.literal("§aНачинаем процесс авторизации через Discord..."));
+
+        new Thread(() -> {
+            try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+                String url = API_BASE + "/authorize";
+                System.out.println("POST to: " + url);
+
+                HttpPost request = new HttpPost(url);
+                request.setHeader("Content-Type", "application/json");
+
+                JsonObject json = new JsonObject();
+                json.addProperty("minecraft_uuid", playerUuid); // Теперь без дефисов
+                request.setEntity(new StringEntity(json.toString()));
+
+                String response = httpClient.execute(request, httpResponse -> {
+                    int status = httpResponse.getStatusLine().getStatusCode();
+                    String body = EntityUtils.toString(httpResponse.getEntity());
+                    System.out.println("Response: " + status + " - " + body);
+                    return body;
+                });
+
+                JsonObject responseJson = JsonParser.parseString(response).getAsJsonObject();
+
+                if (responseJson.has("redirect_url")) {
+                    String authUrl = responseJson.get("redirect_url").getAsString();
+                    client.execute(() -> {
+                        source.sendFeedback(Text.literal("§aПерейдите по ссылке для авторизации:"));
+                        source.sendFeedback(Text.literal("§9" + authUrl));
+                        Util.getOperatingSystem().open(authUrl);
+
+                        executorService.scheduleAtFixedRate(() -> {
+                            checkAuthStatus(source);
+                        }, 5, 5, TimeUnit.SECONDS);
+                    });
+                } else {
+                    String error = responseJson.has("error") ? responseJson.get("error").getAsString() :
+                            "Неверный формат ответа (ожидалось поле redirect_url)";
+                    client.execute(() -> {
+                        source.sendError(Text.literal("§cОшибка API: " + error));
+                    });
+                }
+            } catch (Exception e) {
+                System.err.println("Auth error: " + e);
+                e.printStackTrace();
+                client.execute(() -> {
+                    source.sendError(Text.literal("§cОшибка соединения: " + e.getMessage()));
+                });
+            }
+        }).start();
+    }
+
+    private static void checkAuthStatus(FabricClientCommandSource source) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        // Получаем UUID и удаляем дефисы
+        String playerUuid = client.player.getUuid().toString().replace("-", "");
+
+        new Thread(() -> {
+            try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+                String url = API_BASE + "/authorize/check/" + playerUuid; // UUID без дефисов
+                System.out.println("Checking auth status at: " + url);
+
+                HttpGet request = new HttpGet(url);
+                if (authToken != null) {
+                    request.setHeader("Authorization", "Bearer " + authToken);
+                }
+
+                String response = httpClient.execute(request, httpResponse -> {
+                    int status = httpResponse.getStatusLine().getStatusCode();
+                    String body = EntityUtils.toString(httpResponse.getEntity());
+                    System.out.println("Auth check response: " + status + " - " + body);
+                    return body;
+                });
+
+                JsonObject responseJson = JsonParser.parseString(response).getAsJsonObject();
+
+                if (responseJson.has("token")) {
+                    authToken = responseJson.get("token").getAsString();
+                    client.execute(() -> {
+                        source.sendFeedback(Text.literal("§aАвторизация успешно завершена!"));
+                        if (executorService != null) {
+                            executorService.shutdown();
+                        }
+                    });
+                } else if (responseJson.has("error")) {
+                    String error = responseJson.get("error").getAsString();
+                    client.execute(() -> {
+                        if (error.equals("not_authorized")) {
+                            source.sendError(Text.literal("§cОжидание авторизации через Discord..."));
+                        } else {
+                            source.sendError(Text.literal("§cОшибка авторизации: " + error));
+                            if (executorService != null) {
+                                executorService.shutdown();
+                            }
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                System.err.println("Auth check error: " + e);
+                client.execute(() -> {
+                    source.sendError(Text.literal("§cОшибка проверки статуса: " + e.getMessage()));
+                });
+            }
+        }).start();
     }
 
     private void registerKeyBindings() {
