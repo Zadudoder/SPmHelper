@@ -8,6 +8,8 @@ SPmHelper — мод, который облегчит твою игру на [С
 1. Cloth Config API | [Скачать](https://modrinth.com/mod/cloth-config)
 2. ModMenu | [Скачать](https://modrinth.com/mod/modmenu)
 
+**[Скачать последнюю версию](https://github.com/Zadudoder/SPmHelper/releases/tag/v0.1.0)**
+
 ## Функционал мода:
 <details>
 <summary> <a name="payment"> </a> 💸 Оплата </summary>
@@ -96,6 +98,8 @@ SPmHelper — a mod that will make your game easier on [SPm](https://spworlds.ru
 **Optionally, you can also install:**
 1. Cloth Config API | [Download](https://modrinth.com/mod/cloth-config)
 2. ModMenu | [Download](https://modrinth.com/mod/modmenu)
+
+**[Download the latest release](https://github.com/Zadudoder/SPmHelper/releases/tag/v0.1.0)**
 
 ## Mod functionality:
 <details> 
