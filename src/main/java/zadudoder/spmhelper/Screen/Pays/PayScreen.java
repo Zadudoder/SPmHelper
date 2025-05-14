@@ -1,6 +1,8 @@
 package zadudoder.spmhelper.Screen.Pays;
 
 import com.google.gson.JsonObject;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -13,6 +15,7 @@ import zadudoder.spmhelper.SPmHelperClient;
 import zadudoder.spmhelper.utils.SPWorldsApi;
 import zadudoder.spmhelper.utils.types.Card;
 
+@Environment(EnvType.CLIENT)
 public class PayScreen extends Screen {
     private TextFieldWidget receiverCardField;
     private TextFieldWidget amountField;
