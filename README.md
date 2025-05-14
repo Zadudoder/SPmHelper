@@ -10,7 +10,7 @@ SPmHelper — мод, который облегчит твою игру на [С
 
 ## Функционал мода:
 <details>
-<summary> <a name="payment"> </a> 🪙 Оплата </summary>
+<summary> <a name="payment"> </a> 💸 Оплата </summary>
 
 **Чтобы оплатить, вам нужно:**
 1. Зайти в любой мир или на любой сервер.
@@ -99,7 +99,7 @@ SPmHelper — a mod that will make your game easier on [SPm](https://spworlds.ru
 
 ## Mod functionality:
 <details> 
-<summary> <a name="payment"> </a> 🪙 Payment </summary>
+<summary> <a name="payment"> </a> 💸 Payment </summary>
 
 **To make a payment, you need to:**
 1. Enter any world or server.
