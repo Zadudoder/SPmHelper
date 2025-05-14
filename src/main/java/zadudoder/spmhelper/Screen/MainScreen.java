@@ -1,11 +1,6 @@
 package zadudoder.spmhelper.Screen;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import me.shedaniel.autoconfig.AutoConfig;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.NoticeScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -15,9 +10,7 @@ import net.minecraft.util.Util;
 import zadudoder.spmhelper.Screen.Calls.CallsScreen;
 import zadudoder.spmhelper.Screen.Laws.LawsScreen;
 import zadudoder.spmhelper.Screen.Map.MapScreen;
-import zadudoder.spmhelper.Screen.Pays.MyCardScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
-import zadudoder.spmhelper.config.SPmHelperConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -138,7 +131,7 @@ public class MainScreen extends Screen {
         switch(buttonLabel) {
             case 0: this.client.setScreen(new PayScreen()); break;
             case 1: this.client.setScreen(new MapScreen()); break;
-            case 2: this.client.setScreen(new MyCardScreen()); break; //Тут должен быть экран который открывает настройки или MyCardScreen или что-то ещё
+            case 2: this.client.setScreen(new Settings()); break; //Тут должен быть экран который открывает настройки или Settings или что-то ещё
             case 3: this.client.setScreen(new CallsScreen()); break;
             case 4: this.client.setScreen(new LawsScreen()); break;
         }
