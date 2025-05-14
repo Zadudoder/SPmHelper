@@ -127,7 +127,7 @@ public class PayScreen extends Screen {
             }
 
             if ((MinecraftClient.getInstance().getSession().getUsername().length() + commentField.getText().length()) > 32) {
-                setStatus("❌ Слишком длинный комментарий, максимум: " + (32 - MinecraftClient.getInstance().getSession().getUsername().length()), 0xFF5555);
+                setStatus("❌ Слишком длинный комментарий, максимум: " + (30 - MinecraftClient.getInstance().getSession().getUsername().length()), 0xFF5555);
                 return;
             }
 

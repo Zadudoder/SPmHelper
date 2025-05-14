@@ -21,7 +21,7 @@ public class ModEvents {
                     SignBlockEntity signBlockEntity = (SignBlockEntity) world.getBlockEntity(hitResult.getBlockPos());
                     SignText frontText = signBlockEntity.getFrontText();
                     String firstLine = frontText.getMessage(0, false).getString();
-                    if (firstLine.contains("#SPmHelperPay") && signBlockEntity.isWaxed()) {
+                    if (firstLine.contains("#SPmHPay") && signBlockEntity.isWaxed()) {
                         String cardNumber = frontText.getMessage(1, false).getString().replaceAll(" ", "");
                         String amount = frontText.getMessage(2, false).getString().replaceAll(" ", "");
                         String comment = frontText.getMessage(3, false).getString().replaceAll("", "");

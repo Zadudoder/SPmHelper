@@ -39,4 +39,4 @@ replay_*.log
 *.hprof
 *.jfr
 
-src/main/java/zadudoder/spmhelper/Config.java
+
