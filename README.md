@@ -46,6 +46,7 @@ SPmHelper — мод, который облегчит твою игру на [С
     2.4. Комментарий | Что будет написано при отправке платежа.
 
 3. Заламинировать табличку пчелиной сотой.
+НЕ РАБОТАЕТ НА СЕРВЕРАХ, СЛЕДИТЕ ЗА ОБНОВЛЕНИЯМИ
 
 > **Оплата будет производится, когда вы нажимаете правой кнопкой мыши по табличке, а после подтверждаете платёж в открывшемся экране.**
 </details>
@@ -137,6 +138,7 @@ SPmHelper — a mod that will make your game easier on [SPm](https://spworlds.ru
 2.4. Comment | What will be written when sending the payment.
 
 3. Laminate the honeycomb plaque.
+DOES NOT WORK ON SERVERS, STAY TUNED
 
 Payment will be processed when you right-click on the table and then confirm the payment on the opened screen. Payment will be processed when you right-click on the table and then confirm the payment on the opened screen.
 </details>
