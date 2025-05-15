@@ -56,7 +56,6 @@ public class ModEvents {
 
     private static void registerCommands() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            // Основная команда spmhelper
             dispatcher.register(
                     ClientCommandManager.literal("spmhelper")
                             .then(ClientCommandManager.literal("auth")
