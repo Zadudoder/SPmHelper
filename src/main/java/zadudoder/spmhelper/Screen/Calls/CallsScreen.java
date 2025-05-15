@@ -17,11 +17,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CallsScreen extends Screen {
-    private static final List<String> ALLOWED_SERVERS = Arrays.asList(
+    public static final List<String> ALLOWED_SERVERS = Arrays.asList(
             "spm.spworlds.org",
             "spm.spworlds.ru"
     );
     private TextFieldWidget commentField;
+    private CheckboxWidget coordinatesCheckbox;
     private boolean sendCoordinates = false;
     private BlockPos playerPos;
     private boolean hasToken;
@@ -42,7 +43,7 @@ public class CallsScreen extends Screen {
                 MinecraftClient.getInstance().player.getBlockPos() : null;
 
         // Чекбокс для координат
-        CheckboxWidget coordinatesCheckbox = CheckboxWidget.builder(Text.of(""), textRenderer)
+        coordinatesCheckbox = CheckboxWidget.builder(Text.of(""), textRenderer)
                 .pos(width / 2 - 10, height / 2 - 40)
                 .checked(false)
                 .callback((checkbox, checked) -> sendCoordinates = checked)
@@ -124,7 +125,8 @@ public class CallsScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
-        //coordinatesCheckbox.active = isOnCorrectServer;
+        // Проверка сервера, если на спм - активный если нет, не активный
+        coordinatesCheckbox.active = isOnCorrectServer;
 
         // Статус токена и сервера
         if (!hasToken) {
