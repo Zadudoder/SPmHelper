@@ -19,40 +19,29 @@ import java.util.concurrent.CompletableFuture;
 
 public class SPmHelperApi {
     private static final String API_BASE = "https://api-spmhelpers.sp-mini.ru/api";
+    private static final HttpClient httpClient = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_2)
+            .connectTimeout(Duration.ofSeconds(10))
+            .build();
 
     public static void startAuthProcess(FabricClientCommandSource source) {
         MinecraftClient client = MinecraftClient.getInstance();
         String playerUuid = client.player.getUuid().toString().replace("-", "");
-        System.out.println("Starting auth process for UUID: " + playerUuid);
-
-        source.sendFeedback(Text.literal("§aНачинаем процесс авторизации через Discord..."));
-
-        HttpClient httpClient = HttpClient.newBuilder()
-                .version(HttpClient.Version.HTTP_2)
-                .connectTimeout(Duration.ofSeconds(10))
-                .build();
-
-        String url = API_BASE + "/authorize";
-        System.out.println("POST to: " + url);
 
         JsonObject json = new JsonObject();
         json.addProperty("minecraft_uuid", playerUuid);
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
+                .uri(URI.create(API_BASE + "/authorize"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
                 .build();
 
         httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(response -> {
-                    int status = response.statusCode();
                     String body = response.body();
-                    System.out.println("Response: " + status + " - " + body);
-                    return body;
-                })
-                .thenApply(body -> JsonParser.parseString(body).getAsJsonObject())
-                .thenAccept(responseJson -> {
+                    JsonObject responseJson = JsonParser.parseString(body).getAsJsonObject();
+
                     if (responseJson.has("redirect_url")) {
                         String authUrl = responseJson.get("redirect_url").getAsString();
                         client.execute(() -> {
@@ -62,48 +51,64 @@ public class SPmHelperApi {
                         });
                     } else {
                         String error = responseJson.has("error") ? responseJson.get("error").getAsString() :
-                                "Неверный формат ответа (ожидалось поле redirect_url)";
-                        client.execute(() -> {
-                            source.sendError(Text.literal("§cОшибка API: " + error));
-                        });
+                                "Неверный формат ответа";
+                        client.execute(() -> source.sendError(Text.literal("§cОшибка: " + error)));
                     }
+                    return null;
                 })
                 .exceptionally(e -> {
-                    System.err.println("Auth error: " + e);
-                    e.printStackTrace();
-                    client.execute(() -> {
-                        source.sendError(Text.literal("§cОшибка соединения: " + e.getMessage()));
-                    });
+                    client.execute(() -> source.sendError(Text.literal("§cОшибка соединения: " + e.getMessage())));
                     return null;
                 });
     }
 
-    public static CompletableFuture<Integer> getAuthStatus(FabricClientCommandSource source) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                HttpClient httpClient = HttpClient.newBuilder()
-                        .connectTimeout(Duration.ofSeconds(10))
-                        .build();
+    public static CompletableFuture<Boolean> makeCall(String service, String coordinates, String comment) {
+        String token = SPmHelperClient.config.getAPI_TOKEN();
+        if (token == null || token.isEmpty()) {
+            return CompletableFuture.completedFuture(false);
+        }
 
-                String url = API_BASE + "/authorize/me";
+        JsonObject json = new JsonObject();
+        json.addProperty("service", service);
+        json.addProperty("coordinates", coordinates);
+        json.addProperty("comment", comment);
 
-                HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
-                        .uri(URI.create(url))
-                        .timeout(Duration.ofSeconds(15))  // Добавляем общий таймаут
-                        .GET();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(API_BASE + "/calling"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
+                .build();
 
-                if (SPmHelperClient.config.getAPI_TOKEN() != null) {
-                    requestBuilder.header("Authorization", "Bearer " + SPmHelperClient.config.getAPI_TOKEN());
-                }
+        return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(response -> {
+                    if (response.statusCode() == 200) {
+                        return true;
+                    } else {
+                        System.err.println("Call failed: " + response.body());
+                        return false;
+                    }
+                })
+                .exceptionally(e -> {
+                    System.err.println("Call error: " + e.getMessage());
+                    return false;
+                });
+    }
 
-                HttpResponse<String> response = httpClient.send(
-                        requestBuilder.build(),
-                        HttpResponse.BodyHandlers.ofString()
-                );
-                return response.statusCode();
-            } catch (IOException | InterruptedException e) {
-                return -1;  // Или можно бросить CompletionException
-            }
-        });
+    public static CompletableFuture<Integer> getAuthStatus() {
+        String token = SPmHelperClient.config.getAPI_TOKEN();
+        if (token == null || token.isEmpty()) {
+            return CompletableFuture.completedFuture(401);
+        }
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(API_BASE + "/authorize/me"))
+                .header("Authorization", "Bearer " + token)
+                .GET()
+                .build();
+
+        return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(response -> response.statusCode())
+                .exceptionally(e -> -1);
     }
 }
