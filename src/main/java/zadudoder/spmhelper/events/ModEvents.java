@@ -2,6 +2,7 @@ package zadudoder.spmhelper.events;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.AbstractSignBlock;
@@ -14,7 +15,6 @@ import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.utils.Misc;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 import static zadudoder.spmhelper.utils.SPmHelperApi.startAuthProcess;
 
 @Environment(EnvType.CLIENT)
@@ -56,15 +56,16 @@ public class ModEvents {
 
     private static void registerCommands() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            // Команда для привязки карты
+            // Основная команда spmhelper
             dispatcher.register(
-                    literal("spmhelper")
-                            .then(literal("auth")
+                    ClientCommandManager.literal("spmhelper")
+                            .then(ClientCommandManager.literal("auth")
                                     .executes(context -> {
                                         startAuthProcess(context.getSource());
                                         return 1;
-                                    }))
-                            .then(literal("status")
+                                    })
+                            )
+                            .then(ClientCommandManager.literal("status")
                                     .executes(context -> {
                                         SPmHelperApi.getAuthStatus(context.getSource()).thenAccept(statusCode -> {
                                             MinecraftClient.getInstance().execute(() -> {
@@ -82,7 +83,18 @@ public class ModEvents {
                                             });
                                         });
                                         return 1;
-                                    }))
+                                    })
+                            )
+            );
+
+            dispatcher.register(
+                    ClientCommandManager.literal("spmh")
+                            .then(ClientCommandManager.literal("auth")
+                                    .executes(context -> dispatcher.execute("spmhelper auth", context.getSource()))
+                            )
+                            .then(ClientCommandManager.literal("status")
+                                    .executes(context -> dispatcher.execute("spmhelper status", context.getSource()))
+                            )
             );
         });
     }
