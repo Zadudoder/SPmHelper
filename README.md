@@ -3,10 +3,8 @@ SPmHelper — мод, который облегчит твою игру на [С
 ## Зависимости мода:
 1. Fabric-loader 0.16.14 или выше | [Скачать](https://fabricmc.net/use/installer/)
 2. Fabric-api | [Скачать](https://modrinth.com/mod/fabric-api)
-
-**По желанию можно также установить:**
-1. Cloth Config API | [Скачать](https://modrinth.com/mod/cloth-config)
-2. ModMenu | [Скачать](https://modrinth.com/mod/modmenu)
+3. Cloth Config API | [Скачать](https://modrinth.com/mod/cloth-config)
+4. ModMenu | [Скачать](https://modrinth.com/mod/modmenu)
 
 **[Скачать последнюю версию](https://github.com/Zadudoder/SPmHelper/releases/tag/v0.1.0)**
 
@@ -27,14 +25,13 @@ SPmHelper — мод, который облегчит твою игру на [С
     4.3. Комментарий. Комментарий в итоге будет содержать: `Ваш никнейм: Ваш комментарий`. Учтите, что комментарий может быть **максимум 32 символа**, с учётом длины вашего никнейма и ": ".
 5. Нажать кнопку «Перевести».
 
-![ScreenShotOfPayScreen](blob:https://yapx.ru/a20b593b-1e4c-49db-8872-17d59243ddf3)
 </details>
 
 <details>
 <summary>🚩 Оплата по табличке </summary>
 
 **Чтобы создать оплату по табличке, вам нужно:**
-1. Установить любую табличку на сервере СПм
+1. Установить любую табличку на сервере СПм 
 2. Написать на табличке следующий текст:
 
     2.1. #SPmHPay | Обозначение таблички.
@@ -119,7 +116,7 @@ SPmHelper — a mod that will make your game easier on [SPm](https://spworlds.ru
     4.3. Comment. The comment will ultimately contain: `Your nickname: Your comment`. Keep in mind that the comment can be **a maximum of 32 characters**, including the length of your nickname and ": ".
 5. Click the "Transfer " button.
 
-![ScreenShotOfPayScreen](blob:https://yapx.ru/a20b593b-1e4c-49db-8872-17d59243ddf3)
+
 </details>
 
 <details> 
