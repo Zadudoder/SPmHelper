@@ -67,20 +67,13 @@ public class ModEvents {
                             )
                             .then(ClientCommandManager.literal("status")
                                     .executes(context -> {
-                                        SPmHelperApi.getAuthStatus(context.getSource()).thenAccept(statusCode -> {
-                                            MinecraftClient.getInstance().execute(() -> {
-                                                switch (statusCode) {
-                                                    case 200:
-                                                        context.getSource().sendFeedback(Text.literal("§aТокен действителен"));
-                                                        break;
-                                                    case 401:
-                                                        context.getSource().sendFeedback(Text.literal("§cТокен недействителен"));
-                                                        break;
-                                                    default:
-                                                        context.getSource().sendFeedback(Text.literal("§cОшибка API"));
-                                                        break;
-                                                }
-                                            });
+                                        SPmHelperApi.getAuthStatus().thenAccept(status -> {
+                                            String message = switch (status) {
+                                                case 200 -> "§aТокен действителен";
+                                                case 401 -> "§cТокен недействителен";
+                                                default -> "§cОшибка API: " + status;
+                                            };
+                                            context.getSource().sendFeedback(Text.literal(message));
                                         });
                                         return 1;
                                     })

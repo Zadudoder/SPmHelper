@@ -3,12 +3,10 @@ SPmHelper — мод, который облегчит твою игру на [С
 ## Зависимости мода:
 1. Fabric-loader 0.16.14 или выше | [Скачать](https://fabricmc.net/use/installer/)
 2. Fabric-api | [Скачать](https://modrinth.com/mod/fabric-api)
+3. Cloth Config API | [Скачать](https://modrinth.com/mod/cloth-config)
+4. ModMenu | [Скачать](https://modrinth.com/mod/modmenu)
 
-**По желанию можно также установить:**
-1. Cloth Config API | [Скачать](https://modrinth.com/mod/cloth-config)
-2. ModMenu | [Скачать](https://modrinth.com/mod/modmenu)
-
-**[Скачать последнюю версию](https://github.com/Zadudoder/SPmHelper/releases/tag/v0.1.0)**
+**[Скачать последнюю версию мода](https://github.com/Zadudoder/SPmHelper/releases/tag/v0.1.0)**
 
 ## Функционал мода:
 <details>
@@ -27,25 +25,25 @@ SPmHelper — мод, который облегчит твою игру на [С
     4.3. Комментарий. Комментарий в итоге будет содержать: `Ваш никнейм: Ваш комментарий`. Учтите, что комментарий может быть **максимум 32 символа**, с учётом длины вашего никнейма и ": ".
 5. Нажать кнопку «Перевести».
 
-![ScreenShotOfPayScreen](blob:https://yapx.ru/a20b593b-1e4c-49db-8872-17d59243ddf3)
 </details>
 
 <details>
 <summary>🚩 Оплата по табличке </summary>
 
 **Чтобы создать оплату по табличке, вам нужно:**
-1. Установить любую табличку на сервере СПм
+1. Установить любую табличку на сервере СПм 
 2. Написать на табличке следующий текст:
 
     2.1. #SPmHPay | Обозначение таблички.
 
     2.2. 00001 | Карта, на которую будет совершён перевод.
  
-    2.3. 64 АР | Сумма АР, от 1 до 10000. "АР" писать не обязательно, можно только число.
+    2.3. 64 АР | Сумма АР, от 1 до 10000. "АР" писать нужно обязательно. 
 
     2.4. Комментарий | Что будет написано при отправке платежа.
 
 3. Заламинировать табличку пчелиной сотой.
+
 НЕ РАБОТАЕТ НА СЕРВЕРАХ, СЛЕДИТЕ ЗА ОБНОВЛЕНИЯМИ
 
 > **Оплата будет производится, когда вы нажимаете правой кнопкой мыши по табличке, а после подтверждаете платёж в открывшемся экране.**
@@ -95,12 +93,10 @@ SPmHelper — a mod that will make your game easier on [SPm](https://spworlds.ru
 ## Mod dependencies:
 1. Fabric-loader 0.16.14 or higher | [Download](https://fabricmc.net/use/installer/)
 2. Fabric-api | [Download](https://modrinth.com/mod/fabric-api)
+3. Cloth Config API | [Download](https://modrinth.com/mod/cloth-config)
+4. ModMenu | [Download](https://modrinth.com/mod/modmenu)
 
-**Optionally, you can also install:**
-1. Cloth Config API | [Download](https://modrinth.com/mod/cloth-config)
-2. ModMenu | [Download](https://modrinth.com/mod/modmenu)
-
-**[Download the latest release](https://github.com/Zadudoder/SPmHelper/releases/tag/v0.1.0)**
+**[Download the latest release mod](https://github.com/Zadudoder/SPmHelper/releases/tag/v0.1.0)**
 
 ## Mod functionality:
 <details> 
@@ -119,7 +115,7 @@ SPmHelper — a mod that will make your game easier on [SPm](https://spworlds.ru
     4.3. Comment. The comment will ultimately contain: `Your nickname: Your comment`. Keep in mind that the comment can be **a maximum of 32 characters**, including the length of your nickname and ": ".
 5. Click the "Transfer " button.
 
-![ScreenShotOfPayScreen](blob:https://yapx.ru/a20b593b-1e4c-49db-8872-17d59243ddf3)
+
 </details>
 
 <details> 
@@ -133,7 +129,7 @@ SPmHelper — a mod that will make your game easier on [SPm](https://spworlds.ru
 
 2.2. 00001 | Card to which the transfer will be made.
 
-2.3. 64 AR | AR amount, from 1 to 10000. "AR" is not necessary, just the number is fine.
+2.3. 64 AR | AR amount, from 1 to 10000. "AR" is necessary.
 
 2.4. Comment | What will be written when sending the payment.
 
