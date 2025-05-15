@@ -17,7 +17,7 @@ public class LawsScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
         context.drawCenteredTextWithShadow(
                 this.textRenderer,
-                Text.of("Канал с Законами, временно в разработке"),
+                Text.of("Канал с Законами, на данном этапе находится в разработке"),
                 this.width / 2,
                 this.height / 2,
                 0xFFFFFF

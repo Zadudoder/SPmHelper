@@ -12,26 +12,22 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import zadudoder.spmhelper.SPmHelperClient;
 import zadudoder.spmhelper.utils.SPmHelperApi;
-import net.minecraft.world.World;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class CallsScreen extends Screen {
     private static final List<String> ALLOWED_SERVERS = Arrays.asList(
             "spm.spworlds.org",
             "spm.spworlds.ru"
     );
-
     private TextFieldWidget commentField;
-    private CheckboxWidget coordinatesCheckbox;
     private boolean sendCoordinates = false;
-    private String lastStatus = "";
-    private boolean isSuccess = false;
     private BlockPos playerPos;
     private boolean hasToken;
     private boolean isOnCorrectServer;
+    private String statusMessage;
+    private int statusColor;
 
     public CallsScreen() {
         super(Text.of("Экран вызова"));
@@ -46,7 +42,7 @@ public class CallsScreen extends Screen {
                 MinecraftClient.getInstance().player.getBlockPos() : null;
 
         // Чекбокс для координат
-        coordinatesCheckbox = CheckboxWidget.builder(Text.of(""), textRenderer)
+        CheckboxWidget coordinatesCheckbox = CheckboxWidget.builder(Text.of(""), textRenderer)
                 .pos(width / 2 - 10, height / 2 - 40)
                 .checked(false)
                 .callback((checkbox, checked) -> sendCoordinates = checked)
@@ -100,30 +96,28 @@ public class CallsScreen extends Screen {
     public void callService(String serviceType, String personName) {
         String comment = commentField.getText().trim();
         if (comment.isEmpty() && !sendCoordinates) {
-            setStatus("Ошибка: введите комментарий!", false);
+            setStatus("Ошибка: введите комментарий!", 0xFF5555);
             return;
         }
 
         String coordinates = sendCoordinates && playerPos != null ?
-                "**"+playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ() + MinecraftClient.getInstance().player.getWorld().getRegistryKey() + "**" : "";
+                "**" + playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ() + MinecraftClient.getInstance().player.getWorld().getRegistryKey() + "**" : "";
 
-        setStatus("Отправка запроса...", false);
+        setStatus("Отправка запроса...", 0xFFFF55);
 
         SPmHelperApi.makeCall(serviceType, coordinates, comment)
-                .thenAccept(success -> {
-                    MinecraftClient.getInstance().execute(() -> {
-                        if (success) {
-                            setStatus(personName + " был вызван!", true);
-                        } else {
-                            setStatus("Ошибка отправки вызова", false);
-                        }
-                    });
-                });
+                .thenAccept(success -> MinecraftClient.getInstance().execute(() -> {
+                    if (success) {
+                        setStatus(personName + " был вызван!", 0x55FF55);
+                    } else {
+                        setStatus("Ошибка отправки вызова", 0xFF5555);
+                    }
+                }));
     }
 
-    private void setStatus(String message, boolean success) {
-        this.lastStatus = message;
-        this.isSuccess = success;
+    private void setStatus(String message, int color) {
+        this.statusMessage = message;
+        this.statusColor = color;
     }
 
     @Override
@@ -158,16 +152,19 @@ public class CallsScreen extends Screen {
             context.drawText(textRenderer, "Введите сюда текст",
                     width / 2 - 145, height / 2 + 16, 0xBBBBBB, false);
         }
-
-        // Статус операции
-        if (!lastStatus.isEmpty()) {
-            drawCenteredText(context, lastStatus,
-                    width / 2, height / 2 + 70, isSuccess ? 0x55FF55 : 0xFFFF55);
-        }
+        
+        context.drawCenteredTextWithShadow(
+                this.textRenderer,
+                Text.of(statusMessage),
+                this.width / 2,
+                this.height / 2 + 80,
+                statusColor
+        );
 
         // Заголовок
         renderTitle(context);
     }
+
 
     private void drawCenteredText(DrawContext context, String text, int x, int y, int color) {
         context.drawText(textRenderer, text,
