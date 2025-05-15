@@ -13,7 +13,7 @@
     "homepage": "https://spworlds.ru/spm/groups/06c25d05-b370-47d4-8416-fa1011ea69a1",
     "sources": "https://github.com/Zadudoder/SPmHelper"
   },
-  "license": "CC0-1.0",
+  "license": "MIT License",
   "icon": "assets/spmhelper/SPmHelperLogo.png",
   "environment": "client",
   "entrypoints": {

@@ -94,6 +94,14 @@ public class PayScreen extends Screen {
 
     private void processTransfer() {
         try {
+            String senderId = SPmHelperClient.config.getSpID();
+            String senderToken = SPmHelperClient.config.getSpTOKEN();
+            if (senderId == null || senderToken == null) {
+                setStatus("❌ Привяжите карту (/spmhelper)", 0xFF5555);
+                return;
+            }
+            Card senderCard = new Card(senderId, senderToken);
+
             String receiverCard = receiverCardField.getText().trim();
             if (receiverCard.isEmpty()) {
                 setStatus("❌ Введите номер карты получателя", 0xFF5555);
@@ -116,14 +124,6 @@ public class PayScreen extends Screen {
                 return;
             }
 
-            // Получаем карту-отправителя из конфига
-            String senderId = SPmHelperClient.config.getSpID();
-            String senderToken = SPmHelperClient.config.getSpTOKEN();
-            if (senderId == null || senderToken == null) {
-                setStatus("❌ Привяжите карту (/spmhelper)", 0xFF5555);
-                return;
-            }
-            Card senderCard = new Card(senderId, senderToken);
             if (SPWorldsApi.getBalance(senderCard) < amount) {
                 setStatus("❌ У вас не достаточно денег на карте", 0xFF5555);
                 return;
@@ -146,7 +146,7 @@ public class PayScreen extends Screen {
                 if (error.contains("receiverIsSender")) {
                     setStatus("❌ Нельзя отправить деньги самому себе", 0xFF5555);
                 } else if (error.contains("receiverCardNotFound")) {
-                    setStatus("❌ Неправильно указан номер карты", 0xFF5555);
+                    setStatus("❌ Такой карты не существует", 0xFF5555);
                 } else {
                     setStatus("❌ Ошибка API: " + response.get("error").getAsString(), 0xFF5555);
                 }

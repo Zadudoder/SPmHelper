@@ -44,8 +44,6 @@ public class SPmHelperApi {
                     if (responseJson.has("redirect_url")) {
                         String authUrl = responseJson.get("redirect_url").getAsString();
                         client.execute(() -> {
-                            source.sendFeedback(Text.literal("§aПерейдите по ссылке для авторизации:"));
-                            source.sendFeedback(Text.literal("§9" + authUrl));
                             Util.getOperatingSystem().open(authUrl);
                         });
                     } else {
@@ -56,7 +54,7 @@ public class SPmHelperApi {
                     return null;
                 })
                 .exceptionally(e -> {
-                    client.execute(() -> source.sendError(Text.literal("§cОшибка соединения: " + e.getMessage())));
+                    client.execute(() -> source.sendError(Text.literal("§c[SPmHelper]: Ошибка соединения: " + e.getMessage())));
                     return null;
                 });
     }

@@ -12,6 +12,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import zadudoder.spmhelper.SPmHelperClient;
 import zadudoder.spmhelper.utils.SPmHelperApi;
+import net.minecraft.world.World;
 
 import java.util.Arrays;
 import java.util.List;
@@ -65,11 +66,11 @@ public class CallsScreen extends Screen {
         int buttonY = height / 2 + 40;
         int buttonWidth = 90;
 
-        this.addDrawableChild(createServiceButton("Детектив", "detective", "детектива",
+        this.addDrawableChild(createServiceButton("Детектив", "detective", "Детектив",
                 width / 2 - 150, buttonY, buttonWidth));
         this.addDrawableChild(createServiceButton("ФСБ", "fsb", "ФСБ",
                 width / 2 - 150 + buttonWidth + 15, buttonY, buttonWidth));
-        this.addDrawableChild(createServiceButton("Банкир", "banker", "банкира",
+        this.addDrawableChild(createServiceButton("Банкир", "banker", "Банкир",
                 width / 2 - 150 + 2 * buttonWidth + 30, buttonY, buttonWidth));
 
         // Кнопка группы
@@ -96,7 +97,7 @@ public class CallsScreen extends Screen {
                 .build();
     }
 
-    private void callService(String serviceType, String personName) {
+    public void callService(String serviceType, String personName) {
         String comment = commentField.getText().trim();
         if (comment.isEmpty() && !sendCoordinates) {
             setStatus("Ошибка: введите комментарий!", false);
@@ -104,7 +105,7 @@ public class CallsScreen extends Screen {
         }
 
         String coordinates = sendCoordinates && playerPos != null ?
-                playerPos.getX() + " " + playerPos.getZ() : "";
+                "**"+playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ() + MinecraftClient.getInstance().player.getWorld().getRegistryKey() + "**" : "";
 
         setStatus("Отправка запроса...", false);
 
@@ -112,7 +113,7 @@ public class CallsScreen extends Screen {
                 .thenAccept(success -> {
                     MinecraftClient.getInstance().execute(() -> {
                         if (success) {
-                            setStatus(personName + " в пути!", true);
+                            setStatus(personName + " был вызван!", true);
                         } else {
                             setStatus("Ошибка отправки вызова", false);
                         }
@@ -129,7 +130,7 @@ public class CallsScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
-        coordinatesCheckbox.active = isOnCorrectServer;
+        //coordinatesCheckbox.active = isOnCorrectServer;
 
         // Статус токена и сервера
         if (!hasToken) {

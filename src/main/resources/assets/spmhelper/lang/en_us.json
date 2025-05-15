@@ -8,8 +8,8 @@
   "key.spmhelper.open_laws_screen": "Открыть законы",
 
   "text.autoconfig.spmhelper.title": "Настройки мода SPmHelper",
-  "text.autoconfig.spmhelper.option.TOKEN": "Ваш SPmHelper токен:",
-  "text.autoconfig.spmhelper.option.SP_TOKEN": "Ваш TOKEN от SPw:",
-  "text.autoconfig.spmhelper.option.SP_ID": "Ваш ID от SPw:",
-  "text.autoconfig.spmhelper.search": "Поиск:"
+  "text.autoconfig.spmhelper.option.API_TOKEN": "Ваш SPmHelper токен:",
+  "text.autoconfig.spmhelper.option.SP_TOKEN": "Ваш TOKEN от карточки (SPworlds):",
+  "text.autoconfig.spmhelper.option.SP_ID": "Ваш ID от карточки (SPworlds):",
+  "text.autoconfig.search": "Поиск:"
 }

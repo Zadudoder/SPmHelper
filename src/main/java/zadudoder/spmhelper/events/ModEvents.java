@@ -66,9 +66,9 @@ public class ModEvents {
                             .executes(context -> {
                                 SPmHelperApi.getAuthStatus().thenAccept(status -> {
                                     String message = switch (status) {
-                                        case 200 -> "§aТокен действителен";
-                                        case 401 -> "§cТокен недействителен";
-                                        default -> "§cОшибка API: " + status;
+                                        case 200 -> "§a[SPmHelper]: Токен работает";
+                                        case 401 -> "§c[SPmHelper]: Токен недействителен";
+                                        default -> "§c[SPmHelper]: Ошибка API: " + status;
                                     };
                                     context.getSource().sendFeedback(Text.literal(message));
                                 });
@@ -86,6 +86,8 @@ public class ModEvents {
 
             dispatcher.register(mainCommand);
             dispatcher.register(aliasMainCommand);
+
+
         });
     }
 }
