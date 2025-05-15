@@ -6,7 +6,7 @@ SPmHelper — мод, который облегчит твою игру на [С
 3. Cloth Config API | [Скачать](https://modrinth.com/mod/cloth-config)
 4. ModMenu | [Скачать](https://modrinth.com/mod/modmenu)
 
-**[Скачать последнюю версию](https://github.com/Zadudoder/SPmHelper/releases/tag/v0.1.0)**
+**[Скачать последнюю версию мода](https://github.com/Zadudoder/SPmHelper/releases/tag/v0.1.0)**
 
 ## Функционал мода:
 <details>
@@ -38,11 +38,12 @@ SPmHelper — мод, который облегчит твою игру на [С
 
     2.2. 00001 | Карта, на которую будет совершён перевод.
  
-    2.3. 64 АР | Сумма АР, от 1 до 10000. "АР" писать не обязательно, можно только число.
+    2.3. 64 АР | Сумма АР, от 1 до 10000. "АР" писать нужно обязательно. 
 
     2.4. Комментарий | Что будет написано при отправке платежа.
 
 3. Заламинировать табличку пчелиной сотой.
+
 НЕ РАБОТАЕТ НА СЕРВЕРАХ, СЛЕДИТЕ ЗА ОБНОВЛЕНИЯМИ
 
 > **Оплата будет производится, когда вы нажимаете правой кнопкой мыши по табличке, а после подтверждаете платёж в открывшемся экране.**
@@ -92,12 +93,10 @@ SPmHelper — a mod that will make your game easier on [SPm](https://spworlds.ru
 ## Mod dependencies:
 1. Fabric-loader 0.16.14 or higher | [Download](https://fabricmc.net/use/installer/)
 2. Fabric-api | [Download](https://modrinth.com/mod/fabric-api)
+3. Cloth Config API | [Download](https://modrinth.com/mod/cloth-config)
+4. ModMenu | [Download](https://modrinth.com/mod/modmenu)
 
-**Optionally, you can also install:**
-1. Cloth Config API | [Download](https://modrinth.com/mod/cloth-config)
-2. ModMenu | [Download](https://modrinth.com/mod/modmenu)
-
-**[Download the latest release](https://github.com/Zadudoder/SPmHelper/releases/tag/v0.1.0)**
+**[Download the latest release mod](https://github.com/Zadudoder/SPmHelper/releases/tag/v0.1.0)**
 
 ## Mod functionality:
 <details> 
@@ -130,7 +129,7 @@ SPmHelper — a mod that will make your game easier on [SPm](https://spworlds.ru
 
 2.2. 00001 | Card to which the transfer will be made.
 
-2.3. 64 AR | AR amount, from 1 to 10000. "AR" is not necessary, just the number is fine.
+2.3. 64 AR | AR amount, from 1 to 10000. "AR" is necessary.
 
 2.4. Comment | What will be written when sending the payment.
 
