@@ -8,7 +8,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import zadudoder.spmhelper.SPmHelperClient;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -108,7 +107,7 @@ public class SPmHelperApi {
                 .build();
 
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(response -> response.statusCode())
+                .thenApply(HttpResponse::statusCode)
                 .exceptionally(e -> -1);
     }
 }

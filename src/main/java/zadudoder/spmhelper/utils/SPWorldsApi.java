@@ -1,9 +1,8 @@
 package zadudoder.spmhelper.utils;
 
-import com.google.gson.*;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.minecraft.client.MinecraftClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import zadudoder.spmhelper.utils.types.Card;
 
 import java.net.URI;
@@ -11,10 +10,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.Base64;
 
 public class SPWorldsApi {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SPWorldsApi.class);
     private static final HttpClient httpClient = HttpClient.newHttpClient();
     private static final String API_URL = "https://spworlds.ru/api/public/";
 
