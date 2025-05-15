@@ -15,8 +15,6 @@ import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.utils.Misc;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 
-import static zadudoder.spmhelper.utils.SPmHelperApi.startAuthProcess;
-
 @Environment(EnvType.CLIENT)
 public class ModEvents {
     public static void registerEvents() {
@@ -28,24 +26,24 @@ public class ModEvents {
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
             if (world.getBlockState(hitResult.getBlockPos()).getBlock() instanceof AbstractSignBlock) {
                 SignBlockEntity signBlockEntity = (SignBlockEntity) world.getBlockEntity(hitResult.getBlockPos());
-                SignText frontText = signBlockEntity.getFrontText();
-                String firstLine = frontText.getMessage(0, false).getString();
-                if (firstLine.contains("#SPmHPay") && signBlockEntity.isWaxed()) {
-                    String cardNumber = frontText.getMessage(1, false).getString().replaceAll(" ", "");
-                    String amount = frontText.getMessage(2, false).getString().replaceAll(" ", "");
-                    String comment = frontText.getMessage(3, false).getString().replaceAll("", "");
-                    if (!Misc.isNumeric(cardNumber)) {
-                        return ActionResult.PASS;
-                    }
-                    if (amount.contains("АР")) {
-                        amount = amount.replaceFirst("АР", "");
-                        if (Misc.isNumeric(cardNumber)) {
-                            String finalAmount = amount;
-                            MinecraftClient.getInstance().
-                                    execute(() -> {
-                                        MinecraftClient.getInstance().setScreen(new PayScreen(cardNumber, finalAmount, comment));
-                                    });
-                            return ActionResult.SUCCESS;
+                if (signBlockEntity != null && signBlockEntity.isWaxed()) {
+                    SignText frontText = signBlockEntity.getFrontText();
+                    String firstLine = frontText.getMessage(0, false).getString();
+                    if (firstLine.contains("#SPmHPay")) {
+                        String cardNumber = frontText.getMessage(1, false).getString().replaceAll(" ", "");
+                        String amount = frontText.getMessage(2, false).getString().replaceAll(" ", "");
+                        String comment = frontText.getMessage(3, false).getString().replaceAll("", "");
+                        if (!Misc.isNumeric(cardNumber)) {
+                            return ActionResult.PASS;
+                        }
+                        if (amount.contains("АР")) {
+                            amount = amount.replaceFirst("АР", "");
+                            if (Misc.isNumeric(amount)) {
+                                String finalAmount = amount;
+                                MinecraftClient.getInstance().
+                                        execute(() -> MinecraftClient.getInstance().setScreen(new PayScreen(cardNumber, finalAmount, comment)));
+                                return ActionResult.SUCCESS;
+                            }
                         }
                     }
                 }
@@ -56,38 +54,38 @@ public class ModEvents {
 
     private static void registerCommands() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            dispatcher.register(
-                    ClientCommandManager.literal("spmhelper")
-                            .then(ClientCommandManager.literal("auth")
-                                    .executes(context -> {
-                                        startAuthProcess(context.getSource());
-                                        return 1;
-                                    })
-                            )
-                            .then(ClientCommandManager.literal("status")
-                                    .executes(context -> {
-                                        SPmHelperApi.getAuthStatus().thenAccept(status -> {
-                                            String message = switch (status) {
-                                                case 200 -> "§aТокен действителен";
-                                                case 401 -> "§cТокен недействителен";
-                                                default -> "§cОшибка API: " + status;
-                                            };
-                                            context.getSource().sendFeedback(Text.literal(message));
-                                        });
-                                        return 1;
-                                    })
-                            )
-            );
+            // Главная команда
+            var mainCommand = ClientCommandManager.literal("spmhelper")
+                    .then(ClientCommandManager.literal("auth")
+                            .executes(context -> {
+                                SPmHelperApi.startAuthProcess(context.getSource());
+                                return 1;
+                            })
+                    )
+                    .then(ClientCommandManager.literal("status")
+                            .executes(context -> {
+                                SPmHelperApi.getAuthStatus().thenAccept(status -> {
+                                    String message = switch (status) {
+                                        case 200 -> "§aТокен действителен";
+                                        case 401 -> "§cТокен недействителен";
+                                        default -> "§cОшибка API: " + status;
+                                    };
+                                    context.getSource().sendFeedback(Text.literal(message));
+                                });
+                                return 1;
+                            })
+                    );
 
-            dispatcher.register(
-                    ClientCommandManager.literal("spmh")
-                            .then(ClientCommandManager.literal("auth")
-                                    .executes(context -> dispatcher.execute("spmhelper auth", context.getSource()))
-                            )
-                            .then(ClientCommandManager.literal("status")
-                                    .executes(context -> dispatcher.execute("spmhelper status", context.getSource()))
-                            )
-            );
+            var aliasMainCommand = ClientCommandManager.literal("spmh")
+                    .then(ClientCommandManager.literal("auth")
+                            .executes(context -> dispatcher.execute("spmhelper auth", context.getSource()))
+                    )
+                    .then(ClientCommandManager.literal("status")
+                            .executes(context -> dispatcher.execute("spmhelper status", context.getSource()))
+                    );
+
+            dispatcher.register(mainCommand);
+            dispatcher.register(aliasMainCommand);
         });
     }
 }
