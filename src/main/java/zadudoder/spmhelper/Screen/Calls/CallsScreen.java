@@ -1,11 +1,15 @@
 package zadudoder.spmhelper.Screen.Calls;
 
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
@@ -61,14 +65,24 @@ public class CallsScreen extends Screen {
 
         // Кнопки вызова
         int buttonY = height / 2 + 40;
-        int buttonWidth = 90;
+        int buttonWidth = 65;
 
         this.addDrawableChild(createServiceButton("Детектив", "detective", "Детектив",
-                width / 2 - 150, buttonY, buttonWidth));
+                width / 2 - 150 , buttonY, buttonWidth));
         this.addDrawableChild(createServiceButton("ФСБ", "fsb", "ФСБ",
-                width / 2 - 150 + buttonWidth + 15, buttonY, buttonWidth));
+                width / 2 - 150 + buttonWidth + 10, buttonY, buttonWidth));
         this.addDrawableChild(createServiceButton("Банкир", "banker", "Банкир",
-                width / 2 - 150 + 2 * buttonWidth + 30, buttonY, buttonWidth));
+                width / 2 - 150 + 2 * buttonWidth + 25, buttonY, buttonWidth));
+        this.addDrawableChild(createServiceButton("Гид", "guide", "Гид",
+                width / 2 - 150 + 3 * buttonWidth + 40, buttonY, buttonWidth));
+
+        if (!hasToken) {
+            this.addDrawableChild(ButtonWidget.builder(Text.of("Авторизоваться"), btn -> {
+
+                    })
+                    .dimensions(width / 2 - 100, height / 2 + 60, 100, 20)
+                    .build());
+        }
 
         // Кнопка группы
         this.addDrawableChild(ButtonWidget.builder(Text.of("✈"), btn ->
@@ -103,7 +117,6 @@ public class CallsScreen extends Screen {
 
         String coordinates = sendCoordinates && playerPos != null ?
                 "**" + playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ() + MinecraftClient.getInstance().player.getWorld().getRegistryKey() + "**" : "";
-
         setStatus("Отправка запроса...", 0xFFFF55);
 
         SPmHelperApi.makeCall(serviceType, coordinates, comment)
@@ -130,8 +143,9 @@ public class CallsScreen extends Screen {
 
         // Статус токена и сервера
         if (!hasToken) {
-            drawCenteredText(context, "⚠ Сначала авторизуйтесь (/spmhelper auth)",
+            drawCenteredText(context, "⬇ Сначала авторизуйтесь ⬇",
                     width / 2, height / 2 - 60, 0xFF5555);
+
         } else if (!isOnCorrectServer) {
             drawCenteredText(context, "❗ Координаты можно вводить только на СПм",
                     width / 2, height / 2 - 60, 0xFFFF55);
