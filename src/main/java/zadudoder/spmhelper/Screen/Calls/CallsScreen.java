@@ -80,7 +80,7 @@ public class CallsScreen extends Screen {
             this.addDrawableChild(ButtonWidget.builder(Text.of("Авторизоваться"), btn -> {
 
                     })
-                    .dimensions(width / 2 - 100, height / 2 + 60, 100, 20)
+                    .dimensions(width / 2 - 50, height / 2 + 80, 100, 20)
                     .build());
         }
 

@@ -68,7 +68,7 @@ public class Settings extends Screen {
             // Логика сохранения
         }).dimensions(centerX + 80, startY + 50, buttonWidth, buttonHeight).build());
 
-        this.addDrawableChild(ButtonWidget.builder(Text.of("Авторизоваться в моде"), button -> {
+        this.addDrawableChild(ButtonWidget.builder(Text.of("Авторизоваться"), button -> {
             // Логика авторизации
         }).dimensions(centerX - 15, startY + 80, buttonWidth + 30, buttonHeight).build());
     }
