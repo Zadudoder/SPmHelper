@@ -122,9 +122,20 @@ public class CallsScreen extends Screen {
             setStatus("Ошибка: введите комментарий!", 0xFF5555);
             return;
         }
-
+        String world = "Верхний мир";
+        switch (MinecraftClient.getInstance().player.getWorld().getRegistryKey().getValue().toString()) {
+            case "minecraft:overworld":
+                world = "Верхний мир";
+                break;
+            case "minecraft:the_nether":
+                world = "Ад";
+                break;
+            case "minecraft:the_end":
+                world = "Энд";
+                break;
+        }
         String coordinates = sendCoordinates && playerPos != null ?
-                "**" + playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ() + ' ' + MinecraftClient.getInstance().player.getWorld().getRegistryKey().getValue() + "**" : "";
+                "**" + playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ() + ' ' + world + "**" : "";
         setStatus("Отправка запроса...", 0xFFFF55);
 
         SPmHelperApi.makeCall(serviceType, coordinates, comment)
