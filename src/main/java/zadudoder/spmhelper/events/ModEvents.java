@@ -58,7 +58,7 @@ public class ModEvents {
             var mainCommand = ClientCommandManager.literal("spmhelper")
                     .then(ClientCommandManager.literal("auth")
                             .executes(context -> {
-                                SPmHelperApi.startAuthProcess(context.getSource());
+                                SPmHelperApi.startAuthProcess(context.getSource().getPlayer());
                                 return 1;
                             })
                     )

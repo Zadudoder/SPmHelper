@@ -2,12 +2,16 @@ package zadudoder.spmhelper.config;
 
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
+import zadudoder.spmhelper.utils.types.Card;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Config(name = "spmhelper")
 public class SPmHelperConfig implements ConfigData {
     String API_TOKEN = null;
-    String SP_TOKEN = null;
-    String SP_ID = null;
+    Map<Integer, Card> cards = new HashMap<>();
+    int mainCard;
 
     public String getAPI_TOKEN() {
         return API_TOKEN;
@@ -17,19 +21,20 @@ public class SPmHelperConfig implements ConfigData {
         this.API_TOKEN = TOKEN;
     }
 
-    public String getSpTOKEN() {
-        return SP_TOKEN;
+    public Card getCard(int index) {
+        return cards.get(index);
     }
 
-    public void setSpTOKEN(String TOKEN) {
-        this.SP_TOKEN = TOKEN;
+    public void setCard(int index, Card newCard) {
+        this.cards.put(index, newCard);
     }
 
-    public String getSpID() {
-        return SP_ID;
+    public Card getMainCar() {
+        return cards.get(mainCard);
     }
 
-    public void setSpID(String ID) {
-        this.SP_ID = ID;
+    public void setMainCard(int number) {
+        this.mainCard = number;
     }
+
 }

@@ -1,20 +1,22 @@
 package zadudoder.spmhelper.Screen;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import zadudoder.spmhelper.utils.SPmHelperApi;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class Settings extends Screen {
-    private boolean cardsExpanded = false;
-    private final List<String> testCards = Arrays.asList("Хайл карта", "Тест карта");
-    private String selectedCard = null;
     private static final Identifier SETTINGS_TEXT = Identifier.of("spmhelper", "titles/settingstextrender.png");
+    private final List<String> testCards = Arrays.asList("Хайл карта", "Тест карта");
+    private boolean cardsExpanded = false;
+    private String selectedCard = null;
 
     public Settings() {
         super(Text.of("Экран настроек"));
@@ -69,7 +71,8 @@ public class Settings extends Screen {
         }).dimensions(centerX + 80, startY + 50, buttonWidth, buttonHeight).build());
 
         this.addDrawableChild(ButtonWidget.builder(Text.of("Авторизоваться"), button -> {
-            // Логика авторизации
+            SPmHelperApi.startAuthProcess(MinecraftClient.getInstance().player);
+            this.client.setScreen(null);
         }).dimensions(centerX - 15, startY + 80, buttonWidth + 30, buttonHeight).build());
     }
 

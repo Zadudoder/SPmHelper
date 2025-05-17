@@ -1,14 +1,14 @@
 package zadudoder.spmhelper.utils;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Util;
+import zadudoder.spmhelper.SPmHelper;
 import zadudoder.spmhelper.SPmHelperClient;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -23,40 +23,28 @@ public class SPmHelperApi {
             .connectTimeout(Duration.ofSeconds(10))
             .build();
 
-    public static void startAuthProcess(FabricClientCommandSource source) {
+    public static void startAuthProcess(ClientPlayerEntity player) {
         MinecraftClient client = MinecraftClient.getInstance();
         String playerUuid = client.player.getUuid().toString().replace("-", "");
-
+        SPmHelper.LOGGER.info(playerUuid);
         JsonObject json = new JsonObject();
         json.addProperty("minecraft_uuid", playerUuid);
+        SPmHelper.LOGGER.info(json.toString());
+        try {
+            SocketClient socketClient = new SocketClient(new URI("wss://api-spmhelpers.sp-mini.ru/api/authorize/ws"));
+            socketClient.setOnOpenCallback(() -> {
+                socketClient.send(json.toString());
+            });
+            socketClient.setClientPlayer(player);
+            socketClient.connect();
+            player.sendMessage(Text.literal("§aОткрытие ссылки для авторизации"));
+        } catch (URISyntaxException e) {
+            player.sendMessage(Text.literal("§cОшибка подключения к серверу"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(API_BASE + "/authorize"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
-                .build();
 
-        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(response -> {
-                    String body = response.body();
-                    JsonObject responseJson = JsonParser.parseString(body).getAsJsonObject();
-
-                    if (responseJson.has("redirect_url")) {
-                        String authUrl = responseJson.get("redirect_url").getAsString();
-                        client.execute(() -> {
-                            Util.getOperatingSystem().open(authUrl);
-                        });
-                    } else {
-                        String error = responseJson.has("error") ? responseJson.get("error").getAsString() :
-                                "Неверный формат ответа";
-                        client.execute(() -> source.sendError(Text.literal("§cОшибка: " + error)));
-                    }
-                    return null;
-                })
-                .exceptionally(e -> {
-                    client.execute(() -> source.sendError(Text.literal("§c[SPmHelper]: Ошибка соединения: " + e.getMessage())));
-                    return null;
-                });
     }
 
     public static CompletableFuture<Boolean> makeCall(String service, String coordinates, String comment) {

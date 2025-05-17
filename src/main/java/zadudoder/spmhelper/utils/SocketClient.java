@@ -1,0 +1,81 @@
+package zadudoder.spmhelper.utils;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import me.shedaniel.autoconfig.AutoConfig;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.text.Text;
+import net.minecraft.util.Util;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
+import zadudoder.spmhelper.SPmHelper;
+import zadudoder.spmhelper.SPmHelperClient;
+import zadudoder.spmhelper.config.SPmHelperConfig;
+
+import java.net.URI;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
+public class SocketClient extends WebSocketClient {
+    private final CompletableFuture<String> responseFuture = new CompletableFuture<>();
+    private Runnable onOpenCallback;
+    private ClientPlayerEntity clientPlayer;
+
+    public SocketClient(URI serverUri) {
+        super(serverUri);
+    }
+
+    @Override
+    public void onOpen(ServerHandshake serverHandshake) {
+        SPmHelper.LOGGER.info("WebSocket подключён");
+        if (onOpenCallback != null) {
+            onOpenCallback.run(); // Уведомляем, что соединение открыто
+        }
+
+    }
+
+    @Override
+    public void onMessage(String message) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        JsonObject responseJson = JsonParser.parseString(message).getAsJsonObject();
+        if (responseJson.has("auth_url")) {
+            String authUrl = responseJson.get("auth_url").getAsString();
+            client.execute(() -> {
+                Util.getOperatingSystem().open(authUrl);
+            });
+            clientPlayer.sendMessage(Text.literal("§aОжидание авторизации"));
+        }
+        if (responseJson.has("token")) {
+            SPmHelper.LOGGER.info(responseJson.get("token").getAsString());
+            SPmHelperClient.config.setAPI_TOKEN(responseJson.get("token").getAsString());
+            AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
+            clientPlayer.sendMessage(Text.literal("§aТокен успешно записан!"));
+            if (isOpen()) {
+                close();
+            }
+        }
+    }
+
+    public CompletableFuture<String> getResponseFuture(long timeout, TimeUnit unit) {
+        return responseFuture.orTimeout(timeout, unit);
+    }
+
+    @Override
+    public void onClose(int i, String s, boolean b) {
+        SPmHelper.LOGGER.info("WebSocket отключён");
+    }
+
+    @Override
+    public void onError(Exception e) {
+        responseFuture.completeExceptionally(e);
+    }
+
+    public void setOnOpenCallback(Runnable callback) {
+        this.onOpenCallback = callback;
+    }
+
+    public void setClientPlayer(ClientPlayerEntity client) {
+        this.clientPlayer = client;
+    }
+}

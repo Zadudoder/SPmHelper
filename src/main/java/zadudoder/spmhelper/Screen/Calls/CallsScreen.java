@@ -1,15 +1,11 @@
 package zadudoder.spmhelper.Screen.Calls;
 
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
@@ -26,7 +22,6 @@ public class CallsScreen extends Screen {
             "spm.spworlds.ru"
     );
     private TextFieldWidget commentField;
-    private CheckboxWidget coordinatesCheckbox;
     private boolean sendCoordinates = false;
     private BlockPos playerPos;
     private boolean hasToken;
@@ -47,11 +42,12 @@ public class CallsScreen extends Screen {
                 MinecraftClient.getInstance().player.getBlockPos() : null;
 
         // Чекбокс для координат
-        coordinatesCheckbox = CheckboxWidget.builder(Text.of(""), textRenderer)
+        CheckboxWidget coordinatesCheckbox = CheckboxWidget.builder(Text.of(""), textRenderer)
                 .pos(width / 2 - 10, height / 2 - 40)
                 .checked(false)
                 .callback((checkbox, checked) -> sendCoordinates = checked)
                 .build();
+        coordinatesCheckbox.active = isOnCorrectServer;
         this.addDrawableChild(coordinatesCheckbox);
 
         // Поле комментария
@@ -67,18 +63,30 @@ public class CallsScreen extends Screen {
         int buttonY = height / 2 + 40;
         int buttonWidth = 65;
 
-        this.addDrawableChild(createServiceButton("Детектив", "detective", "Детектив",
-                width / 2 - 150 , buttonY, buttonWidth));
-        this.addDrawableChild(createServiceButton("ФСБ", "fsb", "ФСБ",
-                width / 2 - 150 + buttonWidth + 10, buttonY, buttonWidth));
-        this.addDrawableChild(createServiceButton("Банкир", "banker", "Банкир",
-                width / 2 - 150 + 2 * buttonWidth + 25, buttonY, buttonWidth));
-        this.addDrawableChild(createServiceButton("Гид", "guide", "Гид",
-                width / 2 - 150 + 3 * buttonWidth + 40, buttonY, buttonWidth));
+        ButtonWidget detectiveButton = createServiceButton("Детектив", "detective", "Детектив",
+                width / 2 - 150, buttonY, buttonWidth);
+        detectiveButton.active = isOnCorrectServer;
+        this.addDrawableChild(detectiveButton);
 
-        if (!hasToken) {
+        ButtonWidget fsbButton = createServiceButton("ФСБ", "fsb", "ФСБ",
+                width / 2 - 150 + buttonWidth + 10, buttonY, buttonWidth);
+        fsbButton.active = isOnCorrectServer;
+        this.addDrawableChild(fsbButton);
+
+        ButtonWidget bankerButton = createServiceButton("Банкир", "banker", "Банкир",
+                width / 2 - 150 + 2 * buttonWidth + 25, buttonY, buttonWidth);
+        bankerButton.active = isOnCorrectServer;
+        this.addDrawableChild(bankerButton);
+
+        ButtonWidget guideButton = createServiceButton("Гид", "guide", "Гид",
+                width / 2 - 150 + 3 * buttonWidth + 40, buttonY, buttonWidth);
+        guideButton.active = isOnCorrectServer;
+        this.addDrawableChild(guideButton);
+
+        if (!hasToken && isOnCorrectServer) {
             this.addDrawableChild(ButtonWidget.builder(Text.of("Авторизоваться"), btn -> {
-
+                        SPmHelperApi.startAuthProcess(MinecraftClient.getInstance().player);
+                        this.client.setScreen(null);
                     })
                     .dimensions(width / 2 - 50, height / 2 + 80, 100, 20)
                     .build());
@@ -110,13 +118,13 @@ public class CallsScreen extends Screen {
 
     public void callService(String serviceType, String personName) {
         String comment = commentField.getText().trim();
-        if (comment.isEmpty() && !sendCoordinates) {
+        if (comment.isEmpty()) {
             setStatus("Ошибка: введите комментарий!", 0xFF5555);
             return;
         }
 
         String coordinates = sendCoordinates && playerPos != null ?
-                "**" + playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ() + MinecraftClient.getInstance().player.getWorld().getRegistryKey() + "**" : "";
+                "**" + playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ() + ' ' + MinecraftClient.getInstance().player.getWorld().getRegistryKey().getValue() + "**" : "";
         setStatus("Отправка запроса...", 0xFFFF55);
 
         SPmHelperApi.makeCall(serviceType, coordinates, comment)
@@ -138,16 +146,12 @@ public class CallsScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
-        // Проверка сервера, если на спм - активный если нет, не активный
-        coordinatesCheckbox.active = isOnCorrectServer;
-
-        // Статус токена и сервера
-        if (!hasToken) {
-            drawCenteredText(context, "⬇ Сначала авторизуйтесь ⬇",
+        if (!isOnCorrectServer) {
+            drawCenteredText(context, "❗ Функция доступма только на сервере СПм!",
                     width / 2, height / 2 - 60, 0xFF5555);
 
-        } else if (!isOnCorrectServer) {
-            drawCenteredText(context, "❗ Координаты можно вводить только на СПм",
+        } else if (!hasToken) {
+            drawCenteredText(context, "⬇ Сначала авторизуйтесь ⬇",
                     width / 2, height / 2 - 60, 0xFFFF55);
         }
 
@@ -168,7 +172,7 @@ public class CallsScreen extends Screen {
             context.drawText(textRenderer, "Введите сюда текст",
                     width / 2 - 145, height / 2 + 16, 0xBBBBBB, false);
         }
-        
+
         context.drawCenteredTextWithShadow(
                 this.textRenderer,
                 Text.of(statusMessage),

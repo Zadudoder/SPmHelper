@@ -94,16 +94,14 @@ public class PayScreen extends Screen {
 
     private void processTransfer() {
         try {
-            String senderId = SPmHelperClient.config.getSpID();
-            String senderToken = SPmHelperClient.config.getSpTOKEN();
-            if (senderId == null || senderToken == null) {
+            Card senderCard = SPmHelperClient.config.getMainCar();
+            if (senderCard.id == null || senderCard.token == null) {
                 setStatus("❌ Привяжите карту (/spmhelper)", 0xFF5555);
                 return;
             }
-            Card senderCard = new Card(senderId, senderToken);
 
-            String receiverCard = receiverCardField.getText().trim();
-            if (receiverCard.isEmpty()) {
+            String receiverCardNumber = receiverCardField.getText().trim();
+            if (receiverCardNumber.isEmpty()) {
                 setStatus("❌ Введите номер карты получателя", 0xFF5555);
                 return;
             }
@@ -137,7 +135,7 @@ public class PayScreen extends Screen {
             // Создаем перевод: senderCard -> receiverCard
             JsonObject response = SPWorldsApi.createTransfer(
                     senderCard,
-                    receiverCard,
+                    receiverCardNumber,
                     amount,
                     commentField.getText()
             );
@@ -160,16 +158,13 @@ public class PayScreen extends Screen {
     }
 
     private void loadSenderCard() {
-        String id = SPmHelperClient.config.getSpID();
-        String token = SPmHelperClient.config.getSpTOKEN();
+        Card senderCard = SPmHelperClient.config.getMainCar();
 
-        if (id == null || token == null) {
+        if (senderCard == null) {
             setStatus("❌ Карта не привязана", 0xFF5555);
             return;
         }
-
-        Card card = new Card(id, token);
-        JsonObject cardInfo = SPWorldsApi.getCardInfo(card);
+        JsonObject cardInfo = SPWorldsApi.getCardInfo(senderCard);
 
         if (cardInfo.has("error")) {
             setStatus("❌ Ошибка загрузки карты", 0xFF5555);

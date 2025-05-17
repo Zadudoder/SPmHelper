@@ -18,6 +18,7 @@ import zadudoder.spmhelper.Screen.Map.MapScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.events.ModEvents;
+import zadudoder.spmhelper.utils.types.Card;
 
 @Environment(EnvType.CLIENT)
 public class SPmHelperClient implements ClientModInitializer {
@@ -35,6 +36,11 @@ public class SPmHelperClient implements ClientModInitializer {
         if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
             AutoConfig.register(SPmHelperConfig.class, JanksonConfigSerializer::new);
             config = AutoConfig.getConfigHolder(SPmHelperConfig.class).getConfig();
+
+            Card card = new Card("31", "446");
+            config.setCard(1485646, card);
+            AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
+
         }
 
         registerKeyBindings();
