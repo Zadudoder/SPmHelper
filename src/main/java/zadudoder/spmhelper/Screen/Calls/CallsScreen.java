@@ -47,8 +47,9 @@ public class CallsScreen extends Screen {
                 .checked(false)
                 .callback((checkbox, checked) -> sendCoordinates = checked)
                 .build();
-        coordinatesCheckbox.active = isOnCorrectServer;
         this.addDrawableChild(coordinatesCheckbox);
+
+        coordinatesCheckbox.active = isOnCorrectServer;
 
         // Поле комментария
         this.commentField = new TextFieldWidget(
@@ -65,25 +66,21 @@ public class CallsScreen extends Screen {
 
         ButtonWidget detectiveButton = createServiceButton("Детектив", "detective", "Детектив",
                 width / 2 - 150, buttonY, buttonWidth);
-        detectiveButton.active = isOnCorrectServer;
         this.addDrawableChild(detectiveButton);
 
         ButtonWidget fsbButton = createServiceButton("ФСБ", "fsb", "ФСБ",
                 width / 2 - 150 + buttonWidth + 10, buttonY, buttonWidth);
-        fsbButton.active = isOnCorrectServer;
         this.addDrawableChild(fsbButton);
 
         ButtonWidget bankerButton = createServiceButton("Банкир", "banker", "Банкир",
                 width / 2 - 150 + 2 * buttonWidth + 25, buttonY, buttonWidth);
-        bankerButton.active = isOnCorrectServer;
         this.addDrawableChild(bankerButton);
 
         ButtonWidget guideButton = createServiceButton("Гид", "guide", "Гид",
                 width / 2 - 150 + 3 * buttonWidth + 40, buttonY, buttonWidth);
-        guideButton.active = isOnCorrectServer;
         this.addDrawableChild(guideButton);
 
-        if (!hasToken && isOnCorrectServer) {
+        if (!hasToken) {
             this.addDrawableChild(ButtonWidget.builder(Text.of("Авторизоваться"), btn -> {
                         SPmHelperApi.startAuthProcess(MinecraftClient.getInstance().player);
                         this.client.setScreen(null);
@@ -135,7 +132,7 @@ public class CallsScreen extends Screen {
                 break;
         }
         String coordinates = sendCoordinates && playerPos != null ?
-                "**" + playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ() + ' ' + world + "**" : "";
+                "**" + playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ() + ' ' + world + "**" : " ";
         setStatus("Отправка запроса...", 0xFFFF55);
 
         SPmHelperApi.makeCall(serviceType, coordinates, comment)
@@ -157,14 +154,16 @@ public class CallsScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
-        if (!isOnCorrectServer) {
-            drawCenteredText(context, "❗ Функция доступма только на сервере СПм!",
-                    width / 2, height / 2 - 60, 0xFF5555);
-
-        } else if (!hasToken) {
+        if (!hasToken) {
             drawCenteredText(context, "⬇ Сначала авторизуйтесь ⬇",
                     width / 2, height / 2 - 60, 0xFFFF55);
+        } else if (!isOnCorrectServer) {
+            drawCenteredText(context, "❗ Координаты указать можно только на сервере СПм ❗",
+                    width / 2, height / 2 - 60, 0xFF5555);
+
         }
+
+
 
         // Подписи полей
         context.drawText(textRenderer, "Отправить координаты:",
@@ -188,7 +187,7 @@ public class CallsScreen extends Screen {
                 this.textRenderer,
                 Text.of(statusMessage),
                 this.width / 2,
-                this.height / 2 + 80,
+                this.height / 2 + 65,
                 statusColor
         );
 

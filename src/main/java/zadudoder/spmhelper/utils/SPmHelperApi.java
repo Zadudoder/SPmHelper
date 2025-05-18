@@ -37,9 +37,9 @@ public class SPmHelperApi {
             });
             socketClient.setClientPlayer(player);
             socketClient.connect();
-            player.sendMessage(Text.literal("§aОткрытие ссылки для авторизации"));
+            player.sendMessage(Text.literal("§a[SPmHelper]: Открытие ссылки для авторизации"));
         } catch (URISyntaxException e) {
-            player.sendMessage(Text.literal("§cОшибка подключения к серверу"));
+            player.sendMessage(Text.literal("§c[SPmHelper]: Ошибка подключения к серверу"));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

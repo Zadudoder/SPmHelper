@@ -28,11 +28,11 @@ public class PayScreen extends Screen {
     private int statusColor;
 
     public PayScreen() {
-        super(Text.of("Перевод СП"));
+        super(Text.of("Перевод СПм"));
     }
 
     public PayScreen(String number, String amount, String comment) {
-        super(Text.of("Перевод СП"));
+        super(Text.of("Перевод СПм"));
         p_number = number;
         p_amount = amount;
         p_comment = comment;
@@ -181,6 +181,8 @@ public class PayScreen extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
+
+
 
         // Подписи к полям
         context.drawText(

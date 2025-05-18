@@ -32,7 +32,6 @@ public class SPmHelperClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-
         if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
             AutoConfig.register(SPmHelperConfig.class, JanksonConfigSerializer::new);
             config = AutoConfig.getConfigHolder(SPmHelperConfig.class).getConfig();
@@ -40,7 +39,6 @@ public class SPmHelperClient implements ClientModInitializer {
             Card card = new Card("31", "446");
             config.setCard(1485646, card);
             AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
-
         }
 
         registerKeyBindings();
