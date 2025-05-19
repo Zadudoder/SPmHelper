@@ -33,7 +33,7 @@ public class SPmHelperConfig implements ConfigData {
     public void addCard(String id, String token, String cardName) {
 
         for (String name : cards.keySet()) {
-            if (name == cardName) {
+            if (cards.get(name).token == token) {
                 return;
             }
         }
