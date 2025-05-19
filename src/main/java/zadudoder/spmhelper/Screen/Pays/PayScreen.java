@@ -94,9 +94,9 @@ public class PayScreen extends Screen {
 
     private void processTransfer() {
         try {
-            Card senderCard = SPmHelperClient.config.getMainCar();
-            if (senderCard.id == null || senderCard.token == null) {
-                setStatus("❌ Привяжите карту (/spmhelper)", 0xFF5555);
+            Card senderCard = SPmHelperClient.config.getMainCard();
+            if (senderCard == null) {
+                setStatus("❌ Укажите карту для оплаты", 0xFF5555);
                 return;
             }
 
@@ -158,7 +158,7 @@ public class PayScreen extends Screen {
     }
 
     private void loadSenderCard() {
-        Card senderCard = SPmHelperClient.config.getMainCar();
+        Card senderCard = SPmHelperClient.config.getMainCard();
 
         if (senderCard == null) {
             setStatus("❌ Карта не привязана", 0xFF5555);
@@ -181,7 +181,6 @@ public class PayScreen extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-
 
 
         // Подписи к полям

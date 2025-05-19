@@ -7,16 +7,15 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import zadudoder.spmhelper.SPmHelperClient;
 import zadudoder.spmhelper.utils.SPmHelperApi;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class Settings extends Screen {
     private static final Identifier SETTINGS_TEXT = Identifier.of("spmhelper", "titles/settingstextrender.png");
-    private final List<String> testCards = Arrays.asList("Хайл карта", "Тест карта");
     private boolean cardsExpanded = false;
     private String selectedCard = null;
+    private String statusMessage;
+    private int statusColor;
 
     public Settings() {
         super(Text.of("Экран настроек"));
@@ -30,18 +29,20 @@ public class Settings extends Screen {
         int centerX = this.width / 2 - buttonWidth / 2;
 
         // Основная кнопка выбора карт
-        this.addDrawableChild(ButtonWidget.builder(
-                Text.of(selectedCard != null ? selectedCard : "Выберите карты ⬇"),
-                button -> toggleCards()
-        ).dimensions(centerX - 80, startY - 50, buttonWidth, buttonHeight).build());
+        ButtonWidget selectButton =
+                addDrawableChild(ButtonWidget.builder(
+                        Text.of(selectedCard != null ? selectedCard : "Выберите карту ⬇"),
+                        button -> toggleCards()
+                ).dimensions(centerX - 80, startY - 50, buttonWidth, buttonHeight).build());
 
         // Кнопки карт (изначально скрыты)
-        for (int i = 0; i < testCards.size(); i++) {
-            String card = testCards.get(i);
+        int index = 0;
+        for (String name : SPmHelperClient.config.getCards().keySet()) {
+            index++;
             ButtonWidget cardBtn = ButtonWidget.builder(
-                    Text.of(card),
-                    btn -> selectCard(card)
-            ).dimensions(centerX - 80, startY - 50 + (i + 1) * 25, buttonWidth, buttonHeight).build();
+                    Text.of(name),
+                    btn -> selectCard(name)
+            ).dimensions(centerX - 80, startY - 50 + index * 25, buttonWidth, buttonHeight).build();
             cardBtn.visible = cardsExpanded;
             this.addDrawableChild(cardBtn);
         }
@@ -49,30 +50,40 @@ public class Settings extends Screen {
         // Ваши оригинальные кнопки управления
         this.addDrawableChild(ButtonWidget.builder(Text.of("Удалить"), button -> {
             if (selectedCard != null) {
-                // Логика удаления
+                SPmHelperClient.config.removeCard(selectedCard);
+                selectedCard = null;
+                this.clearAndInit();
+                selectButton.setMessage(Text.literal("Выберите карту ⬇"));
+                setStatus("✔ Карта успешно удалена!", 0x55FF55);
             }
         }).dimensions(centerX + 80, startY - 50, buttonWidth, buttonHeight).build());
 
         this.addDrawableChild(ButtonWidget.builder(Text.of("Изменить имя"), button -> {
             if (selectedCard != null) {
-                // Логика изменения имени
+                String newName = "Новое имя(заглушка)";
+                SPmHelperClient.config.renameCard(selectedCard, newName);
+                selectedCard = newName;
+                this.clearAndInit();
+                selectButton.setMessage(Text.literal(newName));
+                setStatus("✔ Имя карты успешно изменено", 0x55FF55);
             }
         }).dimensions(centerX + 80, startY - 25, buttonWidth, buttonHeight).build());
 
         this.addDrawableChild(ButtonWidget.builder(Text.of("Выбрать для оплаты"), button -> {
             if (selectedCard != null) {
-                // Логика выбора для оплаты
+                SPmHelperClient.config.setMainCard(selectedCard);
+                setStatus("✔ Карта выбрана для оплаты!", 0x55FF55);
             }
         }).dimensions(centerX + 80, startY, buttonWidth, buttonHeight).build());
 
         // Кнопки внизу экрана
-        this.addDrawableChild(ButtonWidget.builder(Text.of("Сохранить"), button -> {
-            // Логика сохранения
+        this.addDrawableChild(ButtonWidget.builder(Text.of("Главное меню"), button -> {
+            this.client.setScreen(new MainScreen());
         }).dimensions(centerX + 80, startY + 50, buttonWidth, buttonHeight).build());
 
         this.addDrawableChild(ButtonWidget.builder(Text.of("Авторизоваться"), button -> {
             SPmHelperApi.startAuthProcess(MinecraftClient.getInstance().player);
-            this.client.setScreen(null);
+            this.close();
         }).dimensions(centerX - 15, startY + 80, buttonWidth + 30, buttonHeight).build());
     }
 
@@ -89,13 +100,20 @@ public class Settings extends Screen {
     }
 
     private void updateCardsVisibility() {
-        for (int i = 0; i < testCards.size(); i++) {
-            int btnIndex = 1 + i; // 0 - основная кнопка
+        int index = 0;
+        for (String name : SPmHelperClient.config.getCards().keySet()) {
+            index++;
+            int btnIndex = index; // 0 - основная кнопка
             if (btnIndex < this.children().size()) {
                 ClickableWidget btn = (ClickableWidget) this.children().get(btnIndex);
                 btn.visible = cardsExpanded;
             }
         }
+    }
+
+    private void setStatus(String message, int color) {
+        this.statusMessage = message;
+        this.statusColor = color;
     }
 
     @Override
@@ -118,5 +136,13 @@ public class Settings extends Screen {
 
         int imageX = (width - finalWidth) / 2;
         context.drawTexture(SETTINGS_TEXT, imageX, imageY, 0, 0, finalWidth, finalHeight, finalWidth, finalHeight);
+
+        context.drawCenteredTextWithShadow(
+                this.textRenderer,
+                Text.of(statusMessage),
+                this.width / 2,
+                this.height / 2 + 80,
+                statusColor
+        );
     }
 }

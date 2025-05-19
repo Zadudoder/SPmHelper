@@ -4,24 +4,39 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
-import net.minecraft.util.Util;
+import zadudoder.spmhelper.SPmHelperClient;
 
-public class AddCard extends Screen {
+public class AddCardScreen extends Screen {
+    private String id;
+    private String token;
+    private String name;
 
-    public AddCard() {
+    public AddCardScreen() {
         super(Text.of("Экран принятия карты"));
+    }
+
+    public AddCardScreen(String id, String token, String name) {
+        super(Text.of("Экран принятия карты"));
+        this.id = id;
+        this.token = token;
+        this.name = name;
+
     }
 
     protected void init() {
         ButtonWidget AcceptButton = ButtonWidget.builder(Text.of("Принять"), (btn) -> {
-                // Логика принятия, запись в конфиг
-        }).dimensions(width/2-40, height/2, 80, 20).build();
+            SPmHelperClient.config.addCard(id, token, name); //Добавление карты
+            this.close();
+            this.client.player.sendMessage(Text.literal("§a[SPmHelper]: Карта успешно привязана!"));
+
+        }).dimensions(width / 2 - 40, height / 2, 80, 20).build();
         this.addDrawableChild(AcceptButton);
 
         ButtonWidget Dismiss = ButtonWidget.builder(Text.of("Отклонить"), (btn) -> {
-            // Логика отклонения карты, наверное просто set screen close
-        }).dimensions(width/2+40, height/2, 80, 20).build();
+            this.close();
+        }).dimensions(width / 2 + 40, height / 2, 80, 20).build();
         this.addDrawableChild(Dismiss);
+
 
     }
 

@@ -1,7 +1,6 @@
 package zadudoder.spmhelper.utils.types;
 
 public class Card {
-    public String name = null;
     public String id;
     public String token;
 

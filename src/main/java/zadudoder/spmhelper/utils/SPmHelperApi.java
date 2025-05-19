@@ -29,7 +29,6 @@ public class SPmHelperApi {
         SPmHelper.LOGGER.info(playerUuid);
         JsonObject json = new JsonObject();
         json.addProperty("minecraft_uuid", playerUuid);
-        SPmHelper.LOGGER.info(json.toString());
         try {
             SocketClient socketClient = new SocketClient(new URI("wss://api-spmhelpers.sp-mini.ru/api/authorize/ws"));
             socketClient.setOnOpenCallback(() -> {

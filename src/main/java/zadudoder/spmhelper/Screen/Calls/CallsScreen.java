@@ -83,7 +83,7 @@ public class CallsScreen extends Screen {
         if (!hasToken) {
             this.addDrawableChild(ButtonWidget.builder(Text.of("Авторизоваться"), btn -> {
                         SPmHelperApi.startAuthProcess(MinecraftClient.getInstance().player);
-                        this.client.setScreen(null);
+                        this.close();
                     })
                     .dimensions(width / 2 - 50, height / 2 + 80, 100, 20)
                     .build());
@@ -162,7 +162,6 @@ public class CallsScreen extends Screen {
                     width / 2, height / 2 - 60, 0xFF5555);
 
         }
-
 
 
         // Подписи полей

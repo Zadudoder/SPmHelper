@@ -28,7 +28,6 @@ public class SocketClient extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
-        SPmHelper.LOGGER.info("WebSocket подключён");
         if (onOpenCallback != null) {
             onOpenCallback.run(); // Уведомляем, что соединение открыто
         }
@@ -44,13 +43,13 @@ public class SocketClient extends WebSocketClient {
             client.execute(() -> {
                 Util.getOperatingSystem().open(authUrl);
             });
-            clientPlayer.sendMessage(Text.literal("§aОжидание авторизации"));
+            clientPlayer.sendMessage(Text.literal("§a[SPmHelper]: Ожидание авторизации"));
         }
         if (responseJson.has("token")) {
             SPmHelper.LOGGER.info(responseJson.get("token").getAsString());
             SPmHelperClient.config.setAPI_TOKEN(responseJson.get("token").getAsString());
             AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
-            clientPlayer.sendMessage(Text.literal("§aТокен успешно записан!"));
+            clientPlayer.sendMessage(Text.literal("§a[SPmHelper]: Токен успешно записан!"));
             if (isOpen()) {
                 close();
             }
@@ -63,7 +62,6 @@ public class SocketClient extends WebSocketClient {
 
     @Override
     public void onClose(int i, String s, boolean b) {
-        SPmHelper.LOGGER.info("WebSocket отключён");
     }
 
     @Override
