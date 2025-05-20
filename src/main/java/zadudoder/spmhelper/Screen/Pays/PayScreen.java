@@ -170,7 +170,7 @@ public class PayScreen extends Screen {
         if (cardInfo.has("error")) {
             setStatus("❌ Ошибка загрузки карты", 0xFF5555);
         } else {
-            setStatus("✔ " + cardName + ": Текущий баланс: " + cardInfo.get("balance").getAsString() + " АР", 0x55FF55);
+            setStatus("Текущий баланс карты \""+ cardName +"\": "+ cardInfo.get("balance").getAsString() + " АР", 0x55FF55);
         }
     }
 

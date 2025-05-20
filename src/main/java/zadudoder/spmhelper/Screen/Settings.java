@@ -94,14 +94,14 @@ public class Settings extends Screen {
                 this.clearAndInit();
                 setStatus("✔ Имя карты успешно изменено на: " + newName, 0x55FF55);
             }
-        }).dimensions(centerX + 150, height / 2 + 30, 20, 20).build();
+        }).dimensions(width / 2 + 95, height / 2 + 30, 20, 20).build();
         newNameCardAccept.visible = showButton;
         this.addDrawableChild(newNameCardAccept);
 
         ButtonWidget newNameCardCancel = ButtonWidget.builder(Text.of("❌"), button -> {
             showButton = false;
             this.clearAndInit();
-        }).dimensions(centerX - 105, height / 2 + 30, 20, 20).build();
+        }).dimensions(width / 2 - 115, height / 2 + 30, 20, 20).build();
         newNameCardCancel.visible = showButton;
         this.addDrawableChild(newNameCardCancel);
 
@@ -119,7 +119,7 @@ public class Settings extends Screen {
         this.addDrawableChild(ButtonWidget.builder(Text.of("Выбрать для оплаты"), button -> {
             if (selectedCard != null) {
                 SPmHelperConfig.get().setMainCard(selectedCard);
-                setStatus("✔ Карта выбрана для оплаты!", 0x55FF55);
+                setStatus("✔ \""+ SPmHelperConfig.get().getMainCardName() +"\" выбрана для оплаты!", 0x55FF55);
             } else {
                 setStatus("Сначала выберите карту!", 0xFFFF00);
             }
