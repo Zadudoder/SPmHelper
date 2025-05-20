@@ -124,7 +124,7 @@ SPmHelper is a mod that will make your game easier on [SPm](https://spworlds.ru 
 **To add your card to the mod, you need to:**
 1. Log in to the SPm server in minecraft.
 2. Go to [website](https://spworlds.ru ) and register via discord.
-3. Go to the ["Wallet"] tab(https://spworlds.ru/spm/wallet ).
+3. Go to the ["Wallet"](https://spworlds.ru/spm/wallet).
 4. Select the desired card and click on the first icon of the "Share" arrow.
 5. Click "Generate a new API token" -> "Next" -> "Generate".
 6. Go to the game and click "Accept".
