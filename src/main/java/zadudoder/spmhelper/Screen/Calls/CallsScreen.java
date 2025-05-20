@@ -114,6 +114,11 @@ public class CallsScreen extends Screen {
     }
 
     public void callService(String serviceType, String personName) {
+        if (!hasToken) {
+            setStatus("⬇ Сначала авторизуйтесь ⬇", 0xFF5555);
+            return;
+        }
+
         String comment = commentField.getText().trim();
         if (comment.isEmpty()) {
             setStatus("Ошибка: введите комментарий!", 0xFF5555);

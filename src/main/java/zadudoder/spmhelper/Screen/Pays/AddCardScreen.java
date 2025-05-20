@@ -27,7 +27,7 @@ public class AddCardScreen extends Screen {
             SPmHelperClient.config.addCard(id, token, name); //Добавление карты
             this.close();
             this.client.player.sendMessage(Text.literal("§a[SPmHelper]: Карта успешно привязана!"));
-        }).dimensions(width / 2 - 80, height / 2, 80, 20).build();
+        }).dimensions(width / 2 - 120, height / 2, 80, 20).build();
         this.addDrawableChild(AcceptButton);
 
         ButtonWidget Dismiss = ButtonWidget.builder(Text.of("Отклонить"), (btn) -> {
