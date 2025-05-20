@@ -26,7 +26,10 @@ public class CallsScreen extends Screen {
     private BlockPos playerPos;
     private boolean hasToken;
     private boolean isOnCorrectServer;
+    private boolean callsActive = true;
     private String statusMessage;
+    private String serviseType;
+    private String personName;
     private int statusColor;
 
     public CallsScreen() {
@@ -64,21 +67,39 @@ public class CallsScreen extends Screen {
         int buttonY = height / 2 + 40;
         int buttonWidth = 65;
 
-        ButtonWidget detectiveButton = createServiceButton("Детектив", "detective", "Детектив",
-                width / 2 - 150, buttonY, buttonWidth);
+
+        ButtonWidget detectiveButton = ButtonWidget.builder(Text.of("Детектив"), (btn) -> {
+            String serviceType = "detective";
+            String personName = "Детектив";
+            callService(serviceType, personName);
+        }).dimensions(width / 2 - 150, buttonY, buttonWidth, 20).build();
         this.addDrawableChild(detectiveButton);
 
-        ButtonWidget fsbButton = createServiceButton("ФСБ", "fsb", "ФСБ",
-                width / 2 - 150 + buttonWidth + 10, buttonY, buttonWidth);
+        ButtonWidget fsbButton = ButtonWidget.builder(Text.of("ФСБ"), (btn) -> {
+            String serviceType = "fsb";
+            String personName = "ФСБ";
+            callService(serviceType, personName);
+        }).dimensions(width / 2 - 150 + buttonWidth + 10, buttonY, buttonWidth, 20).build();
         this.addDrawableChild(fsbButton);
 
-        ButtonWidget bankerButton = createServiceButton("Банкир", "banker", "Банкир",
-                width / 2 - 150 + 2 * buttonWidth + 25, buttonY, buttonWidth);
+        ButtonWidget bankerButton = ButtonWidget.builder(Text.of("Банкир"), (btn) -> {
+            String serviceType = "banker";
+            String personName = "Банкир";
+            callService(serviceType, personName);
+        }).dimensions(width / 2 - 150 + 2 * buttonWidth + 25, buttonY, buttonWidth, 20).build();
         this.addDrawableChild(bankerButton);
 
-        ButtonWidget guideButton = createServiceButton("Гид", "guide", "Гид",
-                width / 2 - 150 + 3 * buttonWidth + 40, buttonY, buttonWidth);
+        ButtonWidget guideButton = ButtonWidget.builder(Text.of("Гид"), (btn) -> {
+            String serviceType = "guide";
+            String personName = "Гид";
+            callService(serviceType, personName);
+        }).dimensions(width / 2 - 150 + 3 * buttonWidth + 40, buttonY, buttonWidth, 20).build();
         this.addDrawableChild(guideButton);
+
+        detectiveButton.active = callsActive;
+        fsbButton.active = callsActive;
+        bankerButton.active = callsActive;
+        guideButton.active = callsActive;
 
         if (!hasToken) {
             this.addDrawableChild(ButtonWidget.builder(Text.of("Авторизоваться"), btn -> {
@@ -139,13 +160,17 @@ public class CallsScreen extends Screen {
         String coordinates = sendCoordinates && playerPos != null ?
                 "**" + playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ() + ' ' + world + "**" : " ";
         setStatus("Отправка запроса...", 0xFFFF55);
+        callsActive = false;
+        // detectiveButton fsbButton bankerButton guideButton
 
         SPmHelperApi.makeCall(serviceType, coordinates, comment)
                 .thenAccept(success -> MinecraftClient.getInstance().execute(() -> {
                     if (success) {
                         setStatus(personName + " был вызван!", 0x55FF55);
+                        callsActive = true;
                     } else {
                         setStatus("Ошибка отправки вызова", 0xFF5555);
+                        callsActive = true;
                     }
                 }));
     }

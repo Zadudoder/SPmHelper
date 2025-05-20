@@ -123,7 +123,7 @@ public class PayScreen extends Screen {
             }
 
             if (SPWorldsApi.getBalance(senderCard) < amount) {
-                setStatus("❌ У вас не достаточно денег на карте", 0xFF5555);
+                setStatus("❌ У вас не достаточно АР на карте", 0xFF5555);
                 return;
             }
 

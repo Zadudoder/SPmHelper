@@ -92,7 +92,7 @@ public class Settings extends Screen {
                 selectedCard = newName;
                 showButton = false;
                 this.clearAndInit();
-                setStatus("✔ Имя карты успешно изменено на: " + newName, 0x55FF55);
+                setStatus("✔ Имя карты успешно изменено на " + newName, 0x55FF55);
             }
         }).dimensions(width / 2 + 95, height / 2 + 30, 20, 20).build();
         newNameCardAccept.visible = showButton;
