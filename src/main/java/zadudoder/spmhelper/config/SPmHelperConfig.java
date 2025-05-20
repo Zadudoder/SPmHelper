@@ -35,12 +35,7 @@ public class SPmHelperConfig implements ConfigData {
     }
 
     public void addCard(String id, String token, String cardName) {
-
-        for (String name : cards.keySet()) {
-            if (cards.get(name).token.equals(token)) {
-                return;
-            }
-        }
+        
         Card card = new Card(id, token);
         cards.put(cardName, card);
         if (getMainCard() == null) {
