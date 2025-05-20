@@ -79,14 +79,15 @@ SPmHelper — мод, который облегчит твою игру на [С
 
 **Чтобы вызвать структуру, вам нужно:**
 1. Зайти на любой сервер или мир.
-2. Открыть меню вызовов (по умолчанию на P).
-3. Вбить следующие данные:
+2. Авторизироваться (нажать кнопку или прописать /spmhelper auth).
+3. Открыть меню вызовов (по умолчанию на P).
+4. Вбить следующие данные:
 
    3.1 Выбрать - указывать координаты или нет (указать их можно только будучи на сервере СПм).
 
    3.2 Написать комментарий (опционально если вы указали координаты то можно не писать комментарий).
 
-4. Выбрать и нажать на кнопку структуры, которую вы хотите вызвать. 
+5. Выбрать и нажать на кнопку структуры, которую вы хотите вызвать. 
 
 > За спам вызовами вы можете получить инвойс от структуры которую вы вызываете. 
 </details>
@@ -123,7 +124,7 @@ SPmHelper is a mod that will make your game easier on [SPm](https://spworlds.ru 
 
 **To add your card to the mod, you need to:**
 1. Log in to the SPm server in minecraft.
-2. Go to [website](https://spworlds.ru ) and register via discord.
+2. Go to [website](https://spworlds.ru) and register via discord.
 3. Go to the ["Wallet"](https://spworlds.ru/spm/wallet).
 4. Select the desired card and click on the first icon of the "Share" arrow.
 5. Click "Generate a new API token" -> "Next" -> "Generate".
@@ -184,18 +185,19 @@ SPmHelper is a mod that will make your game easier on [SPm](https://spworlds.ru 
 </details>
 
 <details>
-<summary>⏰ Challenges </summary>
+<summary>⏰ Calls </summary>
 
 **To invoke the structure, you need to:**
 1. Log in to any server or world.
-2. Open the call menu (default to P).
-3. Enter the following information:
+2. Log in (click on button or register /spmhelper auth).
+3. Open the call menu (default to P).
+4. Enter the following information:
 
    3.1 Choose whether to specify coordinates or not (you can specify them only when you are on the SPm server).
 
    3.2 Write a comment (optionally, if you have specified the coordinates, you do not need to write a comment).
 
-4. Select and click on the structure button that you want to call.
+5. Select and click on the structure button that you want to call.
 
 > You can receive an invoice for spam calls.
 </details>
