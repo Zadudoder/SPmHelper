@@ -110,7 +110,7 @@ SPmHelper — мод, который облегчит твою игру на [С
 # EN
 SPmHelper is a mod that will make your game easier on [SPm](https://spworlds.ru ).
 ## Fashion Dependencies:
-1. Fabric-loader 0.16.14 or higher | [Download](https://fabricmc.net/use/installer /)
+1. Fabric-loader 0.16.14 or higher | [Download](https://fabricmc.net/use/installer)
 2. Fabric-api | [Download](https://modrinth.com/mod/fabric-api )
 3. Cloth Config API | [Download](https://modrinth.com/mod/cloth-config )
 4. ModMenu | [Download](https://modrinth.com/mod/modmenu )
