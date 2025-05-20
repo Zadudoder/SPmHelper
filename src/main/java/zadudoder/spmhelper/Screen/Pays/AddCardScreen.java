@@ -20,7 +20,6 @@ public class AddCardScreen extends Screen {
         this.id = id;
         this.token = token;
         this.name = name;
-
     }
 
     protected void init() {
@@ -28,16 +27,13 @@ public class AddCardScreen extends Screen {
             SPmHelperClient.config.addCard(id, token, name); //Добавление карты
             this.close();
             this.client.player.sendMessage(Text.literal("§a[SPmHelper]: Карта успешно привязана!"));
-
-        }).dimensions(width / 2 - 40, height / 2, 80, 20).build();
+        }).dimensions(width / 2 - 80, height / 2, 80, 20).build();
         this.addDrawableChild(AcceptButton);
 
         ButtonWidget Dismiss = ButtonWidget.builder(Text.of("Отклонить"), (btn) -> {
             this.close();
         }).dimensions(width / 2 + 40, height / 2, 80, 20).build();
         this.addDrawableChild(Dismiss);
-
-
     }
 
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
@@ -45,7 +41,7 @@ public class AddCardScreen extends Screen {
 
         context.drawCenteredTextWithShadow(
                 this.textRenderer,
-                Text.of("Вы хотите добавить карту " + "?"),
+                Text.of("Вы хотите добавить карту " + name + " ?"),
                 this.width / 2,
                 this.height / 2 - 40,
                 0xFFFFFF

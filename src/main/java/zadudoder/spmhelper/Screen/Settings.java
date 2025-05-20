@@ -13,6 +13,7 @@ import zadudoder.spmhelper.utils.SPmHelperApi;
 public class Settings extends Screen {
     private static final Identifier SETTINGS_TEXT = Identifier.of("spmhelper", "titles/settingstextrender.png");
     private boolean cardsExpanded = false;
+    private boolean hasToken;
     private String selectedCard = null;
     private String statusMessage;
     private int statusColor;
@@ -27,6 +28,7 @@ public class Settings extends Screen {
         int buttonHeight = 20;
         int startY = this.height / 2;
         int centerX = this.width / 2 - buttonWidth / 2;
+        this.hasToken = SPmHelperClient.config.getAPI_TOKEN() != null && !SPmHelperClient.config.getAPI_TOKEN().isEmpty();
 
         // Основная кнопка выбора карт
         ButtonWidget selectButton =
@@ -81,10 +83,12 @@ public class Settings extends Screen {
             this.client.setScreen(new MainScreen());
         }).dimensions(centerX + 80, startY + 50, buttonWidth, buttonHeight).build());
 
-        this.addDrawableChild(ButtonWidget.builder(Text.of("Авторизоваться"), button -> {
-            SPmHelperApi.startAuthProcess(MinecraftClient.getInstance().player);
-            this.close();
-        }).dimensions(centerX - 15, startY + 80, buttonWidth + 30, buttonHeight).build());
+        if (!hasToken) {
+            this.addDrawableChild(ButtonWidget.builder(Text.of("Авторизоваться"), button -> {
+                SPmHelperApi.startAuthProcess(MinecraftClient.getInstance().player);
+                this.close();
+            }).dimensions(centerX - 15, startY + 80, buttonWidth + 30, buttonHeight).build());
+        }
     }
 
     private void toggleCards() {
