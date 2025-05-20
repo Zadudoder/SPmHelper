@@ -60,10 +60,10 @@ public class PayScreen extends Screen {
         int centerX = this.width / 2 - buttonWidth / 2;
 
         // Основная кнопка выбора карт
-        selectButton = addDrawableChild(ButtonWidget.builder(
+        /*selectButton = addDrawableChild(ButtonWidget.builder(
                 Text.of(selectedCard != null ? selectedCard : "Выберите карту ⬇"),
                 button -> toggleCards()
-        ).dimensions(width / 2 - 240, height / 2 - 15, buttonWidth, buttonHeight).build());
+        ).dimensions(width / 2 - 240, height / 2 - 15, buttonWidth, buttonHeight).build());*/
 
         // Кнопки карт (изначально скрыты)
         int index = 0;
