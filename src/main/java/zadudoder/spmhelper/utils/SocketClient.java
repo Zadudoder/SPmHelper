@@ -10,7 +10,6 @@ import net.minecraft.util.Util;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import zadudoder.spmhelper.SPmHelper;
-import zadudoder.spmhelper.SPmHelperClient;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 
 import java.net.URI;
@@ -47,7 +46,7 @@ public class SocketClient extends WebSocketClient {
         }
         if (responseJson.has("token")) {
             SPmHelper.LOGGER.info(responseJson.get("token").getAsString());
-            SPmHelperClient.config.setAPI_TOKEN(responseJson.get("token").getAsString());
+            SPmHelperConfig.get().setAPI_TOKEN(responseJson.get("token").getAsString());
             AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
             clientPlayer.sendMessage(Text.literal("§a[SPmHelper]: Токен успешно записан!"));
             if (isOpen()) {

@@ -10,7 +10,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
-import zadudoder.spmhelper.SPmHelperClient;
+import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 
 import java.util.Arrays;
@@ -36,7 +36,7 @@ public class CallsScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        this.hasToken = SPmHelperClient.config.getAPI_TOKEN() != null && !SPmHelperClient.config.getAPI_TOKEN().isEmpty();
+        this.hasToken = SPmHelperConfig.get().getAPI_TOKEN() != null && !SPmHelperConfig.get().getAPI_TOKEN().isEmpty();
         isOnCorrectServer = checkServer();
         this.playerPos = MinecraftClient.getInstance().player != null ?
                 MinecraftClient.getInstance().player.getBlockPos() : null;

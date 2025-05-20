@@ -14,6 +14,10 @@ public class SPmHelperConfig implements ConfigData {
     Map<String, Card> cards = new HashMap<>();
     String mainCardName;
 
+    public static SPmHelperConfig get() {
+        return AutoConfig.getConfigHolder(SPmHelperConfig.class).getConfig();
+    }
+
     public String getAPI_TOKEN() {
         return API_TOKEN;
     }
@@ -33,7 +37,7 @@ public class SPmHelperConfig implements ConfigData {
     public void addCard(String id, String token, String cardName) {
 
         for (String name : cards.keySet()) {
-            if (cards.get(name).token == token) {
+            if (cards.get(name).token.equals(token)) {
                 return;
             }
         }
@@ -49,14 +53,14 @@ public class SPmHelperConfig implements ConfigData {
         Card cardInfo = getCard(cardName);
         cards.remove(cardName);
         cards.put(newCardName, cardInfo);
-        if (mainCardName == cardName) {
+        if (mainCardName.equals(cardName)) {
             mainCardName = newCardName;
         }
         AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
     }
 
     public void removeCard(String cardName) {
-        if (mainCardName == cardName) {
+        if (mainCardName.equals(cardName)) {
             mainCardName = null;
         }
         cards.remove(cardName);
@@ -75,6 +79,14 @@ public class SPmHelperConfig implements ConfigData {
     public void setMainCard(String cardName) {
         this.mainCardName = cardName;
         AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
+    }
+
+    public String getMainCardName() {
+        if (!(mainCardName == null)) {
+            return mainCardName;
+        } else {
+            return null;
+        }
     }
 
 }

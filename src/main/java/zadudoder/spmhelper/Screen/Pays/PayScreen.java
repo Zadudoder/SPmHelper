@@ -11,7 +11,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import zadudoder.spmhelper.SPmHelperClient;
+import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.SPWorldsApi;
 import zadudoder.spmhelper.utils.types.Card;
 
@@ -94,7 +94,7 @@ public class PayScreen extends Screen {
 
     private void processTransfer() {
         try {
-            Card senderCard = SPmHelperClient.config.getMainCard();
+            Card senderCard = SPmHelperConfig.get().getMainCard();
             if (senderCard == null) {
                 setStatus("❌ Укажите карту для оплаты", 0xFF5555);
                 return;
@@ -158,10 +158,11 @@ public class PayScreen extends Screen {
     }
 
     private void loadSenderCard() {
-        Card senderCard = SPmHelperClient.config.getMainCard();
+        Card senderCard = SPmHelperConfig.get().getMainCard();
+        String cardName = SPmHelperConfig.get().getMainCardName();
 
         if (senderCard == null) {
-            setStatus("❌ Карта не привязана", 0xFF5555);
+            setStatus("❌ Вы не указали карту для оплаты", 0xFF5555);
             return;
         }
         JsonObject cardInfo = SPWorldsApi.getCardInfo(senderCard);
@@ -169,7 +170,7 @@ public class PayScreen extends Screen {
         if (cardInfo.has("error")) {
             setStatus("❌ Ошибка загрузки карты", 0xFF5555);
         } else {
-            setStatus("✔ Ваша карта привязана. Текущий баланс: " + cardInfo.get("balance").getAsString() + " АР", 0x55FF55);
+            setStatus("✔ " + cardName + ": Текущий баланс: " + cardInfo.get("balance").getAsString() + " АР", 0x55FF55);
         }
     }
 

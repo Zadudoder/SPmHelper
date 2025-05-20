@@ -4,6 +4,9 @@ public class Card {
     public String id;
     public String token;
 
+    public Card() {
+    } // Пустой конструктор для десериализации
+
     public Card(String id, String token) {
         this.id = id;
         this.token = token;

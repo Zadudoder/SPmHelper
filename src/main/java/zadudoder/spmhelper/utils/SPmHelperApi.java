@@ -5,7 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import zadudoder.spmhelper.SPmHelper;
-import zadudoder.spmhelper.SPmHelperClient;
+import zadudoder.spmhelper.config.SPmHelperConfig;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -47,7 +47,7 @@ public class SPmHelperApi {
     }
 
     public static CompletableFuture<Boolean> makeCall(String service, String coordinates, String comment) {
-        String token = SPmHelperClient.config.getAPI_TOKEN();
+        String token = SPmHelperConfig.get().getAPI_TOKEN();
         if (token == null || token.isEmpty()) {
             return CompletableFuture.completedFuture(false);
         }
@@ -80,7 +80,7 @@ public class SPmHelperApi {
     }
 
     public static CompletableFuture<Integer> getAuthStatus() {
-        String token = SPmHelperClient.config.getAPI_TOKEN();
+        String token = SPmHelperConfig.get().getAPI_TOKEN();
         if (token == null || token.isEmpty()) {
             return CompletableFuture.completedFuture(401);
         }

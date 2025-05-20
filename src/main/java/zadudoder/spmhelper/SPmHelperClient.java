@@ -1,13 +1,12 @@
 package zadudoder.spmhelper;
 
 import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import org.lwjgl.glfw.GLFW;
@@ -21,7 +20,6 @@ import zadudoder.spmhelper.events.ModEvents;
 
 @Environment(EnvType.CLIENT)
 public class SPmHelperClient implements ClientModInitializer {
-    public static SPmHelperConfig config = null;
     private static KeyBinding keyOpenScreen;
     private static KeyBinding keyOpenCallsScreen;
     private static KeyBinding keyOpenPayScreen;
@@ -31,10 +29,7 @@ public class SPmHelperClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
-            AutoConfig.register(SPmHelperConfig.class, JanksonConfigSerializer::new);
-            config = AutoConfig.getConfigHolder(SPmHelperConfig.class).getConfig();
-        }
+        AutoConfig.register(SPmHelperConfig.class, GsonConfigSerializer::new);
 
         registerKeyBindings();
         registerKeyHandlers();

@@ -4,7 +4,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
-import zadudoder.spmhelper.SPmHelperClient;
+import zadudoder.spmhelper.config.SPmHelperConfig;
 
 public class AddCardScreen extends Screen {
     private String id;
@@ -24,7 +24,7 @@ public class AddCardScreen extends Screen {
 
     protected void init() {
         ButtonWidget AcceptButton = ButtonWidget.builder(Text.of("Принять"), (btn) -> {
-            SPmHelperClient.config.addCard(id, token, name); //Добавление карты
+            SPmHelperConfig.get().addCard(id, token, name); //Добавление карты
             this.close();
             this.client.player.sendMessage(Text.literal("§a[SPmHelper]: Карта успешно привязана!"));
         }).dimensions(width / 2 - 120, height / 2, 80, 20).build();
