@@ -5,8 +5,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -26,6 +28,9 @@ public class PayScreen extends Screen {
     private boolean isSPmPay = false;
     private String statusMessage;
     private int statusColor;
+    private ButtonWidget selectButton;
+    private String selectedCard = null;
+    private boolean cardsExpanded = false;
 
     public PayScreen() {
         super(Text.of("Перевод СПм"));
@@ -47,6 +52,31 @@ public class PayScreen extends Screen {
             Util.getOperatingSystem().open("https://spworlds.ru/spm/groups/06c25d05-b370-47d4-8416-fa1011ea69a1");
         }).dimensions(width - 20, 10, 15, 15).build();
         this.addDrawableChild(SPmGroup);
+
+
+        int buttonWidth = 120;
+        int buttonHeight = 20;
+        int startY = this.height / 2;
+        int centerX = this.width / 2 - buttonWidth / 2;
+
+        // Основная кнопка выбора карт
+        selectButton = addDrawableChild(ButtonWidget.builder(
+                Text.of(selectedCard != null ? selectedCard : "Выберите карту ⬇"),
+                button -> toggleCards()
+        ).dimensions(width / 2 - 240, height / 2 - 15, buttonWidth, buttonHeight).build());
+
+        // Кнопки карт (изначально скрыты)
+        int index = 0;
+        for (String name : SPmHelperConfig.get().getCards().keySet()) {
+            index++;
+            ButtonWidget cardBtn = ButtonWidget.builder(
+                    Text.of(name),
+                    btn -> selectCard(name)
+            ).dimensions(centerX - 80, startY - 50 + index * 25, buttonWidth, buttonHeight).build();
+            cardBtn.visible = cardsExpanded;
+            this.addDrawableChild(cardBtn);
+        }
+
 
         // Поле для номера карты получателя
         this.receiverCardField = new TextFieldWidget(
@@ -90,6 +120,31 @@ public class PayScreen extends Screen {
                 .dimensions(this.width / 2 - 100, this.height / 2 + 50, 200, 20)
                 .build();
         this.addDrawableChild(transferButton);
+    }
+
+    private void toggleCards() {
+        cardsExpanded = !cardsExpanded;
+        updateCardsVisibility();
+    }
+
+    private void updateCardsVisibility() {
+        int index = 0;
+        for (Element element : this.children()) {
+            if (element instanceof ClickableWidget widget && element != selectButton) {
+                index++;
+                if (index > 0 && index <= SPmHelperConfig.get().getCards().size()) {
+                    widget.visible = cardsExpanded;
+                }
+            }
+        }
+    }
+
+    private void selectCard(String card) {
+        selectedCard = card;
+        cardsExpanded = false;
+        updateCardsVisibility();
+        // Не вызываем clearAndInit(), чтобы не сбрасывать состояние
+        selectButton.setMessage(Text.of(card));
     }
 
     private void processTransfer() {

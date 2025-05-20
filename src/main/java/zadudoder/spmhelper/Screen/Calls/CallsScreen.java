@@ -26,10 +26,12 @@ public class CallsScreen extends Screen {
     private BlockPos playerPos;
     private boolean hasToken;
     private boolean isOnCorrectServer;
+    private ButtonWidget detectiveButton;
+    private ButtonWidget fsbButton;
+    private ButtonWidget bankerButton;
+    private ButtonWidget guideButton;
     private boolean callsActive = true;
     private String statusMessage;
-    private String serviseType;
-    private String personName;
     private int statusColor;
 
     public CallsScreen() {
@@ -68,38 +70,34 @@ public class CallsScreen extends Screen {
         int buttonWidth = 65;
 
 
-        ButtonWidget detectiveButton = ButtonWidget.builder(Text.of("Детектив"), (btn) -> {
+        detectiveButton = ButtonWidget.builder(Text.of("Детектив"), (btn) -> {
             String serviceType = "detective";
             String personName = "Детектив";
             callService(serviceType, personName);
         }).dimensions(width / 2 - 150, buttonY, buttonWidth, 20).build();
         this.addDrawableChild(detectiveButton);
 
-        ButtonWidget fsbButton = ButtonWidget.builder(Text.of("ФСБ"), (btn) -> {
+        fsbButton = ButtonWidget.builder(Text.of("ФСБ"), (btn) -> {
             String serviceType = "fsb";
             String personName = "ФСБ";
             callService(serviceType, personName);
         }).dimensions(width / 2 - 150 + buttonWidth + 10, buttonY, buttonWidth, 20).build();
         this.addDrawableChild(fsbButton);
 
-        ButtonWidget bankerButton = ButtonWidget.builder(Text.of("Банкир"), (btn) -> {
+        bankerButton = ButtonWidget.builder(Text.of("Банкир"), (btn) -> {
             String serviceType = "banker";
             String personName = "Банкир";
             callService(serviceType, personName);
         }).dimensions(width / 2 - 150 + 2 * buttonWidth + 25, buttonY, buttonWidth, 20).build();
         this.addDrawableChild(bankerButton);
 
-        ButtonWidget guideButton = ButtonWidget.builder(Text.of("Гид"), (btn) -> {
+        guideButton = ButtonWidget.builder(Text.of("Гид"), (btn) -> {
             String serviceType = "guide";
             String personName = "Гид";
             callService(serviceType, personName);
         }).dimensions(width / 2 - 150 + 3 * buttonWidth + 40, buttonY, buttonWidth, 20).build();
         this.addDrawableChild(guideButton);
 
-        detectiveButton.active = callsActive;
-        fsbButton.active = callsActive;
-        bankerButton.active = callsActive;
-        guideButton.active = callsActive;
 
         if (!hasToken) {
             this.addDrawableChild(ButtonWidget.builder(Text.of("Авторизоваться"), btn -> {
@@ -134,6 +132,13 @@ public class CallsScreen extends Screen {
                 .build();
     }
 
+    private void updateButtonsState() {
+        detectiveButton.active = !detectiveButton.active;
+        fsbButton.active = !fsbButton.active;
+        bankerButton.active = !bankerButton.active;
+        guideButton.active = !guideButton.active;
+    }
+
     public void callService(String serviceType, String personName) {
         if (!hasToken) {
             setStatus("⬇ Сначала авторизуйтесь ⬇", 0xFF5555);
@@ -160,17 +165,21 @@ public class CallsScreen extends Screen {
         String coordinates = sendCoordinates && playerPos != null ?
                 "**" + playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ() + ' ' + world + "**" : " ";
         setStatus("Отправка запроса...", 0xFFFF55);
-        callsActive = false;
-        // detectiveButton fsbButton bankerButton guideButton
+        updateButtonsState();
+
 
         SPmHelperApi.makeCall(serviceType, coordinates, comment)
                 .thenAccept(success -> MinecraftClient.getInstance().execute(() -> {
                     if (success) {
                         setStatus(personName + " был вызван!", 0x55FF55);
-                        callsActive = true;
+                        updateButtonsState();
                     } else {
                         setStatus("Ошибка отправки вызова", 0xFF5555);
                         callsActive = true;
+                        detectiveButton.active = callsActive;
+                        fsbButton.active = callsActive;
+                        bankerButton.active = callsActive;
+                        guideButton.active = callsActive;
                     }
                 }));
     }
