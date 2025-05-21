@@ -3,6 +3,7 @@ package zadudoder.spmhelper.config;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import zadudoder.spmhelper.utils.types.Card;
 
 import java.util.HashMap;
@@ -11,7 +12,11 @@ import java.util.Map;
 @Config(name = "spmhelper")
 public class SPmHelperConfig implements ConfigData {
     String API_TOKEN = null;
+
+    @ConfigEntry.Gui.Excluded
     Map<String, Card> cards = new HashMap<>();
+    
+    @ConfigEntry.Gui.Excluded
     String mainCardName;
 
     public static SPmHelperConfig get() {
