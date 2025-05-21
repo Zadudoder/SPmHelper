@@ -122,7 +122,7 @@ public class PayScreen extends Screen {
         this.addDrawableChild(transferButton);
     }
 
-    private void toggleCards() {
+    /*private void toggleCards() {
         cardsExpanded = !cardsExpanded;
         updateCardsVisibility();
     }
@@ -145,7 +145,7 @@ public class PayScreen extends Screen {
         updateCardsVisibility();
         // Не вызываем clearAndInit(), чтобы не сбрасывать состояние
         selectButton.setMessage(Text.of(card));
-    }
+    }*/
 
     private void processTransfer() {
         try {
