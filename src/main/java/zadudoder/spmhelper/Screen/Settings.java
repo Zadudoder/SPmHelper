@@ -9,7 +9,6 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import zadudoder.spmhelper.SPmHelper;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 
@@ -35,10 +34,12 @@ public class Settings extends Screen {
         int startY = this.height / 2;
         int centerX = this.width / 2 - buttonWidth / 2;
         this.hasToken = SPmHelperConfig.get().getAPI_TOKEN() != null && !SPmHelperConfig.get().getAPI_TOKEN().isEmpty();
-
+        if (selectedCard == null) {
+            selectedCard = SPmHelperConfig.get().getMainCardName();
+        }
         // Основная кнопка выбора карт
         selectButton = addDrawableChild(ButtonWidget.builder(
-                Text.of(selectedCard != null ? selectedCard : "Выберите карту ⬇"),
+                Text.of(selectedCard != null ? selectedCard + " | " + SPmHelperConfig.get().getCard(selectedCard).number : "Выберите карту ⬇"),
                 button -> toggleCards()
         ).dimensions(centerX - 80, startY - 50, buttonWidth, buttonHeight).build());
 
@@ -60,7 +61,7 @@ public class Settings extends Screen {
                 SPmHelperConfig.get().removeCard(selectedCard);
                 selectedCard = null;
                 showButton = false;
-                this.clearAndInit();
+                reloadScreen();
                 setStatus("✔ Карта успешно удалена!", 0x55FF55);
             } else {
                 setStatus("Сначала выберите карту!", 0xFFFF00);
@@ -80,7 +81,6 @@ public class Settings extends Screen {
 
         ButtonWidget newNameCardAccept = ButtonWidget.builder(Text.of("✔"), button -> {
             String newName = NewNameCard.getText().trim();
-            SPmHelper.LOGGER.info(newName);
             if (!newName.isEmpty()) {
                 for (String name : SPmHelperConfig.get().getCards().keySet()) {
                     if (name.equals(newName)) {
@@ -91,7 +91,7 @@ public class Settings extends Screen {
                 SPmHelperConfig.get().renameCard(selectedCard, newName);
                 selectedCard = newName;
                 showButton = false;
-                this.clearAndInit();
+                reloadScreen();
                 setStatus("✔ Имя карты успешно изменено на " + newName, 0x55FF55);
             }
         }).dimensions(width / 2 + 95, height / 2 + 30, 20, 20).build();
@@ -100,7 +100,7 @@ public class Settings extends Screen {
 
         ButtonWidget newNameCardCancel = ButtonWidget.builder(Text.of("❌"), button -> {
             showButton = false;
-            this.clearAndInit();
+            reloadScreen();
         }).dimensions(width / 2 - 115, height / 2 + 30, 20, 20).build();
         newNameCardCancel.visible = showButton;
         this.addDrawableChild(newNameCardCancel);
@@ -109,7 +109,7 @@ public class Settings extends Screen {
         this.addDrawableChild(ButtonWidget.builder(Text.of("Изменить имя"), button -> {
             if (selectedCard != null) {
                 showButton = true;
-                this.clearAndInit(); // Пересоздаем экран с новым состоянием
+                reloadScreen(); // Пересоздаем экран с новым состоянием
             } else {
                 setStatus("Сначала выберите карту!", 0xFFFF00);
             }
@@ -119,7 +119,7 @@ public class Settings extends Screen {
         this.addDrawableChild(ButtonWidget.builder(Text.of("Выбрать для оплаты"), button -> {
             if (selectedCard != null) {
                 SPmHelperConfig.get().setMainCard(selectedCard);
-                setStatus("✔ \""+ SPmHelperConfig.get().getMainCardName() +"\" выбрана для оплаты!", 0x55FF55);
+                setStatus("✔ \"" + SPmHelperConfig.get().getMainCardName() + "\" выбрана для оплаты!", 0x55FF55);
             } else {
                 setStatus("Сначала выберите карту!", 0xFFFF00);
             }
@@ -135,8 +135,18 @@ public class Settings extends Screen {
     }
 
     private void toggleCards() {
-        cardsExpanded = !cardsExpanded;
-        updateCardsVisibility();
+        if (!SPmHelperConfig.get().getCards().isEmpty()) {
+            cardsExpanded = !cardsExpanded;
+            updateCardsVisibility();
+        } else {
+            setStatus("Нет привязанных карт!", 0xFF5555);
+        }
+
+    }
+
+    private void reloadScreen() {
+        cardsExpanded = false;
+        this.clearAndInit();
     }
 
     private void selectCard(String card) {

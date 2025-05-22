@@ -9,12 +9,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
-import zadudoder.spmhelper.SPmHelper;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 
 import java.net.URI;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 public class SocketClient extends WebSocketClient {
     private final CompletableFuture<String> responseFuture = new CompletableFuture<>();
@@ -37,26 +35,27 @@ public class SocketClient extends WebSocketClient {
     public void onMessage(String message) {
         MinecraftClient client = MinecraftClient.getInstance();
         JsonObject responseJson = JsonParser.parseString(message).getAsJsonObject();
+        System.out.println(responseJson.toString());
         if (responseJson.has("auth_url")) {
+            clientPlayer.sendMessage(Text.literal("§a[SPmHelper]: Открытие ссылки на авторизацию"));
             String authUrl = responseJson.get("auth_url").getAsString();
             client.execute(() -> {
                 Util.getOperatingSystem().open(authUrl);
             });
             clientPlayer.sendMessage(Text.literal("§a[SPmHelper]: Ожидание авторизации"));
-        }
-        if (responseJson.has("token")) {
-            SPmHelper.LOGGER.info(responseJson.get("token").getAsString());
+        } else if (responseJson.has("token")) {
             SPmHelperConfig.get().setAPI_TOKEN(responseJson.get("token").getAsString());
             AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
             clientPlayer.sendMessage(Text.literal("§a[SPmHelper]: Токен успешно записан!"));
-            if (isOpen()) {
-                close();
+            safeClose();
+        } else if (responseJson.has("error")) {
+            if (responseJson.has("Авторизация отклонена игроком")) {
+                clientPlayer.sendMessage(Text.literal("§c[SPmHelper]: Авторизация отменена вами"));
+            } else {
+                clientPlayer.sendMessage(Text.literal("§c[SPmHelper]: Не удалось получить ссылку на авторизацию"));
             }
+            safeClose();
         }
-    }
-
-    public CompletableFuture<String> getResponseFuture(long timeout, TimeUnit unit) {
-        return responseFuture.orTimeout(timeout, unit);
     }
 
     @Override
@@ -74,5 +73,11 @@ public class SocketClient extends WebSocketClient {
 
     public void setClientPlayer(ClientPlayerEntity client) {
         this.clientPlayer = client;
+    }
+
+    private void safeClose() {
+        if (isOpen()) {
+            close();
+        }
     }
 }
