@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 
 
 public class SPmHelperApi {
-    private static final String API_BASE = "https://api-spmhelpers.sp-mini.ru/api";
+    private static final String API_BASE = "https://api.spmhelpers.ru/api";
     private static final HttpClient httpClient = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_2)
             .connectTimeout(Duration.ofSeconds(10))
@@ -30,7 +30,7 @@ public class SPmHelperApi {
         JsonObject json = new JsonObject();
         json.addProperty("minecraft_uuid", playerUuid);
         try {
-            SocketClient socketClient = new SocketClient(new URI("wss://api-spmhelpers.sp-mini.ru/api/authorize/ws"));
+            SocketClient socketClient = new SocketClient(new URI("wss://api.spmhelpers.ru/api/authorize/ws"));
             socketClient.setOnOpenCallback(() -> {
                 socketClient.send(json.toString());
             });
