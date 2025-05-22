@@ -39,7 +39,7 @@ public class Settings extends Screen {
         }
         // Основная кнопка выбора карт
         selectButton = addDrawableChild(ButtonWidget.builder(
-                Text.of(selectedCard != null ? selectedCard + " | " + SPmHelperConfig.get().getCard(selectedCard).number : "Выберите карту ⬇"),
+                Text.of(selectedCard != null ? getCardButtonText(selectedCard) : "Выберите карту ⬇"),
                 button -> toggleCards()
         ).dimensions(centerX - 80, startY - 50, buttonWidth, buttonHeight).build());
 
@@ -48,7 +48,7 @@ public class Settings extends Screen {
         for (String name : SPmHelperConfig.get().getCards().keySet()) {
             index++;
             ButtonWidget cardBtn = ButtonWidget.builder(
-                    Text.of(name),
+                    Text.of(getCardButtonText(name)),
                     btn -> selectCard(name)
             ).dimensions(centerX - 80, startY - 50 + index * 25, buttonWidth, buttonHeight).build();
             cardBtn.visible = cardsExpanded;
@@ -149,12 +149,16 @@ public class Settings extends Screen {
         this.clearAndInit();
     }
 
+    private String getCardButtonText(String name) {
+        return name + " | " + SPmHelperConfig.get().getCard(name).number;
+    }
+
     private void selectCard(String card) {
         selectedCard = card;
         cardsExpanded = false;
         updateCardsVisibility();
         // Не вызываем clearAndInit(), чтобы не сбрасывать состояние
-        selectButton.setMessage(Text.of(card));
+        selectButton.setMessage(Text.literal(getCardButtonText(selectedCard)));
     }
 
     private void updateCardsVisibility() {
