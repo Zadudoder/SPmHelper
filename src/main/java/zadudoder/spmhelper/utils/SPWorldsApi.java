@@ -81,6 +81,22 @@ public class SPWorldsApi {
         }
     }
 
+    public static JsonObject getOwnerInfo(Card card) {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(API_URL + "accounts/me"))
+                    .header("Authorization", getAuthorizationHeader(card))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            return JsonParser.parseString(response.body()).getAsJsonObject();
+        } catch (Exception e) {
+            JsonObject error = new JsonObject();
+            error.addProperty("error", e.getMessage());
+            return error;
+        }
+    }
+
     private static String getAuthorizationHeader(Card card) {
         return "Bearer " + card.getBase64Key();
     }

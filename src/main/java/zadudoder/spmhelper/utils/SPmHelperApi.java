@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
-import zadudoder.spmhelper.SPmHelper;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 
 import java.net.URI;
@@ -26,21 +25,22 @@ public class SPmHelperApi {
     public static void startAuthProcess(ClientPlayerEntity player) {
         MinecraftClient client = MinecraftClient.getInstance();
         String playerUuid = client.player.getUuid().toString().replace("-", "");
-        SPmHelper.LOGGER.info(playerUuid);
         JsonObject json = new JsonObject();
         json.addProperty("minecraft_uuid", playerUuid);
         try {
             SocketClient socketClient = new SocketClient(new URI("wss://api.spmhelpers.ru/api/authorize/ws"));
             socketClient.setOnOpenCallback(() -> {
+                player.sendMessage(Text.literal("§a[SPmHelper]: Получение ссылки на авторизации"));
                 socketClient.send(json.toString());
             });
             socketClient.setClientPlayer(player);
             socketClient.connect();
-            player.sendMessage(Text.literal("§a[SPmHelper]: Открытие ссылки для авторизации"));
         } catch (URISyntaxException e) {
             player.sendMessage(Text.literal("§c[SPmHelper]: Ошибка подключения к серверу"));
+        } catch (IllegalStateException Exception) {
+            player.sendMessage(Text.literal("§c[SPmHelper]: Ошибка подключения к WebSocket"));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            player.sendMessage(Text.literal("§c[SPmHelper]: Ошибка сервера"));
         }
 
 

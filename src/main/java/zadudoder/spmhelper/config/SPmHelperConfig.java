@@ -15,7 +15,7 @@ public class SPmHelperConfig implements ConfigData {
 
     @ConfigEntry.Gui.Excluded
     Map<String, Card> cards = new HashMap<>();
-    
+
     @ConfigEntry.Gui.Excluded
     String mainCardName;
 
