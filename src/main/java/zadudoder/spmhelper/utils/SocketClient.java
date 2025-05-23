@@ -49,7 +49,7 @@ public class SocketClient extends WebSocketClient {
             clientPlayer.sendMessage(Text.literal("§a[SPmHelper]: Токен успешно записан!"));
             safeClose();
         } else if (responseJson.has("error")) {
-            if (responseJson.has("Авторизация отклонена игроком")) {
+            if (responseJson.get("error").getAsString().equals("Авторизация отклонена игроком")) {
                 clientPlayer.sendMessage(Text.literal("§c[SPmHelper]: Авторизация отменена вами"));
             } else {
                 clientPlayer.sendMessage(Text.literal("§c[SPmHelper]: Не удалось получить ссылку на авторизацию"));
