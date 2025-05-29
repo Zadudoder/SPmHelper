@@ -6,13 +6,18 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
+import zadudoder.spmhelper.SPmHelper;
 import zadudoder.spmhelper.Screen.Pays.AddCardScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.utils.Misc;
@@ -67,6 +72,31 @@ public class ModEvents {
                 String finalName = name;
                 MinecraftClient.getInstance().
                         execute(() -> MinecraftClient.getInstance().setScreen(new AddCardScreen(id, token, finalName)));
+            }
+        });
+
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            String clientVersion = FabricLoader.getInstance().getModContainer(SPmHelper.MOD_ID).get().getMetadata().getVersion().toString();
+            String lastVersion = SPmHelperApi.getLastModVersionInfo().get("version_number").getAsString();
+            ServerPlayerEntity player = handler.getPlayer();
+            if (!clientVersion.equals(lastVersion)) {
+                player.sendMessage(
+                        Text.literal("[SPmHelper]: Доступно обновление! ").formatted(Formatting.GREEN)
+                                .styled(style -> style
+                                        .withClickEvent(new ClickEvent(
+                                                ClickEvent.Action.OPEN_URL,
+                                                "https://modrinth.com/mod/spmhelper/versions/" + lastVersion
+                                        ))
+                                )
+                                .append(
+                                        Text.literal(clientVersion).formatted(Formatting.YELLOW)
+                                )
+                                .append(" -> ")
+                                .append(
+                                        Text.literal(lastVersion)
+                                                .formatted(Formatting.GREEN)
+                                )
+                );
             }
         });
 
