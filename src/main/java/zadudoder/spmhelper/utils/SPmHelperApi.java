@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 
 
 public class SPmHelperApi {
-    private static final String API_BASE = "https://api.spmhelpers.ru/api";
+    private static final String API_BASE = "https://api.spmhelper.ru/api";
     private static final HttpClient httpClient = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_2)
             .connectTimeout(Duration.ofSeconds(10))
