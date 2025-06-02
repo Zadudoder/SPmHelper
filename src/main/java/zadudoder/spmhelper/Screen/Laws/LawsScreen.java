@@ -2,7 +2,9 @@ package zadudoder.spmhelper.Screen.Laws;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
+import net.minecraft.util.Util;
 
 public class LawsScreen extends Screen {
     public LawsScreen() {
@@ -10,7 +12,10 @@ public class LawsScreen extends Screen {
     }
 
     protected void init() {
-
+        ButtonWidget SPmGroup = ButtonWidget.builder(Text.of("✈"), (btn) -> {
+            Util.getOperatingSystem().open("https://spmhelper.ru");
+        }).dimensions(width - 20, 10, 15, 15).build();
+        this.addDrawableChild(SPmGroup);
     }
 
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {

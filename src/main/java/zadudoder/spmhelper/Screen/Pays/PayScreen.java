@@ -48,7 +48,7 @@ public class PayScreen extends Screen {
         super.init();
         loadSenderCard();
         ButtonWidget SPmGroup = ButtonWidget.builder(Text.of("✈"), (btn) -> {
-            Util.getOperatingSystem().open("https://spworlds.ru/spm/groups/06c25d05-b370-47d4-8416-fa1011ea69a1");
+            Util.getOperatingSystem().open("https://spmhelper.ru");
         }).dimensions(width - 20, 10, 15, 15).build();
         this.addDrawableChild(SPmGroup);
 
