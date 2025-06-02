@@ -20,6 +20,7 @@ import net.minecraft.util.Formatting;
 import zadudoder.spmhelper.SPmHelper;
 import zadudoder.spmhelper.Screen.Pays.AddCardScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
+import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.Misc;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 
@@ -30,6 +31,8 @@ public class ModEvents {
         registerChatEventHandler();
         registerCommands();
     }
+
+    private static boolean hasToken = SPmHelperConfig.get().getAPI_TOKEN() != null && !SPmHelperConfig.get().getAPI_TOKEN().isEmpty();
 
     private static void registerBlockClickHandler() {
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
@@ -108,8 +111,12 @@ public class ModEvents {
             var mainCommand = ClientCommandManager.literal("spmhelper")
                     .then(ClientCommandManager.literal("auth")
                             .executes(context -> {
-                                SPmHelperApi.startAuthProcess(context.getSource().getPlayer());
-                                return 1;
+                                if (!hasToken) {
+                                    SPmHelperApi.startAuthProcess(context.getSource().getPlayer());
+                                    return 1;
+                                }
+                                context.getSource().sendFeedback(Text.literal("§a[SPmHelper]: Токен активен! Новая авторизация не нужна."));
+                                return 0;
                             })
                     )
                     .then(ClientCommandManager.literal("status")
