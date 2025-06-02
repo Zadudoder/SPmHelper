@@ -5,10 +5,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -31,6 +29,7 @@ public class PayScreen extends Screen {
     private ButtonWidget selectButton;
     private String selectedCard = null;
     private boolean cardsExpanded = false;
+    private ButtonWidget[] cardButtons;
 
     public PayScreen() {
         super(Text.of("Перевод СПм"));
@@ -59,23 +58,28 @@ public class PayScreen extends Screen {
         int startY = this.height / 2;
         int centerX = this.width / 2 - buttonWidth / 2;
 
-        // Основная кнопка выбора карт
-        /*selectButton = addDrawableChild(ButtonWidget.builder(
-                Text.of(selectedCard != null ? selectedCard : "Выберите карту ⬇"),
+        if (selectedCard == null) {
+            selectedCard = SPmHelperConfig.get().getMainCardName();
+        }
+
+        cardButtons = new ButtonWidget[SPmHelperConfig.get().getCards().size()];
+
+        selectButton = addDrawableChild(ButtonWidget.builder(
+                Text.of(selectedCard != null ? getCardButtonText(selectedCard) : "Выберите карту ⬇"),
                 button -> toggleCards()
-        ).dimensions(width / 2 - 240, height / 2 - 15, buttonWidth, buttonHeight).build());
+        ).dimensions(centerX - 180, startY - 50, buttonWidth, buttonHeight).build());
 
         // Кнопки карт (изначально скрыты)
         int index = 0;
         for (String name : SPmHelperConfig.get().getCards().keySet()) {
-            index++;
-            ButtonWidget cardBtn = ButtonWidget.builder(
-                    Text.of(name),
+            cardButtons[index] = ButtonWidget.builder(
+                    Text.of(getCardButtonText(name)),
                     btn -> selectCard(name)
-            ).dimensions(centerX - 80, startY - 50 + index * 25, buttonWidth, buttonHeight).build();
-            cardBtn.visible = cardsExpanded;
-            this.addDrawableChild(cardBtn);
-        }*/
+            ).dimensions(centerX - 180, startY - 25 + index * 25, buttonWidth, buttonHeight).build();
+            cardButtons[index].visible = cardsExpanded;
+            this.addDrawableChild(cardButtons[index]);
+            index++;
+        }
 
 
         // Поле для номера карты получателя
@@ -122,30 +126,6 @@ public class PayScreen extends Screen {
         this.addDrawableChild(transferButton);
     }
 
-    /*private void toggleCards() {
-        cardsExpanded = !cardsExpanded;
-        updateCardsVisibility();
-    }
-
-    private void updateCardsVisibility() {
-        int index = 0;
-        for (Element element : this.children()) {
-            if (element instanceof ClickableWidget widget && element != selectButton) {
-                index++;
-                if (index > 0 && index <= SPmHelperConfig.get().getCards().size()) {
-                    widget.visible = cardsExpanded;
-                }
-            }
-        }
-    }
-
-    private void selectCard(String card) {
-        selectedCard = card;
-        cardsExpanded = false;
-        updateCardsVisibility();
-        // Не вызываем clearAndInit(), чтобы не сбрасывать состояние
-        selectButton.setMessage(Text.of(card));
-    }*/
 
     private void processTransfer() {
         try {
@@ -225,7 +205,42 @@ public class PayScreen extends Screen {
         if (cardInfo.has("error")) {
             setStatus("❌ Ошибка загрузки карты", 0xFF5555);
         } else {
-            setStatus("Текущий баланс карты \""+ cardName +"\": "+ cardInfo.get("balance").getAsString() + " АР", 0x55FF55);
+            setStatus("Текущий баланс карты \"" + cardName + "\": " + cardInfo.get("balance").getAsString() + " АР", 0x55FF55);
+        }
+    }
+
+    private void toggleCards() {
+        if (!SPmHelperConfig.get().getCards().isEmpty()) {
+            cardsExpanded = !cardsExpanded;
+            updateCardsVisibility();
+        } else {
+            setStatus("Нет привязанных карт!", 0xFF5555);
+        }
+
+    }
+
+    private void reloadScreen() {
+        cardsExpanded = false;
+        this.clearAndInit();
+    }
+
+    private String getCardButtonText(String name) {
+        return name + " | " + SPmHelperConfig.get().getCard(name).number;
+    }
+
+    private void selectCard(String card) {
+        SPmHelperConfig.get().setMainCard(card);
+        setStatus("Текущий баланс карты \"" + card + "\": " + SPWorldsApi.getBalance(SPmHelperConfig.get().getMainCard()) + " АР", 0x55FF55);
+        cardsExpanded = false;
+        updateCardsVisibility();
+        selectedCard = card;
+        selectButton.setMessage(Text.literal(getCardButtonText(selectedCard)));
+    }
+
+    private void updateCardsVisibility() {
+        for (ButtonWidget cardButton : cardButtons) {
+            cardButton.visible = cardsExpanded;
+            cardButton.active = !cardButton.getMessage().getString().equals(getCardButtonText(SPmHelperConfig.get().getMainCardName()));
         }
     }
 

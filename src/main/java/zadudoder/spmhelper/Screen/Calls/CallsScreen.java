@@ -122,8 +122,7 @@ public class CallsScreen extends Screen {
         String address = MinecraftClient.getInstance().getCurrentServerEntry().address.toLowerCase();
         return ALLOWED_SERVERS.stream().anyMatch(allowed ->
                 address.equals(allowed) ||
-                        address.startsWith(allowed + ":") ||
-                        address.endsWith("." + allowed));
+                        address.startsWith(allowed + ":"));
     }
 
     private ButtonWidget createServiceButton(String text, String serviceType, String personName, int x, int y, int width) {

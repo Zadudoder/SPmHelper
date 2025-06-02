@@ -2,10 +2,8 @@ package zadudoder.spmhelper.Screen;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -16,12 +14,12 @@ public class Settings extends Screen {
     private static final Identifier SETTINGS_TEXT = Identifier.of("spmhelper", "titles/settingstextrender.png");
     private boolean cardsExpanded = false;
     private boolean hasToken;
-    private boolean showButton = false;
     private String selectedCard = null;
     private String statusMessage;
-    private TextFieldWidget NewNameCard;
+    private TextFieldWidget newNameCard;
     private int statusColor;
-    private ButtonWidget selectButton; // Сохраняем ссылку на кнопку выбора
+    private ButtonWidget selectButton;
+    private ButtonWidget[] cardButtons;
 
     public Settings() {
         super(Text.of("Экран настроек"));
@@ -34,25 +32,23 @@ public class Settings extends Screen {
         int startY = this.height / 2;
         int centerX = this.width / 2 - buttonWidth / 2;
         this.hasToken = SPmHelperConfig.get().getAPI_TOKEN() != null && !SPmHelperConfig.get().getAPI_TOKEN().isEmpty();
-        if (selectedCard == null) {
-            selectedCard = SPmHelperConfig.get().getMainCardName();
-        }
+        cardButtons = new ButtonWidget[SPmHelperConfig.get().getCards().size()];
         // Основная кнопка выбора карт
         selectButton = addDrawableChild(ButtonWidget.builder(
-                Text.of(selectedCard != null ? getCardButtonText(selectedCard) : "Выберите карту ⬇"),
+                Text.of("Выберите карту ⬇"),
                 button -> toggleCards()
         ).dimensions(centerX - 80, startY - 50, buttonWidth, buttonHeight).build());
 
         // Кнопки карт (изначально скрыты)
         int index = 0;
         for (String name : SPmHelperConfig.get().getCards().keySet()) {
-            index++;
-            ButtonWidget cardBtn = ButtonWidget.builder(
+            cardButtons[index] = ButtonWidget.builder(
                     Text.of(getCardButtonText(name)),
                     btn -> selectCard(name)
-            ).dimensions(centerX - 80, startY - 50 + index * 25, buttonWidth, buttonHeight).build();
-            cardBtn.visible = cardsExpanded;
-            this.addDrawableChild(cardBtn);
+            ).dimensions(centerX - 80, startY - 25 + index * 25, buttonWidth, buttonHeight).build();
+            cardButtons[index].visible = cardsExpanded;
+            this.addDrawableChild(cardButtons[index]);
+            index++;
         }
 
         // Кнопка удаления
@@ -60,27 +56,27 @@ public class Settings extends Screen {
             if (selectedCard != null) {
                 SPmHelperConfig.get().removeCard(selectedCard);
                 selectedCard = null;
-                showButton = false;
                 reloadScreen();
                 setStatus("✔ Карта успешно удалена!", 0x55FF55);
+
             } else {
                 setStatus("Сначала выберите карту!", 0xFFFF00);
             }
         }).dimensions(centerX + 80, startY - 50, buttonWidth, buttonHeight).build());
 
         // Поле для нового имени и кнопки подтверждения/отмены
-        NewNameCard = new TextFieldWidget(
+        newNameCard = new TextFieldWidget(
                 this.textRenderer,
                 this.width / 2 - 75,
                 this.height / 2 + 30,
                 150, 20,
                 Text.of("Введите новое имя")
         );
-        NewNameCard.setVisible(showButton);
-        this.addDrawableChild(NewNameCard);
+        newNameCard.setVisible(false);
+        this.addDrawableChild(newNameCard);
 
         ButtonWidget newNameCardAccept = ButtonWidget.builder(Text.of("✔"), button -> {
-            String newName = NewNameCard.getText().trim();
+            String newName = newNameCard.getText().trim();
             if (!newName.isEmpty()) {
                 for (String name : SPmHelperConfig.get().getCards().keySet()) {
                     if (name.equals(newName)) {
@@ -89,27 +85,28 @@ public class Settings extends Screen {
                     }
                 }
                 SPmHelperConfig.get().renameCard(selectedCard, newName);
-                selectedCard = newName;
-                showButton = false;
+                selectedCard = null;
                 reloadScreen();
                 setStatus("✔ Имя карты успешно изменено на " + newName, 0x55FF55);
             }
         }).dimensions(width / 2 + 95, height / 2 + 30, 20, 20).build();
-        newNameCardAccept.visible = showButton;
+        newNameCardAccept.visible = false;
         this.addDrawableChild(newNameCardAccept);
 
         ButtonWidget newNameCardCancel = ButtonWidget.builder(Text.of("❌"), button -> {
-            showButton = false;
             reloadScreen();
+            clearStatus();
         }).dimensions(width / 2 - 115, height / 2 + 30, 20, 20).build();
-        newNameCardCancel.visible = showButton;
+        newNameCardCancel.visible = false;
         this.addDrawableChild(newNameCardCancel);
 
         // Кнопка изменения имени
         this.addDrawableChild(ButtonWidget.builder(Text.of("Изменить имя"), button -> {
             if (selectedCard != null) {
-                showButton = true;
-                reloadScreen(); // Пересоздаем экран с новым состоянием
+                newNameCard.setVisible(true);
+                newNameCardAccept.visible = true;
+                newNameCardCancel.visible = true;
+                setStatus("Введите новое имя", 0xBBBBBB);
             } else {
                 setStatus("Сначала выберите карту!", 0xFFFF00);
             }
@@ -120,6 +117,7 @@ public class Settings extends Screen {
             if (selectedCard != null) {
                 SPmHelperConfig.get().setMainCard(selectedCard);
                 setStatus("✔ \"" + SPmHelperConfig.get().getMainCardName() + "\" выбрана для оплаты!", 0x55FF55);
+                reloadScreen();
             } else {
                 setStatus("Сначала выберите карту!", 0xFFFF00);
             }
@@ -157,25 +155,23 @@ public class Settings extends Screen {
         selectedCard = card;
         cardsExpanded = false;
         updateCardsVisibility();
-        // Не вызываем clearAndInit(), чтобы не сбрасывать состояние
         selectButton.setMessage(Text.literal(getCardButtonText(selectedCard)));
     }
 
     private void updateCardsVisibility() {
-        int index = 0;
-        for (Element element : this.children()) {
-            if (element instanceof ClickableWidget widget && element != selectButton) {
-                index++;
-                if (index > 0 && index <= SPmHelperConfig.get().getCards().size()) {
-                    widget.visible = cardsExpanded;
-                }
-            }
+        for (ButtonWidget cardButton : cardButtons) {
+            cardButton.visible = cardsExpanded;
         }
     }
 
     private void setStatus(String message, int color) {
         this.statusMessage = message;
         this.statusColor = color;
+    }
+
+    private void clearStatus() {
+        this.statusMessage = "";
+        this.statusColor = 0xFFFFFF;
     }
 
     @Override
@@ -214,11 +210,6 @@ public class Settings extends Screen {
                     y,
                     statusColor
             );
-        }
-
-        if (showButton && NewNameCard != null && NewNameCard.getText().isEmpty()) {
-            context.drawText(textRenderer, "Введите новое имя",
-                    width / 2 - 70, height / 2 + 36, 0xBBBBBB, false);
         }
     }
 }

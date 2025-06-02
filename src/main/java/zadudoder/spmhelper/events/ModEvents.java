@@ -5,14 +5,14 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.client.network.ServerInfo;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -22,6 +22,8 @@ import zadudoder.spmhelper.Screen.Pays.AddCardScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.utils.Misc;
 import zadudoder.spmhelper.utils.SPmHelperApi;
+
+import static zadudoder.spmhelper.Screen.Calls.CallsScreen.ALLOWED_SERVERS;
 
 @Environment(EnvType.CLIENT)
 public class ModEvents {
@@ -75,31 +77,35 @@ public class ModEvents {
             }
         });
 
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            String clientVersion = FabricLoader.getInstance().getModContainer(SPmHelper.MOD_ID).get().getMetadata().getVersion().toString();
-            String lastVersion = SPmHelperApi.getLastModVersionInfo().get("version_number").getAsString();
-            ServerPlayerEntity player = handler.getPlayer();
-            if (!clientVersion.equals(lastVersion)) {
-                player.sendMessage(
-                        Text.literal("[SPmHelper]: Доступно обновление! ").formatted(Formatting.GREEN)
-                                .styled(style -> style
-                                        .withClickEvent(new ClickEvent(
-                                                ClickEvent.Action.OPEN_URL,
-                                                "https://modrinth.com/mod/spmhelper/versions/" + lastVersion
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            ServerInfo serverInfo = client.getCurrentServerEntry();
+            if (serverInfo != null) {
+                String serverAddress = serverInfo.address;
+                String domain = serverAddress.split(":")[0];
+
+                boolean onAllowedServer = ALLOWED_SERVERS.stream().anyMatch(allowed ->
+                        domain.equals(allowed) ||
+                                domain.startsWith(allowed + ":"));
+
+                if (onAllowedServer) {
+                    String clientVersion = FabricLoader.getInstance().getModContainer(SPmHelper.MOD_ID).get().getMetadata().getVersion().toString();
+                    String lastVersion = SPmHelperApi.getLastModVersionInfo().get("version_number").getAsString();
+
+                    if (!clientVersion.equals(lastVersion)) {
+                        client.player.sendMessage(
+                                Text.literal("[SPmHelper]: Доступно обновление! ")
+                                        .formatted(Formatting.GREEN)
+                                        .styled(style -> style.withClickEvent(
+                                                new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/spmhelper/version/" + lastVersion)
                                         ))
-                                )
-                                .append(
-                                        Text.literal(clientVersion).formatted(Formatting.YELLOW)
-                                )
-                                .append(" -> ")
-                                .append(
-                                        Text.literal(lastVersion)
-                                                .formatted(Formatting.GREEN)
-                                )
-                );
+                                        .append(Text.literal(clientVersion).formatted(Formatting.YELLOW))
+                                        .append(" -> ")
+                                        .append(Text.literal(lastVersion).formatted(Formatting.GREEN))
+                        );
+                    }
+                }
             }
         });
-
     }
 
     private static void registerCommands() {
@@ -136,7 +142,6 @@ public class ModEvents {
 
             dispatcher.register(mainCommand);
             dispatcher.register(aliasMainCommand);
-
 
         });
     }
