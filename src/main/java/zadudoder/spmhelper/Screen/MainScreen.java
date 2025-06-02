@@ -22,6 +22,7 @@ public class MainScreen extends Screen {
     private static final int BUTTON_COUNT = 5;
     private static final int SCREEN_PADDING = 20;
     private static final int IMAGE_BOTTOM_MARGIN = 20; // Отступ между картинкой и кнопками
+
     public MainScreen() {
         super(Text.of("Основной экран"));
     }
@@ -30,7 +31,7 @@ public class MainScreen extends Screen {
     protected void init() {
         // Кнопка группы SPm (без изменений)
         ButtonWidget SPmGroup = ButtonWidget.builder(Text.of("✈"), (btn) -> {
-            Util.getOperatingSystem().open("https://spworlds.ru/spm/groups/06c25d05-b370-47d4-8416-fa1011ea69a1");
+            Util.getOperatingSystem().open("https://spmhelper.ru/");
         }).dimensions(width - 20, 10, 15, 15).build();
         this.addDrawableChild(SPmGroup);
 
