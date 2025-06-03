@@ -28,13 +28,13 @@ import static zadudoder.spmhelper.Screen.Calls.CallsScreen.ALLOWED_SERVERS;
 
 @Environment(EnvType.CLIENT)
 public class ModEvents {
+    private static final boolean hasToken = SPmHelperConfig.get().getAPI_TOKEN() != null && !SPmHelperConfig.get().getAPI_TOKEN().isEmpty();
+
     public static void registerEvents() {
         registerBlockClickHandler();
         registerChatEventHandler();
         registerCommands();
     }
-
-    private static boolean hasToken = SPmHelperConfig.get().getAPI_TOKEN() != null && !SPmHelperConfig.get().getAPI_TOKEN().isEmpty();
 
     private static void registerBlockClickHandler() {
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
@@ -81,33 +81,37 @@ public class ModEvents {
         });
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            ServerInfo serverInfo = client.getCurrentServerEntry();
-            if (serverInfo != null) {
-                String serverAddress = serverInfo.address;
-                String domain = serverAddress.split(":")[0];
+            client.execute(() -> {
+                ServerInfo serverInfo = client.getCurrentServerEntry();
+                if (serverInfo != null) {
+                    String serverAddress = serverInfo.address;
+                    String domain = serverAddress.split(":")[0];
 
-                boolean onAllowedServer = ALLOWED_SERVERS.stream().anyMatch(allowed ->
-                        domain.equals(allowed) ||
-                                domain.startsWith(allowed + ":"));
+                    boolean onAllowedServer = ALLOWED_SERVERS.stream().anyMatch(allowed ->
+                            domain.equals(allowed) ||
+                                    domain.startsWith(allowed + ":"));
 
-                if (onAllowedServer) {
-                    String clientVersion = FabricLoader.getInstance().getModContainer(SPmHelper.MOD_ID).get().getMetadata().getVersion().toString();
-                    String lastVersion = SPmHelperApi.getLastModVersionInfo().get("version_number").getAsString();
+                    SPmHelper.LOGGER.debug(domain);
 
-                    if (!clientVersion.equals(lastVersion)) {
-                        client.player.sendMessage(
-                                Text.literal("[SPmHelper]: Доступно обновление! ")
-                                        .formatted(Formatting.GREEN)
-                                        .styled(style -> style.withClickEvent(
-                                                new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/spmhelper/version/" + lastVersion)
-                                        ))
-                                        .append(Text.literal(clientVersion).formatted(Formatting.YELLOW))
-                                        .append(" -> ")
-                                        .append(Text.literal(lastVersion).formatted(Formatting.GREEN))
-                        );
+                    if (onAllowedServer) {
+                        String clientVersion = FabricLoader.getInstance().getModContainer(SPmHelper.MOD_ID).get().getMetadata().getVersion().toString();
+                        String lastVersion = SPmHelperApi.getLastModVersionInfo().get("version_number").getAsString();
+
+                        if (!clientVersion.equals(lastVersion)) {
+                            client.player.sendMessage(
+                                    Text.literal("[SPmHelper]: Доступно обновление! ")
+                                            .formatted(Formatting.GREEN)
+                                            .styled(style -> style.withClickEvent(
+                                                    new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/spmhelper/version/" + lastVersion)
+                                            ))
+                                            .append(Text.literal(clientVersion).formatted(Formatting.YELLOW))
+                                            .append(" -> ")
+                                            .append(Text.literal(lastVersion).formatted(Formatting.GREEN))
+                            );
+                        }
                     }
                 }
-            }
+            });
         });
     }
 
