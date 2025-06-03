@@ -91,7 +91,7 @@ public class ModEvents {
                             domain.equals(allowed) ||
                                     domain.startsWith(allowed + ":"));
 
-                    SPmHelper.LOGGER.debug(domain);
+                    //SPmHelper.LOGGER.debug(domain);
 
                     if (onAllowedServer) {
                         String clientVersion = FabricLoader.getInstance().getModContainer(SPmHelper.MOD_ID).get().getMetadata().getVersion().toString();

@@ -113,4 +113,17 @@ public class SPmHelperApi {
     public static JsonObject getLastModVersionInfo() {
         return getModVersionInfo(0);
     }
+
+    public static int getAPIStatus() {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(API_BASE + "/versions"))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.statusCode();
+        } catch (Exception ex) {
+            return 404;
+        }
+    }
 }
