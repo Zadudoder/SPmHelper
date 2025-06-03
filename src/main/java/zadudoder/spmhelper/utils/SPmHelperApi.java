@@ -117,7 +117,7 @@ public class SPmHelperApi {
     public static int getAPIStatus() {
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(API_BASE + "/versions"))
+                    .uri(URI.create(API_BASE + "/info"))
                     .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
