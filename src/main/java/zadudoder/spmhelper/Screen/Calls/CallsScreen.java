@@ -197,7 +197,10 @@ public class CallsScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
-        if (!hasToken) {
+        /*if (SPmHelperApi.getAPIStatus() != 200) {
+            drawCenteredText(context, "❗ Ошибка API, обратитесь в тех. поддержку ❗",
+                    width / 2, height / 2 - 60, 0xFF5555);
+        } else*/ if (!hasToken) {
             drawCenteredText(context, "⬇ Сначала авторизуйтесь ⬇",
                     width / 2, height / 2 - 60, 0xFFFF55);
         } else if (!isOnCorrectServer) {

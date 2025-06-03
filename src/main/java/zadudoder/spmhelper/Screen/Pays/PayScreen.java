@@ -54,6 +54,11 @@ public class PayScreen extends Screen {
         }).dimensions(width - 20, 10, 15, 15).build();
         this.addDrawableChild(SPmGroup);
 
+        ButtonWidget Donate = ButtonWidget.builder(Text.of("☕"), (btn) -> {
+            this.client.setScreen(new PayScreen("98225", "16", "НаДепРазрабам"));
+        }).dimensions(5, 10, 15, 15).build();
+        this.addDrawableChild(Donate);
+
         ButtonWidget Back = ButtonWidget.builder(Text.of("⬅"), (btn) -> {
             this.client.setScreen(new MainScreen());
         }).dimensions(5, 10, 15, 15).build();

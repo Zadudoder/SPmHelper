@@ -99,14 +99,15 @@ public class ModEvents {
 
                         if (!clientVersion.equals(lastVersion)) {
                             client.player.sendMessage(
-                                    Text.literal("[SPmHelper]: Доступно обновление! ")
+                                    Text.literal("[SPmHelper]: Доступно обновление! Ваша версия:")
                                             .formatted(Formatting.GREEN)
                                             .styled(style -> style.withClickEvent(
                                                     new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/spmhelper/version/" + lastVersion)
                                             ))
                                             .append(Text.literal(clientVersion).formatted(Formatting.YELLOW))
-                                            .append(" -> ")
+                                            .append(". Доступна новая: ")
                                             .append(Text.literal(lastVersion).formatted(Formatting.GREEN))
+                                            .append(". Нажмите на текст чтобы перейти на Modrinth. ")
                             );
                         }
                     }
