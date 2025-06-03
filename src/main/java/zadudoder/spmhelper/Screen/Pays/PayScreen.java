@@ -12,7 +12,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import zadudoder.spmhelper.Screen.MainScreen;
-import zadudoder.spmhelper.Screen.Map.MapScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.SPWorldsApi;
 import zadudoder.spmhelper.utils.types.Card;
@@ -229,11 +228,6 @@ public class PayScreen extends Screen {
             setStatus("Нет привязанных карт!", 0xFF5555);
         }
 
-    }
-
-    private void reloadScreen() {
-        cardsExpanded = false;
-        this.clearAndInit();
     }
 
     private String getCardButtonText(String name) {

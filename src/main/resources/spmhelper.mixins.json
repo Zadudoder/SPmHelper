@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "zadudoder.spmhelper.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "GameMenuScreenMixin",
+    "ScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

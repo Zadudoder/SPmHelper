@@ -115,15 +115,18 @@ public class SPmHelperApi {
     }
 
     public static int getAPIStatus() {
+        int code;
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(API_BASE + "/info"))
                     .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.statusCode();
+            code = response.statusCode();
         } catch (Exception ex) {
-            return 404;
+            code = 404;
         }
+        //SPmHelper.LOGGER.debug("CallsScreen: "+String.valueOf(code));
+        return code;
     }
 }

@@ -26,14 +26,13 @@ public class CallsScreen extends Screen {
     private boolean sendCoordinates = false;
     private BlockPos playerPos;
     private boolean hasToken;
-    private boolean isOnCorrectServer;
     private ButtonWidget detectiveButton;
     private ButtonWidget fsbButton;
     private ButtonWidget bankerButton;
     private ButtonWidget guideButton;
-    private boolean callsActive = true;
     private String statusMessage;
     private int statusColor;
+    private String errorMessage = null;
 
     public CallsScreen() {
         super(Text.of("Экран вызова"));
@@ -43,7 +42,7 @@ public class CallsScreen extends Screen {
     protected void init() {
         super.init();
         this.hasToken = SPmHelperConfig.get().getAPI_TOKEN() != null && !SPmHelperConfig.get().getAPI_TOKEN().isEmpty();
-        isOnCorrectServer = checkServer();
+        boolean isOnCorrectServer = checkServer();
         this.playerPos = MinecraftClient.getInstance().player != null ?
                 MinecraftClient.getInstance().player.getBlockPos() : null;
 
@@ -99,6 +98,14 @@ public class CallsScreen extends Screen {
         }).dimensions(width / 2 - 150 + 3 * buttonWidth + 40, buttonY, buttonWidth, 20).build();
         this.addDrawableChild(guideButton);
 
+        if (SPmHelperApi.getAPIStatus() != 200) {
+            errorMessage = "❗ Ошибка API, обратитесь в тех. поддержку ❗";
+        } else if (!hasToken) {
+            errorMessage = "⬇ Сначала авторизуйтесь ⬇";
+        } else if (!isOnCorrectServer) {
+            errorMessage = "❗ Координаты указать можно только на сервере СПм ❗";
+        }
+
 
         if (!hasToken) {
             this.addDrawableChild(ButtonWidget.builder(Text.of("Авторизоваться"), btn -> {
@@ -114,9 +121,7 @@ public class CallsScreen extends Screen {
                         Util.getOperatingSystem().open("https://spmhelper.ru"))
                 .dimensions(width - 20, 10, 15, 15)
                 .build());
-        ButtonWidget Back = ButtonWidget.builder(Text.of("⬅"), (btn) -> {
-            this.client.setScreen(new MainScreen());
-        }).dimensions(5, 10, 15, 15).build();
+        ButtonWidget Back = ButtonWidget.builder(Text.of("⬅"), (btn) -> this.client.setScreen(new MainScreen())).dimensions(5, 10, 15, 15).build();
         this.addDrawableChild(Back);
     }
 
@@ -128,12 +133,6 @@ public class CallsScreen extends Screen {
         return ALLOWED_SERVERS.stream().anyMatch(allowed ->
                 address.equals(allowed) ||
                         address.startsWith(allowed + ":"));
-    }
-
-    private ButtonWidget createServiceButton(String text, String serviceType, String personName, int x, int y, int width) {
-        return ButtonWidget.builder(Text.of(text), button -> callService(serviceType, personName))
-                .dimensions(x, y, width, 20)
-                .build();
     }
 
     private void updateButtonsState() {
@@ -154,18 +153,11 @@ public class CallsScreen extends Screen {
             setStatus("Ошибка: введите комментарий!", 0xFF5555);
             return;
         }
-        String world = "Верхний мир";
-        switch (MinecraftClient.getInstance().player.getWorld().getRegistryKey().getValue().toString()) {
-            case "minecraft:overworld":
-                world = "Верхний мир";
-                break;
-            case "minecraft:the_nether":
-                world = "Ад";
-                break;
-            case "minecraft:the_end":
-                world = "Энд";
-                break;
-        }
+        String world = switch (MinecraftClient.getInstance().player.getWorld().getRegistryKey().getValue().toString()) {
+            case "minecraft:the_nether" -> "Ад";
+            case "minecraft:the_end" -> "Энд";
+            default -> "Верхний мир";
+        };
         String coordinates = sendCoordinates && playerPos != null ?
                 "**" + playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ() + ' ' + world + "**" : " ";
         setStatus("Отправка запроса...", 0xFFFF55);
@@ -179,11 +171,10 @@ public class CallsScreen extends Screen {
                         updateButtonsState();
                     } else {
                         setStatus("Ошибка отправки вызова", 0xFF5555);
-                        callsActive = true;
-                        detectiveButton.active = callsActive;
-                        fsbButton.active = callsActive;
-                        bankerButton.active = callsActive;
-                        guideButton.active = callsActive;
+                        detectiveButton.active = true;
+                        fsbButton.active = true;
+                        bankerButton.active = true;
+                        guideButton.active = true;
                     }
                 }));
     }
@@ -196,17 +187,9 @@ public class CallsScreen extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-
-        /*if (SPmHelperApi.getAPIStatus() != 200) {
-            drawCenteredText(context, "❗ Ошибка API, обратитесь в тех. поддержку ❗",
+        if (errorMessage != null) {
+            drawCenteredText(context, errorMessage,
                     width / 2, height / 2 - 60, 0xFF5555);
-        } else*/ if (!hasToken) {
-            drawCenteredText(context, "⬇ Сначала авторизуйтесь ⬇",
-                    width / 2, height / 2 - 60, 0xFFFF55);
-        } else if (!isOnCorrectServer) {
-            drawCenteredText(context, "❗ Координаты указать можно только на сервере СПм ❗",
-                    width / 2, height / 2 - 60, 0xFF5555);
-
         }
 
 

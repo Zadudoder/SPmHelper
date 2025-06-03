@@ -35,6 +35,11 @@ public class MainScreen extends Screen {
         }).dimensions(width - 20, 10, 15, 15).build();
         this.addDrawableChild(SPmGroup);
 
+        ButtonWidget Donate = ButtonWidget.builder(Text.of("☕"), (btn) -> {
+            this.client.setScreen(new PayScreen("98225", "16", "НаДепРазрабам"));
+        }).dimensions(5, 10, 15, 15).build();
+        this.addDrawableChild(Donate);
+
         String[] buttonLabels = {"Оплата", "Карта", "Настройки", "Вызовы", "Законы"};
 
         // Рассчитываем доступную ширину для кнопок
