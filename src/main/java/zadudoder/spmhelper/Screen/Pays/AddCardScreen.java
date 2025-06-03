@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
+import zadudoder.spmhelper.Screen.MainScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 
 public class AddCardScreen extends Screen {
@@ -28,6 +29,11 @@ public class AddCardScreen extends Screen {
             Util.getOperatingSystem().open("https://spmhelper.ru");
         }).dimensions(width - 20, 10, 15, 15).build();
         this.addDrawableChild(SPmGroup);
+
+        ButtonWidget Back = ButtonWidget.builder(Text.of("⬅"), (btn) -> {
+            this.client.setScreen(new MainScreen());
+        }).dimensions(5, 10, 15, 15).build();
+        this.addDrawableChild(Back);
 
         ButtonWidget AcceptButton = ButtonWidget.builder(Text.of("Принять"), (btn) -> {
             SPmHelperConfig.get().addCard(id, token, name); //Добавление карты

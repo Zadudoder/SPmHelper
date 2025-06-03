@@ -7,6 +7,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 
@@ -27,6 +28,17 @@ public class Settings extends Screen {
 
     @Override
     protected void init() {
+
+        ButtonWidget SPmGroup = ButtonWidget.builder(Text.of("✈"), (btn) -> {
+            Util.getOperatingSystem().open("https://spmhelper.ru");
+        }).dimensions(width - 20, 10, 15, 15).build();
+        this.addDrawableChild(SPmGroup);
+
+        ButtonWidget Back = ButtonWidget.builder(Text.of("⬅"), (btn) -> {
+            this.client.setScreen(new MainScreen());
+        }).dimensions(5, 10, 15, 15).build();
+        this.addDrawableChild(Back);
+
         int buttonWidth = 120;
         int buttonHeight = 20;
         int startY = this.height / 2;
@@ -83,20 +95,24 @@ public class Settings extends Screen {
                         setStatus("❌ Данное имя карты уже используется", 0xFFFF00);
                         return;
                     }
+                    if (newName.length() > 12) {
+                        setStatus("❌ Имя не должно быть длиннее 12 символов",0xFFFF00);
+                        return;
+                    }
                 }
                 SPmHelperConfig.get().renameCard(selectedCard, newName);
                 selectedCard = null;
                 reloadScreen();
                 setStatus("✔ Имя карты успешно изменено на " + newName, 0x55FF55);
             }
-        }).dimensions(width / 2 + 95, height / 2 + 30, 20, 20).build();
+        }).dimensions(width / 2 + 85, height / 2 + 30, 20, 20).build();
         newNameCardAccept.visible = false;
         this.addDrawableChild(newNameCardAccept);
 
         ButtonWidget newNameCardCancel = ButtonWidget.builder(Text.of("❌"), button -> {
             reloadScreen();
             clearStatus();
-        }).dimensions(width / 2 - 115, height / 2 + 30, 20, 20).build();
+        }).dimensions(width / 2 - 105, height / 2 + 30, 20, 20).build();
         newNameCardCancel.visible = false;
         this.addDrawableChild(newNameCardCancel);
 
@@ -106,7 +122,7 @@ public class Settings extends Screen {
                 newNameCard.setVisible(true);
                 newNameCardAccept.visible = true;
                 newNameCardCancel.visible = true;
-                setStatus("Введите новое имя", 0xBBBBBB);
+                setStatus("⬆ Введите новое имя в появившемся окне ⬆", 0xBBBBBB);
             } else {
                 setStatus("Сначала выберите карту!", 0xFFFF00);
             }

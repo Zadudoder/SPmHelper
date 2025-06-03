@@ -10,6 +10,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import zadudoder.spmhelper.Screen.MainScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 
@@ -113,6 +114,10 @@ public class CallsScreen extends Screen {
                         Util.getOperatingSystem().open("https://spmhelper.ru"))
                 .dimensions(width - 20, 10, 15, 15)
                 .build());
+        ButtonWidget Back = ButtonWidget.builder(Text.of("⬅"), (btn) -> {
+            this.client.setScreen(new MainScreen());
+        }).dimensions(5, 10, 15, 15).build();
+        this.addDrawableChild(Back);
     }
 
     private boolean checkServer() {

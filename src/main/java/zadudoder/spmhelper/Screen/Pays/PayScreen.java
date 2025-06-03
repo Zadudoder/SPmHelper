@@ -11,6 +11,8 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import zadudoder.spmhelper.Screen.MainScreen;
+import zadudoder.spmhelper.Screen.Map.MapScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.SPWorldsApi;
 import zadudoder.spmhelper.utils.types.Card;
@@ -52,6 +54,11 @@ public class PayScreen extends Screen {
         }).dimensions(width - 20, 10, 15, 15).build();
         this.addDrawableChild(SPmGroup);
 
+        ButtonWidget Back = ButtonWidget.builder(Text.of("⬅"), (btn) -> {
+            this.client.setScreen(new MainScreen());
+        }).dimensions(5, 10, 15, 15).build();
+        this.addDrawableChild(Back);
+
 
         int buttonWidth = 120;
         int buttonHeight = 20;
@@ -67,7 +74,7 @@ public class PayScreen extends Screen {
         selectButton = addDrawableChild(ButtonWidget.builder(
                 Text.of(selectedCard != null ? getCardButtonText(selectedCard) : "Выберите карту ⬇"),
                 button -> toggleCards()
-        ).dimensions(centerX - 180, startY - 50, buttonWidth, buttonHeight).build());
+        ).dimensions(centerX - 170, startY - 50, buttonWidth, buttonHeight).build());
 
         // Кнопки карт (изначально скрыты)
         int index = 0;
@@ -75,7 +82,7 @@ public class PayScreen extends Screen {
             cardButtons[index] = ButtonWidget.builder(
                     Text.of(getCardButtonText(name)),
                     btn -> selectCard(name)
-            ).dimensions(centerX - 180, startY - 25 + index * 25, buttonWidth, buttonHeight).build();
+            ).dimensions(centerX - 170, startY - 25 + index * 25, buttonWidth, buttonHeight).build();
             cardButtons[index].visible = cardsExpanded;
             this.addDrawableChild(cardButtons[index]);
             index++;
@@ -253,6 +260,16 @@ public class PayScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
+
+        // Подписи к полям
+        context.drawText(
+                this.textRenderer,
+                Text.of("Карта для оплаты:"),
+                this.width / 2 - 170,
+                this.height / 2 - 60,
+                0xA0A0A0,
+                true
+        );
 
         // Подписи к полям
         context.drawText(
