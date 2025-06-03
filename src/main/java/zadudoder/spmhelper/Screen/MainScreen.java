@@ -37,7 +37,7 @@ public class MainScreen extends Screen {
 
         ButtonWidget Donate = ButtonWidget.builder(Text.of("☕"), (btn) -> {
             this.client.setScreen(new PayScreen("98225", "16", "НаДепРазрабам"));
-        }).dimensions(5, 10, 15, 15).build();
+        }).dimensions(5, 10, 20, 20).build();
         this.addDrawableChild(Donate);
 
         String[] buttonLabels = {"Оплата", "Карта", "Настройки", "Вызовы", "Законы"};
