@@ -71,7 +71,7 @@ public class PayScreen extends Screen {
         cardButtons = new ButtonWidget[SPmHelperConfig.get().getCards().size()];
 
         selectButton = addDrawableChild(ButtonWidget.builder(
-                Text.of(selectedCard != null ? getCardButtonText(selectedCard) : "Выберите карту ⬇"),
+                Text.of(!selectedCard.isEmpty() ? getCardButtonText(selectedCard) : "Выберите карту ⬇"),
                 button -> toggleCards()
         ).dimensions(centerX - 170, startY - 50, buttonWidth, buttonHeight).build());
 
@@ -199,13 +199,9 @@ public class PayScreen extends Screen {
     }
 
     private void loadSenderCard() {
-        Card senderCard = SPmHelperConfig.get().getMainCard();
         String cardName = SPmHelperConfig.get().getMainCardName();
+        Card senderCard = SPmHelperConfig.get().getMainCard();
 
-        if (senderCard == null) {
-            setStatus("❌ Вы не указали карту для оплаты", 0xFF5555);
-            return;
-        }
         JsonObject cardInfo = SPWorldsApi.getCardInfo(senderCard);
 
         if (cardInfo.has("error")) {

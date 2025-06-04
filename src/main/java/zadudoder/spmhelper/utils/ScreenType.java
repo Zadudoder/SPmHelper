@@ -17,7 +17,4 @@ public enum ScreenType {
         this.translationKey = translationKey;
     }
 
-    public Text getTranslatedName() {
-        return Text.translatable(this.translationKey);
-    }
 }

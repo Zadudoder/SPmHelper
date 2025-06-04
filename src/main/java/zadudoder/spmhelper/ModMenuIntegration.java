@@ -41,12 +41,10 @@ public class ModMenuIntegration implements ModMenuApi {
 
             // Добавляем настройки
             general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("text.spmhelper.option.enableMenuButton"), config.enableMenuButton)
-                    .setDefaultValue(true)
                     .setSaveConsumer(newValue -> config.enableMenuButton = newValue)
                     .build());
 
             general.addEntry(entryBuilder.startEnumSelector(Text.translatable("text.spmhelper.option.defaultScreen"), ScreenType.class, config.defaultScreen)
-                    .setDefaultValue(ScreenType.MAIN)
                     .setSaveConsumer(newValue -> config.defaultScreen = newValue)
                     .setEnumNameProvider(value -> {
                         // Локализация значений enum

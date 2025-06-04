@@ -13,13 +13,13 @@ import java.util.Map;
 @Config(name = "spmhelper")
 public class SPmHelperConfig implements ConfigData {
 
-    public Boolean enableMenuButton;
+    public Boolean enableMenuButton = true;
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-    public ScreenType defaultScreen;
+    public ScreenType defaultScreen = ScreenType.MAIN;
 
-    String API_TOKEN = null;
+    String API_TOKEN = "";
     Map<String, Card> cards = new HashMap<>();
-    String mainCardName;
+    String mainCardName = "";
 
     public static SPmHelperConfig get() {
         return AutoConfig.getConfigHolder(SPmHelperConfig.class).getConfig();

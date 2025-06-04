@@ -135,7 +135,7 @@ public class ModEvents {
                                 SPmHelperApi.getAuthStatus().thenAccept(status -> {
                                     String message = switch (status) {
                                         case 200 -> "§a[SPmHelper]: Токен работает";
-                                        case 401 -> "§c[SPmHelper]: Токен недействителен";
+                                        case 401 -> "§c[SPmHelper]: Токен недействителен или отсутсвует";
                                         default -> "§c[SPmHelper]: Ошибка API: " + status;
                                     };
                                     context.getSource().sendFeedback(Text.literal(message));
