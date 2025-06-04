@@ -8,8 +8,10 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import zadudoder.spmhelper.SPmHelper;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.SPmHelperApi;
+import zadudoder.spmhelper.utils.ScreenType;
 
 public class Settings extends Screen {
     private static final Identifier SETTINGS_TEXT = Identifier.of("spmhelper", "titles/settingstextrender.png");
@@ -28,7 +30,9 @@ public class Settings extends Screen {
 
     @Override
     protected void init() {
-
+        SPmHelper.LOGGER.debug(ScreenType.SETTINGS.name().toLowerCase());
+        System.out.println("Translation test: " +
+                Text.translatable("text.spmhelper.screen_type.main").getString());
         ButtonWidget SPmGroup = ButtonWidget.builder(Text.of("✈"), (btn) -> {
             Util.getOperatingSystem().open("https://spmhelper.ru");
         }).dimensions(width - 20, 10, 15, 15).build();
@@ -96,7 +100,7 @@ public class Settings extends Screen {
                         return;
                     }
                     if (newName.length() > 12) {
-                        setStatus("❌ Имя не должно быть длиннее 12 символов",0xFFFF00);
+                        setStatus("❌ Имя не должно быть длиннее 12 символов", 0xFFFF00);
                         return;
                     }
                 }
