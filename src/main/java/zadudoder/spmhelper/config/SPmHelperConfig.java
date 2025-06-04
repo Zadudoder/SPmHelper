@@ -4,6 +4,8 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import net.minecraft.text.Text;
+import zadudoder.spmhelper.Screen.MainScreen;
 import zadudoder.spmhelper.utils.types.Card;
 
 import java.util.HashMap;
@@ -11,13 +13,57 @@ import java.util.Map;
 
 @Config(name = "spmhelper")
 public class SPmHelperConfig implements ConfigData {
-    public Boolean enableMenuButton = true;
     String API_TOKEN = null;
+    public Boolean enableMenuButton = true;
+    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    public ScreenType defaultScreen = ScreenType.SPmHelper;
+
     @ConfigEntry.Gui.Excluded
     Map<String, Card> cards = new HashMap<>();
 
     @ConfigEntry.Gui.Excluded
     String mainCardName;
+
+    public enum ScreenType {
+        SPmHelper(0, "screen.spmhelper.main"),
+        Настройки(1, "screen.spmhelper.settings"),
+        Оплата(2, "screen.spmhelper.pay"),
+        Вызовы(3, "screen.spmhelper.calls"),
+        Карта(4, "screen.spmhelper.map"),
+        Законы(5, "screen.spmhelper.laws");
+
+        private final int id;
+        private final String translationKey;
+
+        ScreenType(int id, String translationKey) {
+            this.id = id;
+            this.translationKey = translationKey;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public Text getTranslatedName() {
+            switch(this) {
+                case SPmHelper:
+                default:
+                    return Text.literal("Главный экран");
+                case Настройки: return Text.literal("Настройки");
+                case Оплата: return Text.literal("Оплата");
+                case Вызовы: return Text.literal("Вызовы");
+                case Карта: return Text.literal("Карта");
+                case Законы: return Text.literal("Законы");
+            }
+        }
+
+        public static ScreenType byId(int id) {
+            for (ScreenType type : values()) {
+                if (type.id == id) return type;
+            }
+            return SPmHelper;
+        }
+    }
 
     public static SPmHelperConfig get() {
         return AutoConfig.getConfigHolder(SPmHelperConfig.class).getConfig();

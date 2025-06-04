@@ -9,7 +9,14 @@
 
   "text.autoconfig.spmhelper.title": "Настройки мода SPmHelper",
   "text.autoconfig.spmhelper.option.API_TOKEN": "Ваш SPmHelper токен:",
-  "text.autoconfig.spmhelper.option.SP_TOKEN": "Ваш TOKEN от карточки (SPworlds):",
-  "text.autoconfig.spmhelper.option.SP_ID": "Ваш ID от карточки (SPworlds):",
-  "text.autoconfig.search": "Поиск:"
+  "text.autoconfig.spmhelper.option.enableMenuButton": "Включить кнопку SPmHelper в основном меню: ",
+  "text.autoconfig.spmhelper.option.defaultScreen": "На какой экран будет вести эта кнопка: ",
+  "screen.spmhelper.main": "Главный экран",
+  "screen.spmhelper.settings": "Настройки",
+  "screen.spmhelper.pay": "Оплата",
+  "screen.spmhelper.calls": "Вызовы",
+  "screen.spmhelper.map": "Карта",
+  "screen.spmhelper.laws": "Законы",
+  "text.spmhelper.current_screen": "SPmHelper — %s",
+  "text.spmhelper.select_screen": "Выбрать экран: %s"
 }

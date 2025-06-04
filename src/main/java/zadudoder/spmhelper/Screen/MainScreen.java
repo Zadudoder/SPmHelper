@@ -37,7 +37,7 @@ public class MainScreen extends Screen {
 
         ButtonWidget Donate = ButtonWidget.builder(Text.of("☕"), (btn) -> {
             this.client.setScreen(new PayScreen("98225", "16", "НаДепРазрабам"));
-        }).dimensions(5, 10, 20, 20).build();
+        }).dimensions(5, 10, 15, 15).build();
         this.addDrawableChild(Donate);
 
         String[] buttonLabels = {"Оплата", "Карта", "Настройки", "Вызовы", "Законы"};
@@ -133,7 +133,7 @@ public class MainScreen extends Screen {
                 break;
             case 2:
                 this.client.setScreen(new Settings());
-                break; //Тут должен быть экран который открывает настройки или Settings или что-то ещё
+                break;
             case 3:
                 this.client.setScreen(new CallsScreen());
                 break;

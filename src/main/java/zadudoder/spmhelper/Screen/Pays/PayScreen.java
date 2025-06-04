@@ -259,7 +259,7 @@ public class PayScreen extends Screen {
         context.drawText(
                 this.textRenderer,
                 Text.of("Карта для оплаты:"),
-                this.width / 2 - 170,
+                this.width / 2 - 229,
                 this.height / 2 - 60,
                 0xA0A0A0,
                 true
