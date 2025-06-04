@@ -15,7 +15,7 @@ public class SPmHelperConfig implements ConfigData {
 
     public Boolean enableMenuButton;
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-    public ScreenType defaultScreen = ScreenType.MAIN;
+    public ScreenType defaultScreen;
 
     String API_TOKEN = null;
     Map<String, Card> cards = new HashMap<>();
