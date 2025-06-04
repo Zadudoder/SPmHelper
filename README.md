@@ -6,8 +6,6 @@ SPmHelper — мод, который облегчит твою игру на [С
 3. Cloth Config API | [Скачать](https://modrinth.com/mod/cloth-config)
 4. ModMenu | [Скачать](https://modrinth.com/mod/modmenu)
 
-**[Скачать последнюю версию мода](https://github.com/Zadudoder/SPmHelper/releases/tag/v0.2.0)**
-
 ## Функционал мода:
 <details>
 <summary> <a name="management card"> </a> 💳 Управление картами </summary>
@@ -122,8 +120,6 @@ SPmHelper is a mod that will make your game easier on [SPm](https://spworlds.ru 
 2. Fabric-api | [Download](https://modrinth.com/mod/fabric-api )
 3. Cloth Config API | [Download](https://modrinth.com/mod/cloth-config )
 4. ModMenu | [Download](https://modrinth.com/mod/modmenu )
-
-**[Download the latest version of the mod](https://github.com/Zadudoder/SPmHelper/releases/tag/v0.2.0 )**
 
 ## Mod functionality:
 <details>
