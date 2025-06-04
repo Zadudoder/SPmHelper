@@ -107,6 +107,13 @@ SPmHelper — мод, который облегчит твою игру на [С
 
 </details>
 
+<details>  
+<summary> <a name="spmhelperbutton"> </a>👁️ Как убрать или изменить кнопку в меню ESC?</summary>  
+
+> - Чтобы **убрать** кнопку из главного меню, перейдите в **Моды (ModMenu) → SPmHelper → Настройки** и измените значение поля с *"Да"* на *"Нет"*.
+> - Чтобы **изменить путь**, по которому ведёт кнопка, нажмите на соответствующее поле ниже. По умолчанию настроен переход в главное меню мода.
+</details>  
+
 
 # EN
 SPmHelper is a mod that will make your game easier on [SPm](https://spworlds.ru ).
@@ -216,3 +223,10 @@ SPmHelper is a mod that will make your game easier on [SPm](https://spworlds.ru 
 > Write to our telegram bot for technical support - https://t.me/SPmHelperBOT
 
 </details>
+
+<details>  
+<summary> <a name="spmhelperbutton"> </a>👁️ How to remove or change the button in the ESC menu?</summary>  
+
+> - To **remove** the button from the main menu, go to **Mods (ModMenu) → SPmHelper → Settings** and toggle the field from *"Yes"* to *"No"*.
+> - To **change the destination** of the button, click the field below. By default, it redirects to the mod's main menu.
+</details>  
