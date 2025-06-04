@@ -99,7 +99,7 @@ public class ModEvents {
 
                         if (!clientVersion.equals(lastVersion)) {
                             client.player.sendMessage(
-                                    Text.literal("[SPmHelper]: Доступно обновление! Ваша версия:")
+                                    Text.literal("[SPmHelper]: Доступно обновление! Ваша версия: ")
                                             .formatted(Formatting.GREEN)
                                             .styled(style -> style.withClickEvent(
                                                     new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/spmhelper/version/" + lastVersion)
