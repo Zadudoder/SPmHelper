@@ -14,7 +14,7 @@ import zadudoder.spmhelper.Screen.Calls.CallsScreen;
 public abstract class GameMenuScreenMixin extends ScreenMixin {
 
 
-    @Inject(at = @At("HEAD"), method = "init()V")
+    @Inject(at = @At("TAIL"), method = "init()V")
     private void init(CallbackInfo info) {
         int buttonWidth = 120;
         int buttonHeight = 20;
