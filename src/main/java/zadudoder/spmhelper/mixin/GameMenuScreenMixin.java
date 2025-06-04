@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import zadudoder.spmhelper.Screen.Calls.CallsScreen;
+import zadudoder.spmhelper.config.SPmHelperConfig;
 
 @Mixin(GameMenuScreen.class)
 public abstract class GameMenuScreenMixin extends ScreenMixin {
@@ -20,13 +21,14 @@ public abstract class GameMenuScreenMixin extends ScreenMixin {
         int buttonHeight = 20;
         int startY = this.height / 2;
         int centerX = this.width / 2 - buttonWidth / 2;
+        if (SPmHelperConfig.get().enableMenuButton) {
+            ButtonWidget callsButton = ButtonWidget.builder(
+                            Text.literal("Вызовы"),
+                            button -> this.client.setScreen(new CallsScreen()))
+                    .dimensions(centerX - 170, startY - 50, buttonWidth, buttonHeight)
+                    .build();
 
-        ButtonWidget callsButton = ButtonWidget.builder(
-                        Text.literal("Вызовы"),
-                        button -> this.client.setScreen(new CallsScreen()))
-                .dimensions(centerX - 170, startY - 50, buttonWidth, buttonHeight)
-                .build();
-
-        this.addDrawableChild(callsButton);
+            this.addDrawableChild(callsButton);
+        }
     }
 }

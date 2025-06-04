@@ -11,8 +11,8 @@ import java.util.Map;
 
 @Config(name = "spmhelper")
 public class SPmHelperConfig implements ConfigData {
+    public Boolean enableMenuButton = true;
     String API_TOKEN = null;
-
     @ConfigEntry.Gui.Excluded
     Map<String, Card> cards = new HashMap<>();
 
