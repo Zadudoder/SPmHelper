@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -39,7 +40,7 @@ public abstract class GameMenuScreenMixin extends ScreenMixin {
                     int buttonY = button.getY();
 
                     this.menuButton = ButtonWidget.builder(
-                                    Text.literal("\uD83C\uDFB2"),
+                                    Text.literal(""),
                                     btn -> openSelectedScreen())
                             .dimensions(buttonX, buttonY, buttonWidth, buttonHeight)
                             .build();
@@ -69,7 +70,20 @@ public abstract class GameMenuScreenMixin extends ScreenMixin {
 
     @Inject(method = "render", at = @At("TAIL"))
     private void onRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        int iconSize = 16;
+        int x = menuButton.getX() + (menuButton.getWidth() - iconSize) / 2;
+        int y = menuButton.getY() + (menuButton.getHeight() - iconSize) / 2;
+        Identifier BUTTON_ICON = Identifier.of("spmhelper", "gui/bookwithfeather.png");
+        context.drawTexture(
+                BUTTON_ICON,
+                x, y,
+                0, 0,
+                iconSize, iconSize,
+                iconSize, iconSize
+        );
+
         if (menuButton != null && menuButton.isSelected()) {
+
             Text tooltipText = Text.translatable("text.spmhelper.current_screen")
                     .append(Text.translatable("text.spmhelper.screen_type." + SPmHelperConfig.get().defaultScreen.name().toLowerCase()));
 
