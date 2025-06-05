@@ -5,6 +5,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -39,10 +40,15 @@ public abstract class GameMenuScreenMixin extends ScreenMixin {
                     int buttonX = button.getX() - buttonWidth - 4;
                     int buttonY = button.getY();
 
+                    Text tooltipText = Text.translatable("text.spmhelper.current_screen")
+                            .append(Text.translatable("text.spmhelper.screen_type." + SPmHelperConfig.get().defaultScreen.name().toLowerCase()));
+
+
                     this.menuButton = ButtonWidget.builder(
                                     Text.literal(""),
                                     btn -> openSelectedScreen())
                             .dimensions(buttonX, buttonY, buttonWidth, buttonHeight)
+                            .tooltip(Tooltip.of(tooltipText))
                             .build();
 
                     this.addDrawableChild(menuButton);
@@ -81,18 +87,5 @@ public abstract class GameMenuScreenMixin extends ScreenMixin {
                 iconSize, iconSize,
                 iconSize, iconSize
         );
-
-        if (menuButton != null && menuButton.isSelected()) {
-
-            Text tooltipText = Text.translatable("text.spmhelper.current_screen")
-                    .append(Text.translatable("text.spmhelper.screen_type." + SPmHelperConfig.get().defaultScreen.name().toLowerCase()));
-
-            context.drawTooltip(
-                    client.textRenderer,
-                    tooltipText,
-                    mouseX, mouseY
-            );
-
-        }
     }
 }
