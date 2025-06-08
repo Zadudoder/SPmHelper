@@ -61,7 +61,7 @@ public class CallsScreen extends Screen {
                 textRenderer,
                 width / 2 - 150, height / 2 + 10,
                 300, 20,
-                Text.of("Введите комментарий для вызова:")
+                Text.translatable("text.spmhelper.calls_TextFieldWidget")
         );
         this.addDrawableChild(commentField);
 
@@ -70,28 +70,28 @@ public class CallsScreen extends Screen {
         int buttonWidth = 65;
 
 
-        detectiveButton = ButtonWidget.builder(Text.of("Детектив"), (btn) -> {
+        detectiveButton = ButtonWidget.builder(Text.translatable("text.spmhelper.calls_detective"), (btn) -> {
             String serviceType = "detective";
             String personName = "Детектив";
             callService(serviceType, personName);
         }).dimensions(width / 2 - 150, buttonY, buttonWidth, 20).build();
         this.addDrawableChild(detectiveButton);
 
-        fsbButton = ButtonWidget.builder(Text.of("ФСБ"), (btn) -> {
+        fsbButton = ButtonWidget.builder(Text.translatable("text.spmhelper.calls_fsb"), (btn) -> {
             String serviceType = "fsb";
             String personName = "ФСБ";
             callService(serviceType, personName);
         }).dimensions(width / 2 - 150 + buttonWidth + 10, buttonY, buttonWidth, 20).build();
         this.addDrawableChild(fsbButton);
 
-        bankerButton = ButtonWidget.builder(Text.of("Банкир"), (btn) -> {
+        bankerButton = ButtonWidget.builder(Text.translatable("text.spmhelper.calls_banker"), (btn) -> {
             String serviceType = "banker";
             String personName = "Банкир";
             callService(serviceType, personName);
         }).dimensions(width / 2 - 150 + 2 * buttonWidth + 25, buttonY, buttonWidth, 20).build();
         this.addDrawableChild(bankerButton);
 
-        guideButton = ButtonWidget.builder(Text.of("Гид"), (btn) -> {
+        guideButton = ButtonWidget.builder(Text.translatable("text.spmhelper.calls_guide"), (btn) -> {
             String serviceType = "guide";
             String personName = "Гид";
             callService(serviceType, personName);
@@ -99,16 +99,16 @@ public class CallsScreen extends Screen {
         this.addDrawableChild(guideButton);
 
         if (SPmHelperApi.getAPIStatus() != 200) {
-            errorMessage = "❗ Ошибка API, обратитесь в тех. поддержку ❗";
+            errorMessage = "text.spmhelper.calls_errorMessageNot200";
         } else if (!hasToken) {
-            errorMessage = "⬇ Сначала авторизуйтесь ⬇";
+            errorMessage = "text.spmhelper.calls_errorMessageNotHasToken";
         } else if (!isOnCorrectServer) {
-            errorMessage = "❗ Координаты указать можно только на сервере СПм ❗";
+            errorMessage = "text.spmhelper.calls_errorMessageNotIsOnCorrectServer";
         }
 
 
         if (!hasToken) {
-            this.addDrawableChild(ButtonWidget.builder(Text.of("Авторизоваться"), btn -> {
+            this.addDrawableChild(ButtonWidget.builder(Text.translatable("text.spmhelper.calls_Login"), btn -> {
                         SPmHelperApi.startAuthProcess(MinecraftClient.getInstance().player);
                         this.close();
                     })
@@ -144,13 +144,13 @@ public class CallsScreen extends Screen {
 
     public void callService(String serviceType, String personName) {
         if (!hasToken) {
-            setStatus("⬇ Сначала авторизуйтесь ⬇", 0xFF5555);
+            setStatus("text.spmhelper.calls_callService_NotHasToken", 0xFF5555);
             return;
         }
 
         String comment = commentField.getText().trim();
         if (comment.isEmpty()) {
-            setStatus("Ошибка: введите комментарий!", 0xFF5555);
+            setStatus("text.spmhelper.calls_callService_CommentIsEmpty", 0xFF5555);
             return;
         }
         String world = switch (MinecraftClient.getInstance().player.getWorld().getRegistryKey().getValue().toString()) {
@@ -160,17 +160,17 @@ public class CallsScreen extends Screen {
         };
         String coordinates = sendCoordinates && playerPos != null ?
                 "**" + playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ() + ' ' + world + "**" : " ";
-        setStatus("Отправка запроса...", 0xFFFF55);
+        setStatus("text.spmhelper.calls_callService_SendRequest", 0xFFFF55);
         updateButtonsState();
 
 
         SPmHelperApi.makeCall(serviceType, coordinates, comment)
                 .thenAccept(success -> MinecraftClient.getInstance().execute(() -> {
                     if (success) {
-                        setStatus(personName + " был вызван!", 0x55FF55);
+                        setStatus(personName + "text.spmhelper.calls_callService_WasCalled", 0x55FF55);
                         updateButtonsState();
                     } else {
-                        setStatus("Ошибка отправки вызова", 0xFF5555);
+                        setStatus("text.spmhelper.calls_callService_ErrorSendingCall", 0xFF5555);
                         detectiveButton.active = true;
                         fsbButton.active = true;
                         bankerButton.active = true;
@@ -187,47 +187,55 @@ public class CallsScreen extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
+
         if (errorMessage != null) {
-            drawCenteredText(context, errorMessage,
-                    width / 2, height / 2 - 60, 0xFF5555);
+            context.drawCenteredTextWithShadow(
+                    textRenderer,
+                    Text.translatable(errorMessage),
+                    width / 2,
+                    height / 2 - 60,
+                    0xFF5555
+            );
         }
 
 
         // Подписи полей
-        context.drawText(textRenderer, "Отправить координаты:",
+        context.drawText(textRenderer, Text.translatable("text.spmhelper.calls_render_SendCoordinates"),
                 width / 2 - 150, height / 2 - 35, 0xFFFFFF, false);
 
         if (sendCoordinates && playerPos != null) {
             context.drawText(textRenderer,
-                    String.format("Координаты: X:%d Y:%d Z:%d", playerPos.getX(), playerPos.getY(), playerPos.getZ()),
+                    String.format(Text.translatable("text.spmhelper.calls_render_SendCoordinatesAndPlayerPos").getString(),
+                            playerPos.getX(), playerPos.getY(), playerPos.getZ()),
                     width / 2 - 150, height / 2 - 20, 0xFFFFFF, false);
         }
 
-        context.drawText(textRenderer, "Комментарий:",
+        context.drawText(textRenderer, Text.translatable("text.spmhelper.calls_render_Comment"),
                 width / 2 - 150, height / 2 - 5, 0xFFFFFF, false);
 
         if (commentField.getText().isEmpty()) {
-            context.drawText(textRenderer, "Введите сюда текст",
+            context.drawText(textRenderer, Text.translatable("text.spmhelper.calls_render_EnterTextHere"),
                     width / 2 - 145, height / 2 + 16, 0xBBBBBB, false);
         }
-
-        context.drawCenteredTextWithShadow(
-                this.textRenderer,
-                Text.of(statusMessage),
-                this.width / 2,
-                this.height / 2 + 65,
-                statusColor
-        );
+        if (statusMessage != null) {
+            context.drawCenteredTextWithShadow(
+                    this.textRenderer,
+                    Text.translatable(statusMessage),
+                    this.width / 2,
+                    this.height / 2 + 65,
+                    statusColor
+            );
+        }
 
         // Заголовок
         renderTitle(context);
     }
 
 
-    private void drawCenteredText(DrawContext context, String text, int x, int y, int color) {
+    /*private void drawCenteredText(DrawContext context, String text, int x, int y, int color) {
         context.drawText(textRenderer, text,
                 x - textRenderer.getWidth(text) / 2, y, color, false);
-    }
+    }*/
 
     private void renderTitle(DrawContext context) {
         Identifier texture = Identifier.of("spmhelper", "titles/callstextrender.png");

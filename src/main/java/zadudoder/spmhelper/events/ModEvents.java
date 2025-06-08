@@ -99,15 +99,15 @@ public class ModEvents {
 
                         if (!clientVersion.equals(lastVersion)) {
                             client.player.sendMessage(
-                                    Text.literal("[SPmHelper]: Доступно обновление! Ваша версия: ")
+                                    Text.translatable("text.spmhelper.updateMod_message_firstPart")
                                             .formatted(Formatting.GREEN)
                                             .styled(style -> style.withClickEvent(
                                                     new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/spmhelper/version/" + lastVersion)
                                             ))
                                             .append(Text.literal(clientVersion).formatted(Formatting.YELLOW))
-                                            .append(". Доступна новая: ")
+                                            .append(Text.translatable("text.spmhelper.updateMod_message_betweenPart"))
                                             .append(Text.literal(lastVersion).formatted(Formatting.GREEN))
-                                            .append(". Нажмите на текст чтобы перейти на Modrinth. ")
+                                            .append(Text.translatable("text.spmhelper.updateMod_message_lastPart"))
                             );
                         }
                     }
@@ -126,7 +126,7 @@ public class ModEvents {
                                     SPmHelperApi.startAuthProcess(context.getSource().getPlayer());
                                     return 1;
                                 }
-                                context.getSource().sendFeedback(Text.literal("§a[SPmHelper]: Токен активен! Новая авторизация не нужна."));
+                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.auth_FeedBackMessage"));
                                 return 0;
                             })
                     )
@@ -134,11 +134,11 @@ public class ModEvents {
                             .executes(context -> {
                                 SPmHelperApi.getAuthStatus().thenAccept(status -> {
                                     String message = switch (status) {
-                                        case 200 -> "§a[SPmHelper]: Токен работает";
-                                        case 401 -> "§c[SPmHelper]: Токен недействителен или отсутсвует";
-                                        default -> "§c[SPmHelper]: Ошибка API: " + status;
+                                        case 200 -> "text.spmhelper.status_FeedBackMessageCase200";
+                                        case 401 -> "text.spmhelper.status_FeedBackMessageCase401";
+                                        default -> "text.spmhelper.status_FeedBackMessageCaseDefault" + status;
                                     };
-                                    context.getSource().sendFeedback(Text.literal(message));
+                                    context.getSource().sendFeedback(Text.translatable(message));
                                 });
                                 return 1;
                             })

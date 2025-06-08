@@ -29,7 +29,7 @@ public class MapScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
         context.drawCenteredTextWithShadow(
                 this.textRenderer,
-                Text.of("Канал с Картой, на данном этапе находится в разработке"),
+                Text.translatable("text.spmhelper.maps_InDevelopment"),
                 this.width / 2,
                 this.height / 2,
                 0xFFFFFF

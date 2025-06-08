@@ -31,17 +31,17 @@ public class SPmHelperApi {
         try {
             SocketClient socketClient = new SocketClient(new URI("wss://api.spmhelpers.ru/api/authorize/ws"));
             socketClient.setOnOpenCallback(() -> {
-                player.sendMessage(Text.literal("§a[SPmHelper]: Получение ссылки на авторизации"));
+                player.sendMessage(Text.translatable("text.spmhelper.SPmHAPI_GettingLink"));
                 socketClient.send(json.toString());
             });
             socketClient.setClientPlayer(player);
             socketClient.connect();
         } catch (URISyntaxException e) {
-            player.sendMessage(Text.literal("§c[SPmHelper]: Ошибка подключения к серверу"));
+            player.sendMessage(Text.translatable("text.spmhelper.SPmHAPI_ErrorConnectingServer"));
         } catch (IllegalStateException Exception) {
-            player.sendMessage(Text.literal("§c[SPmHelper]: Ошибка подключения к WebSocket"));
+            player.sendMessage(Text.translatable("text.spmhelper.SPmHAPI_ErrorConnectingWebSocket"));
         } catch (Exception e) {
-            player.sendMessage(Text.literal("§c[SPmHelper]: Ошибка сервера"));
+            player.sendMessage(Text.translatable("text.spmhelper.SPmHAPI_ErrorServer"));
         }
 
 

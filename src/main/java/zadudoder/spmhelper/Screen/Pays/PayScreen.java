@@ -69,9 +69,9 @@ public class PayScreen extends Screen {
         }
 
         cardButtons = new ButtonWidget[SPmHelperConfig.get().getCards().size()];
-
+        // Text.translatable("text.spmhelper.addCard_AcceptFeedBack")
         selectButton = addDrawableChild(ButtonWidget.builder(
-                Text.of(!selectedCard.isEmpty() ? getCardButtonText(selectedCard) : "Выберите карту ⬇"),
+                Text.translatable(!selectedCard.isEmpty() ? getCardButtonText(selectedCard) : "text.spmhelper.pays_SelectСard"),
                 button -> toggleCards()
         ).dimensions(centerX - 170, startY - 50, buttonWidth, buttonHeight).build());
 
@@ -94,7 +94,7 @@ public class PayScreen extends Screen {
                 this.width / 2 - 100,
                 this.height / 2 - 50,
                 200, 20,
-                Text.of("Номер карты получателя")
+                Text.translatable("text.spmhelper.pays_CardNumber")
         );
         this.addDrawableChild(receiverCardField);
 
@@ -104,7 +104,7 @@ public class PayScreen extends Screen {
                 this.width / 2 - 100,
                 this.height / 2 - 15,
                 200, 20,
-                Text.of("Сумма (АР):")
+                Text.translatable("text.spmhelper.pays_Amount")
         );
         this.addDrawableChild(amountField);
 
@@ -114,7 +114,7 @@ public class PayScreen extends Screen {
                 this.width / 2 - 100,
                 this.height / 2 + 20,
                 200, 20,
-                Text.of("Комментарий (не обязательно)")
+                Text.translatable("text.spmhelper.pays_Comment")
         );
         this.addDrawableChild(commentField);
         if (isSPmPay) {
@@ -124,7 +124,7 @@ public class PayScreen extends Screen {
         }
 
         // Кнопка перевода
-        ButtonWidget transferButton = ButtonWidget.builder(Text.of("Перевести"), button -> {
+        ButtonWidget transferButton = ButtonWidget.builder(Text.translatable("text.spmhelper.pays_Transfer"), button -> {
                     processTransfer();
                 })
                 .dimensions(this.width / 2 - 100, this.height / 2 + 50, 200, 20)
@@ -137,39 +137,39 @@ public class PayScreen extends Screen {
         try {
             Card senderCard = SPmHelperConfig.get().getMainCard();
             if (senderCard == null) {
-                setStatus("❌ Укажите карту для оплаты", 0xFF5555);
+                setStatus("text.spmhelper.pays_processTransfer_senderCardNull", 0xFF5555);
                 return;
             }
 
             String receiverCardNumber = receiverCardField.getText().trim();
             if (receiverCardNumber.isEmpty()) {
-                setStatus("❌ Введите номер карты получателя", 0xFF5555);
+                setStatus("text.spmhelper.pays_processTransfer_receiverCardNumberNull", 0xFF5555);
                 return;
             }
             if (amountField.getText().isEmpty()) {
-                setStatus("❌ Сумма не указана", 0xFF5555);
+                setStatus("text.spmhelper.pays_processTransfer_amountFieldNull", 0xFF5555);
                 return;
             }
             int amount;
             try { //переписать
                 amount = Integer.parseInt(amountField.getText());
             } catch (NumberFormatException ex) {
-                setStatus("❌ Сумма не указана", 0xFF5555);
+                setStatus("text.spmhelper.pays_processTransfer_amountFieldRandomSymbol", 0xFF5555);
                 return;
             }
 
             if (amount <= 0) {
-                setStatus("❌ Сумма должна быть больше 0", 0xFF5555);
+                setStatus("text.spmhelper.pays_processTransfer_amountField<0", 0xFF5555);
                 return;
             }
 
             if (SPWorldsApi.getBalance(senderCard) < amount) {
-                setStatus("❌ У вас не достаточно АР на карте", 0xFF5555);
+                setStatus("text.spmhelper.pays_processTransfer_Balance<Amount", 0xFF5555);
                 return;
             }
 
             if ((MinecraftClient.getInstance().getSession().getUsername().length() + commentField.getText().length()) > 32) {
-                setStatus("❌ Слишком длинный комментарий, максимум: " + (30 - MinecraftClient.getInstance().getSession().getUsername().length()), 0xFF5555);
+                setStatus("text.spmhelper.pays_processTransfer_CommentIsLong" + (30 - MinecraftClient.getInstance().getSession().getUsername().length()), 0xFF5555);
                 return;
             }
 
@@ -183,18 +183,18 @@ public class PayScreen extends Screen {
             if (response.has("error")) {
                 String error = response.get("error").toString();
                 if (error.contains("receiverIsSender")) {
-                    setStatus("❌ Нельзя отправить деньги самому себе", 0xFF5555);
+                    setStatus("text.spmhelper.pays_processTransfer_ReceiverIsSender", 0xFF5555);
                 } else if (error.contains("receiverCardNotFound")) {
-                    setStatus("❌ Такой карты не существует", 0xFF5555);
+                    setStatus("text.spmhelper.pays_processTransfer_ReceiverCardNotFound", 0xFF5555);
                 } else {
-                    setStatus("❌ Ошибка API: " + response.get("error").getAsString(), 0xFF5555);
+                    setStatus("text.spmhelper.pays_processTransfer_ErrorAPI" + response.get("error").getAsString(), 0xFF5555);
                 }
             } else {
                 setStatus("✔ Успешно переведено " + amount + " АР", 0x55FF55);
             }
 
         } catch (Exception e) {
-            setStatus("❌ Ошибка: " + e.getMessage(), 0xFF5555);
+            setStatus("text.spmhelper.pays_processTransfer_Error" + e.getMessage(), 0xFF5555);
         }
     }
 
@@ -205,9 +205,9 @@ public class PayScreen extends Screen {
         JsonObject cardInfo = SPWorldsApi.getCardInfo(senderCard);
 
         if (cardInfo.has("error")) {
-            setStatus("❌ Ошибка загрузки карты", 0xFF5555);
+            setStatus("text.spmhelper.pays_loadSenderCard_ErrorLoadingCard", 0xFF5555);
         } else {
-            setStatus("Текущий баланс карты \"" + cardName + "\": " + cardInfo.get("balance").getAsString() + " АР", 0x55FF55);
+            setStatus("text.spmhelper.pays.CurrentBalance" + cardName + "\": " + cardInfo.get("balance").getAsString() + "text.spmhelper.pays_DiamondOre", 0x55FF55);
         }
     }
 
@@ -216,7 +216,7 @@ public class PayScreen extends Screen {
             cardsExpanded = !cardsExpanded;
             updateCardsVisibility();
         } else {
-            setStatus("Нет привязанных карт!", 0xFF5555);
+            setStatus("text.spmhelper.pays_toggleCards_NotLinkedCard", 0xFF5555);
         }
 
     }
@@ -227,7 +227,7 @@ public class PayScreen extends Screen {
 
     private void selectCard(String card) {
         SPmHelperConfig.get().setMainCard(card);
-        setStatus("Текущий баланс карты \"" + card + "\": " + SPWorldsApi.getBalance(SPmHelperConfig.get().getMainCard()) + " АР", 0x55FF55);
+        setStatus("text.spmhelper.pays.CurrentBalance" + card + "\": " + SPWorldsApi.getBalance(SPmHelperConfig.get().getMainCard()) + "text.spmhelper.pays_DiamondOre", 0x55FF55);
         cardsExpanded = false;
         updateCardsVisibility();
         selectedCard = card;
@@ -254,7 +254,7 @@ public class PayScreen extends Screen {
         // Подписи к полям
         context.drawText(
                 this.textRenderer,
-                Text.of("Карта для оплаты:"),
+                Text.translatable("text.spmhelper.pays_render_CardForPayment"),
                 this.width / 2 - 229,
                 this.height / 2 - 60,
                 0xA0A0A0,
@@ -264,7 +264,7 @@ public class PayScreen extends Screen {
         // Подписи к полям
         context.drawText(
                 this.textRenderer,
-                Text.of("Номер карты:"),
+                Text.translatable("text.spmhelper.pays_render_CardNumber"),
                 this.width / 2 - 100,
                 this.height / 2 - 60,
                 0xA0A0A0,
@@ -274,7 +274,7 @@ public class PayScreen extends Screen {
         if (receiverCardField.getText().isEmpty()) {
             context.drawText(
                     textRenderer,
-                    "Пример: 00001",
+                    Text.translatable("text.spmhelper.pays_render_Example"),
                     width / 2 - 95,
                     height / 2 - 44,
                     0xbbbbbb,
@@ -284,7 +284,7 @@ public class PayScreen extends Screen {
 
         context.drawText(
                 this.textRenderer,
-                Text.of("Сумма (АР):"),
+                Text.translatable("text.spmhelper.pays_render_AmountAR"),
                 this.width / 2 - 100,
                 this.height / 2 - 25,
                 0xA0A0A0,
@@ -294,7 +294,7 @@ public class PayScreen extends Screen {
         if (amountField.getText().isEmpty()) {
             context.drawText(
                     textRenderer,
-                    "От 1 до 10000",
+                    Text.translatable("text.spmhelper.pays_render_AmountMinAndMax"),
                     width / 2 - 95,
                     height / 2 - 9,
                     0xbbbbbb,
@@ -304,7 +304,7 @@ public class PayScreen extends Screen {
 
         context.drawText(
                 this.textRenderer,
-                Text.of("Комментарий:"),
+                Text.translatable("text.spmhelper.pays_render_Comment"),
                 this.width / 2 - 100,
                 this.height / 2 + 10,
                 0xA0A0A0,
@@ -314,21 +314,22 @@ public class PayScreen extends Screen {
         if (commentField.getText().isEmpty()) {
             context.drawText(
                     textRenderer,
-                    "Можно оставить пустым",
+                    Text.translatable("text.spmhelper.pays_render_CommentMayBeNull"),
                     width / 2 - 95,
                     height / 2 + 26,
                     0xbbbbbb,
                     false
             );
         }
-
-        context.drawCenteredTextWithShadow(
-                this.textRenderer,
-                Text.of(statusMessage),
-                this.width / 2,
-                this.height / 2 + 80,
-                statusColor
-        );
+        if (statusMessage != null) {
+            context.drawCenteredTextWithShadow(
+                    this.textRenderer,
+                    Text.translatable(statusMessage),
+                    this.width / 2,
+                    this.height / 2 + 80,
+                    statusColor
+            );
+        }
 
         Identifier PayText = Identifier.of("spmhelper", "titles/paystextrender.png");
         int imageY = height / 2 - 110;
