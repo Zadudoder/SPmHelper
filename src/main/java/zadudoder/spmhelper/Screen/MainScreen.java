@@ -40,7 +40,7 @@ public class MainScreen extends Screen {
         }).dimensions(5, 10, 15, 15).build();
         this.addDrawableChild(Donate);
 
-        String[] buttonLabels = {"Оплата", "Карта", "Настройки", "Вызовы", "Законы"};
+        String[] buttonLabels = {"text.spmhelper.mainMenu_ButtonLabels.payment", "text.spmhelper.mainMenu_ButtonLabels.map", "text.spmhelper.mainMenu_ButtonLabels.settings", "text.spmhelper.mainMenu_ButtonLabels.calls", "text.spmhelper.mainMenu_ButtonLabels.laws"};
 
         // Рассчитываем доступную ширину для кнопок
         int availableWidth = width - 2 * SCREEN_PADDING;
@@ -88,7 +88,7 @@ public class MainScreen extends Screen {
             int y = buttonsStartY + row * (BUTTON_HEIGHT + VERTICAL_SPACING);
 
             final int buttonIndex = i;
-            ButtonWidget button = ButtonWidget.builder(Text.of(buttonLabels[i]), (btn) -> {
+            ButtonWidget button = ButtonWidget.builder(Text.translatable(buttonLabels[i]), (btn) -> {
                 handleButtonClick(buttonIndex);
             }).dimensions(x, y, buttonWidth, BUTTON_HEIGHT).build();
             this.addDrawableChild(button);

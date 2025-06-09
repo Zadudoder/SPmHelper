@@ -37,22 +37,22 @@ public class SocketClient extends WebSocketClient {
         JsonObject responseJson = JsonParser.parseString(message).getAsJsonObject();
         System.out.println(responseJson.toString());
         if (responseJson.has("auth_url")) {
-            clientPlayer.sendMessage(Text.literal("§a[SPmHelper]: Открытие ссылки на авторизацию"));
+            clientPlayer.sendMessage(Text.translatable("text.spmhelper.WebSocketClient_OpenURL"));
             String authUrl = responseJson.get("auth_url").getAsString();
             client.execute(() -> {
                 Util.getOperatingSystem().open(authUrl);
             });
-            clientPlayer.sendMessage(Text.literal("§a[SPmHelper]: Ожидание авторизации"));
+            clientPlayer.sendMessage(Text.translatable("text.spmhelper.WebSocketClient_WaitingAuth"));
         } else if (responseJson.has("token")) {
             SPmHelperConfig.get().setAPI_TOKEN(responseJson.get("token").getAsString());
             AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
-            clientPlayer.sendMessage(Text.literal("§a[SPmHelper]: Токен успешно записан!"));
+            clientPlayer.sendMessage(Text.translatable("text.spmhelper.WebSocketClient_TokenWritten"));
             safeClose();
         } else if (responseJson.has("error")) {
             if (responseJson.get("error").getAsString().equals("Авторизация отклонена игроком")) {
-                clientPlayer.sendMessage(Text.literal("§c[SPmHelper]: Авторизация отменена вами"));
+                clientPlayer.sendMessage(Text.translatable("text.spmhelper.WebSocketClient_AuthorizationCancelledByYou"));
             } else {
-                clientPlayer.sendMessage(Text.literal("§c[SPmHelper]: Не удалось получить ссылку на авторизацию"));
+                clientPlayer.sendMessage(Text.translatable("text.spmhelper.WebSocketClient_FailedToGetLink"));
             }
             safeClose();
         }
