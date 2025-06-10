@@ -3,13 +3,10 @@ package zadudoder.spmhelper.mixin;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TextIconButtonWidget;
-import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,7 +25,7 @@ import zadudoder.spmhelper.config.SPmHelperConfig;
 @Mixin(GameMenuScreen.class)
 public abstract class GameMenuScreenMixin extends ScreenMixin {
     @Unique
-    private TexturedButtonWidget menuButton;
+    private ButtonWidget menuButton;
 
     @Inject(at = @At("TAIL"), method = "init()V")
     private void init(CallbackInfo info) {
@@ -46,18 +43,13 @@ public abstract class GameMenuScreenMixin extends ScreenMixin {
                     Text tooltipText = Text.translatable("text.spmhelper.current_screen")
                             .append(Text.translatable("text.spmhelper.screen_type." + SPmHelperConfig.get().defaultScreen.name().toLowerCase()));
 
-                    ButtonTextures BUTTON_TEXTURE = new ButtonTextures(
-                            Identifier.of("spmhelper", "gui/bookwithfeather.png"), // обычное состояние
-                            Identifier.of("spmhelper", "gui/bookwithfeather.png") // состояние при наведении
-                    );
-                    this.menuButton = new TexturedButtonWidget(
-                            buttonX, buttonY,
-                            buttonWidth,buttonHeight,
-                            BUTTON_TEXTURE,
-                            btn -> openSelectedScreen(),
-                            Text.empty());
 
-                    this.menuButton.setTooltip(Tooltip.of(tooltipText));
+                    this.menuButton = ButtonWidget.builder(
+                                    Text.literal(""),
+                                    btn -> openSelectedScreen())
+                            .dimensions(buttonX, buttonY, buttonWidth, buttonHeight)
+                            .tooltip(Tooltip.of(tooltipText))
+                            .build();
 
                     this.addDrawableChild(menuButton);
                     break;
@@ -80,5 +72,20 @@ public abstract class GameMenuScreenMixin extends ScreenMixin {
         };
 
         client.setScreen(screenToOpen);
+    }
+
+    @Inject(method = "render", at = @At("TAIL"))
+    private void onRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        int iconSize = 16;
+        int x = menuButton.getX() + (menuButton.getWidth() - iconSize) / 2;
+        int y = menuButton.getY() + (menuButton.getHeight() - iconSize) / 2;
+        Identifier BUTTON_ICON = Identifier.of("spmhelper", "gui/bookwithfeather.png");
+        context.drawTexture(
+                BUTTON_ICON,
+                x, y,
+                0, 0,
+                iconSize, iconSize,
+                iconSize, iconSize
+        );
     }
 }
