@@ -44,6 +44,12 @@ public class PayScreen extends Screen {
         isSPmPay = true;
     }
 
+    public PayScreen(String number) {
+        super(Text.of("Перевод СПм"));
+        p_number = number;
+        isSPmPay = true;
+    }
+
     @Override
     protected void init() {
         super.init();

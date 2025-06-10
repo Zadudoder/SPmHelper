@@ -58,7 +58,19 @@ public class ModEvents {
                                         execute(() -> MinecraftClient.getInstance().setScreen(new PayScreen(cardNumber, finalAmount, comment)));
                                 return ActionResult.SUCCESS;
                             }
+                        } else if(amount.isEmpty()){
+                            MinecraftClient.getInstance().
+                                    execute(() -> MinecraftClient.getInstance().setScreen(new PayScreen(cardNumber)));
+                            return ActionResult.SUCCESS;
                         }
+                    } else if (firstLine.toLowerCase().contains("оплата по карте")){
+                        String secondLine = frontText.getMessage(1, false).getString();
+                        if(Misc.isNumeric(secondLine)){
+                            MinecraftClient.getInstance().
+                                    execute(() -> MinecraftClient.getInstance().setScreen(new PayScreen(secondLine)));
+                            return ActionResult.SUCCESS;
+                        }
+                        return  ActionResult.PASS;
                     }
                 }
             }
