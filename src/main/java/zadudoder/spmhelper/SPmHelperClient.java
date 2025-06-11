@@ -17,6 +17,7 @@ import zadudoder.spmhelper.Screen.Map.MapScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.events.ModEvents;
+import zadudoder.spmhelper.utils.SoundManager;
 
 @Environment(EnvType.CLIENT)
 public class SPmHelperClient implements ClientModInitializer {
@@ -33,7 +34,7 @@ public class SPmHelperClient implements ClientModInitializer {
 
         registerKeyBindings();
         registerKeyHandlers();
-
+        SoundManager.initialize();
         ModEvents.registerEvents();
     }
 
