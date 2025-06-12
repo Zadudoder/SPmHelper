@@ -2,6 +2,7 @@ package zadudoder.spmhelper.config;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import zadudoder.spmhelper.utils.ScreenType;
@@ -16,10 +17,16 @@ public class SPmHelperConfig implements ConfigData {
     public Boolean enableMenuButton = true;
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public ScreenType defaultScreen = ScreenType.MAIN;
+    public Boolean paymentNickOrNumber = false; // true - ник, false - по номеру
 
     String API_TOKEN = "";
     Map<String, Card> cards = new HashMap<>();
     String mainCardName = "";
+
+    public static void saveConfig() {
+        ConfigHolder<SPmHelperConfig> configHolder = AutoConfig.getConfigHolder(SPmHelperConfig.class);
+        configHolder.save();  // Сохраняет конфиг на диск
+    }
 
     public static SPmHelperConfig get() {
         return AutoConfig.getConfigHolder(SPmHelperConfig.class).getConfig();
