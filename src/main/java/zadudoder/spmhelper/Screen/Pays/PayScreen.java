@@ -11,9 +11,9 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import zadudoder.spmhelper.SPmHelper;
 import zadudoder.spmhelper.Screen.MainScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
+import zadudoder.spmhelper.utils.Misc;
 import zadudoder.spmhelper.utils.SPWorldsApi;
 import zadudoder.spmhelper.utils.types.BaseCard;
 import zadudoder.spmhelper.utils.types.Card;
@@ -200,13 +200,11 @@ public class PayScreen extends Screen {
                 setStatus(Text.translatable("text.spmhelper.pays_processTransfer_amountFieldNull").getString(), 0xFF5555);
                 return;
             }
-            int amount;
-            try { //переписать
-                amount = Integer.parseInt(amountField.getText());
-            } catch (NumberFormatException ex) {
+            if(!Misc.isNumeric(amountField.getText())){
                 setStatus(Text.translatable("text.spmhelper.pays_processTransfer_amountFieldRandomSymbol").getString(), 0xFF5555);
                 return;
             }
+            int amount = Integer.parseInt(amountField.getText());
 
             if (amount <= 0) {
                 setStatus(Text.translatable("text.spmhelper.pays_processTransfer_amountField<0").getString(), 0xFF5555);
