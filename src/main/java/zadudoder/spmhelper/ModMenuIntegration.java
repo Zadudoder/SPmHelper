@@ -52,10 +52,6 @@ public class ModMenuIntegration implements ModMenuApi {
                     })
                     .build());
 
-            general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("text.spmhelper.option.paymentNickOrNumber"), config.paymentWithNick)
-                    .setSaveConsumer(newValue -> config.paymentWithNick = newValue)
-                    .build());
-
             return builder.build();
         };
     }

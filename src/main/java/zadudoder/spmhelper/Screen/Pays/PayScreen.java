@@ -183,7 +183,7 @@ public class PayScreen extends Screen {
         try {
             Card senderCard = SPmHelperConfig.get().getMainCard();
             if (senderCard == null) {
-                setStatus("text.spmhelper.pays_processTransfer_senderCardNull", 0xFF5555);
+                setStatus(Text.translatable("text.spmhelper.pays_processTransfer_senderCardNull").getString(), 0xFF5555);
                 return;
             }
             String receiverCardNumber;
@@ -193,33 +193,33 @@ public class PayScreen extends Screen {
                 receiverCardNumber = receiverCardOrNameField.getText().trim();
             }
             if (receiverCardNumber.isEmpty()) {
-                setStatus("text.spmhelper.pays_processTransfer_receiverCardNumberNull", 0xFF5555);
+                setStatus(Text.translatable("text.spmhelper.pays_processTransfer_receiverCardNumberNull").getString(), 0xFF5555);
                 return;
             }
             if (amountField.getText().isEmpty()) {
-                setStatus("text.spmhelper.pays_processTransfer_amountFieldNull", 0xFF5555);
+                setStatus(Text.translatable("text.spmhelper.pays_processTransfer_amountFieldNull").getString(), 0xFF5555);
                 return;
             }
             int amount;
             try { //переписать
                 amount = Integer.parseInt(amountField.getText());
             } catch (NumberFormatException ex) {
-                setStatus("text.spmhelper.pays_processTransfer_amountFieldRandomSymbol", 0xFF5555);
+                setStatus(Text.translatable("text.spmhelper.pays_processTransfer_amountFieldRandomSymbol").getString(), 0xFF5555);
                 return;
             }
 
             if (amount <= 0) {
-                setStatus("text.spmhelper.pays_processTransfer_amountField<0", 0xFF5555);
+                setStatus(Text.translatable("text.spmhelper.pays_processTransfer_amountField<0").getString(), 0xFF5555);
                 return;
             }
 
             if (SPWorldsApi.getBalance(senderCard) < amount) {
-                setStatus("text.spmhelper.pays_processTransfer_Balance<Amount", 0xFF5555);
+                setStatus(Text.translatable("text.spmhelper.pays_processTransfer_Balance<Amount").getString(), 0xFF5555);
                 return;
             }
 
             if ((MinecraftClient.getInstance().getSession().getUsername().length() + commentField.getText().length()) > 32) {
-                setStatus("text.spmhelper.pays_processTransfer_CommentIsLong" + (30 - MinecraftClient.getInstance().getSession().getUsername().length()), 0xFF5555);
+                setStatus (String.format(Text.translatable("text.spmhelper.pays_processTransfer_CommentIsLong").getString(), (30 - MinecraftClient.getInstance().getSession().getUsername().length())), 0xFF5555);
                 return;
             }
 
@@ -233,18 +233,18 @@ public class PayScreen extends Screen {
             if (response.has("error")) {
                 String error = response.get("error").toString();
                 if (error.contains("receiverIsSender")) {
-                    setStatus("text.spmhelper.pays_processTransfer_ReceiverIsSender", 0xFF5555);
+                    setStatus(Text.translatable("text.spmhelper.pays_processTransfer_ReceiverIsSender").getString(), 0xFF5555);
                 } else if (error.contains("receiverCardNotFound")) {
-                    setStatus("text.spmhelper.pays_processTransfer_ReceiverCardNotFound", 0xFF5555);
+                    setStatus(Text.translatable("text.spmhelper.pays_processTransfer_ReceiverCardNotFound").getString(), 0xFF5555);
                 } else {
-                    setStatus("text.spmhelper.pays_processTransfer_ErrorAPI" + response.get("error").getAsString(), 0xFF5555);
+                    setStatus(String.format(Text.translatable("text.spmhelper.pays_processTransfer_ErrorAPI").getString(), response.get("error").getAsString()), 0xFF5555);
                 }
             } else {
-                setStatus("✔ Успешно переведено " + amount + " АР", 0x55FF55);
+                setStatus(String.format(Text.translatable("text.spmhelper.pays.Successfully").getString(), amount), 0x55FF55);
             }
 
         } catch (Exception e) {
-            setStatus("text.spmhelper.pays_processTransfer_Error" + e.getMessage(), 0xFF5555);
+            setStatus(String.format(Text.translatable("text.spmhelper.pays_processTransfer_Error").getString(), e.getMessage()), 0xFF5555);
         }
     }
 
@@ -255,9 +255,9 @@ public class PayScreen extends Screen {
         JsonObject cardInfo = SPWorldsApi.getCardInfo(senderCard);
 
         if (cardInfo.has("error")) {
-            setStatus("text.spmhelper.pays_loadSenderCard_ErrorLoadingCard", 0xFF5555);
+            setStatus(Text.translatable("text.spmhelper.pays_loadSenderCard_ErrorLoadingCard").getString(), 0xFF5555);
         } else {
-            setStatus("text.spmhelper.pays.CurrentBalance" + cardName + "\": " + cardInfo.get("balance").getAsString() + "text.spmhelper.pays_DiamondOre", 0x55FF55);
+            setStatus(String.format(Text.translatable("text.spmhelper.pays.CurrentBalance").getString(), cardName, cardInfo.get("balance").getAsString()), 0x55FF55);
         }
     }
 
@@ -266,7 +266,7 @@ public class PayScreen extends Screen {
             cardsExpanded = !cardsExpanded;
             updateCardsVisibility();
         } else {
-            setStatus("text.spmhelper.pays_toggleCards_NotLinkedCard", 0xFF5555);
+            setStatus(Text.translatable("text.spmhelper.pays_toggleCards_NotLinkedCard").getString(), 0xFF5555);
         }
 
     }
@@ -277,16 +277,16 @@ public class PayScreen extends Screen {
             updateReceiverCardsVisibility();
         } else {
             if (SPmHelperConfig.get().getMainCardName().isEmpty()) {
-                setStatus("Привяжите хотя бы одну карту", 0xFF5555);
+                setStatus(Text.translatable("text.spmhelper.pays_toggleRecieverCards_LinkOneCard").getString(), 0xFF5555);
                 return;
             }
             if (receiverCardOrNameField.getText().isEmpty()) {
-                setStatus("Вы не вписали ник игрока", 0xFF5555);
+                setStatus(Text.translatable("text.spmhelper.pays_toggleRecieverCards_PlayerNotEntry").getString(), 0xFF5555);
                 return;
             }
             BaseCard[] cards = SPWorldsApi.getCards(receiverCardOrNameField.getText());
             if (cards == null || cards.length == 0) {
-                setStatus("Такого игрока не существует или он не имеет карт", 0xFF5555);
+                setStatus(Text.translatable("text.spmhelper.pays_toggleRecieverCards_PlayerNotOrNoCard").getString(), 0xFF5555);
                 return;
             }
             receiverName = receiverCardOrNameField.getText();
@@ -320,7 +320,7 @@ public class PayScreen extends Screen {
 
     private void selectCard(String card) {
         SPmHelperConfig.get().setMainCard(card);
-        setStatus("text.spmhelper.pays.CurrentBalance" + card + "\": " + SPWorldsApi.getBalance(SPmHelperConfig.get().getMainCard()) + "text.spmhelper.pays_DiamondOre", 0x55FF55);
+        setStatus(String.format(Text.translatable("text.spmhelper.pays.CurrentBalance").getString(), card, SPWorldsApi.getBalance(SPmHelperConfig.get().getMainCard())), 0x55FF55);
         cardsExpanded = false;
         updateCardsVisibility();
         selectedCard = card;
@@ -328,7 +328,6 @@ public class PayScreen extends Screen {
     }
 
     private void selectRecieverCard(BaseCard card) {
-        setStatus("text.spmhelper.pays.CurrentBalance" + card + "\": " + SPWorldsApi.getBalance(SPmHelperConfig.get().getMainCard()) + "text.spmhelper.pays_DiamondOre", 0x55FF55);
         receiverCardsExpanded = false;
         updateReceiverCardsVisibility();
         selectedReceiverCard = card.getNumber();
@@ -434,7 +433,7 @@ public class PayScreen extends Screen {
         if (statusMessage != null) {
             context.drawCenteredTextWithShadow(
                     this.textRenderer,
-                    Text.translatable(statusMessage),
+                    Text.of(statusMessage),
                     this.width / 2,
                     this.height / 2 + 80,
                     statusColor
