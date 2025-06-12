@@ -1,8 +1,12 @@
 package zadudoder.spmhelper.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.minecraft.client.MinecraftClient;
+import zadudoder.spmhelper.config.SPmHelperConfig;
+import zadudoder.spmhelper.utils.types.BaseCard;
 import zadudoder.spmhelper.utils.types.Card;
 
 import java.net.URI;
@@ -94,6 +98,23 @@ public class SPWorldsApi {
             JsonObject error = new JsonObject();
             error.addProperty("error", e.getMessage());
             return error;
+        }
+    }
+
+    public  static BaseCard[] getCards(String nick){
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(API_URL + "accounts/"+nick+"/cards"))
+                    .header("Authorization", getAuthorizationHeader(SPmHelperConfig.get().getMainCard()))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            JsonArray cardsArray = JsonParser.parseString(response.body()).getAsJsonArray();
+            Gson gson = new Gson();
+            BaseCard[] cards = gson.fromJson(cardsArray, BaseCard[].class);
+            return cards;
+        } catch (Exception e) {
+            return null;
         }
     }
 

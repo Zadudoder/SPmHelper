@@ -11,16 +11,17 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import zadudoder.spmhelper.SPmHelper;
 import zadudoder.spmhelper.Screen.MainScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.SPWorldsApi;
+import zadudoder.spmhelper.utils.types.BaseCard;
 import zadudoder.spmhelper.utils.types.Card;
 
-import static zadudoder.spmhelper.config.SPmHelperConfig.saveConfig;
 
 @Environment(EnvType.CLIENT)
 public class PayScreen extends Screen {
-    private TextFieldWidget receiverCardField;
+    private TextFieldWidget receiverCardOrNameField;
     private TextFieldWidget amountField;
     private TextFieldWidget commentField;
     private String p_number;
@@ -29,13 +30,18 @@ public class PayScreen extends Screen {
     private boolean isSPmPay = false;
     private String statusMessage;
     private int statusColor;
-    private ButtonWidget selectButton;
+    private ButtonWidget selectCardButton;
+    private ButtonWidget selectReceieverCardButton;
     private String selectedCard = null;
+    private String selectedReceiverCard = null;
     private boolean cardsExpanded = false;
+    private boolean receiverCardsExpanded = false;
     private ButtonWidget[] cardButtons;
+    private ButtonWidget[] receiverCardButtons;
 
-    private ButtonWidget CardNumber;
-    private ButtonWidget NickName;
+    private ButtonWidget cardNumberButton;
+    private ButtonWidget nickNameButton;
+    private String receiverName = "";
 
     public PayScreen() {
         super(Text.of("Перевод СПм"));
@@ -47,12 +53,14 @@ public class PayScreen extends Screen {
         p_amount = amount;
         p_comment = comment;
         isSPmPay = true;
+        SPmHelperConfig.get().setPayWithNick(false);
     }
 
     public PayScreen(String number) {
         super(Text.of("Перевод СПм"));
         p_number = number;
         isSPmPay = true;
+        SPmHelperConfig.get().setPayWithNick(false);
     }
 
     @Override
@@ -71,27 +79,25 @@ public class PayScreen extends Screen {
 
         // Выбор оплаты по нику или по карте
 
-        CardNumber = ButtonWidget.builder(Text.of("Карта"), (btn) -> {
-            SPmHelperConfig.get().paymentNickOrNumber = false;
-            CardNumber.active = false;
-            NickName.active = true;
-            saveConfig();
+        cardNumberButton = ButtonWidget.builder(Text.of("Карта"), (btn) -> {
+            SPmHelperConfig.get().setPayWithNick(false);
+            cardNumberButton.active = false;
+            nickNameButton.active = true;
             this.client.setScreen(new PayScreen());
-        }).dimensions(width/2-50, this.height / 2 - 80, 50, 20).build();
+        }).dimensions(width / 2 - 50, this.height / 2 - 80, 50, 20).build();
 
-        NickName = ButtonWidget.builder(Text.of("Ник"), (btn) -> {
-            SPmHelperConfig.get().paymentNickOrNumber = true;
-            CardNumber.active = true;
-            NickName.active = false;
-            saveConfig();
+        nickNameButton = ButtonWidget.builder(Text.of("Ник"), (btn) -> {
+            SPmHelperConfig.get().setPayWithNick(true);
+            cardNumberButton.active = true;
+            nickNameButton.active = false;
             this.client.setScreen(new PayScreen());
-        }).dimensions(width/2, this.height / 2 - 80, 50, 20).build();
+        }).dimensions(width / 2, this.height / 2 - 80, 50, 20).build();
 
-        this.addDrawableChild(CardNumber);
-        this.addDrawableChild(NickName);
+        this.addDrawableChild(cardNumberButton);
+        this.addDrawableChild(nickNameButton);
 
-        CardNumber.active = SPmHelperConfig.get().paymentNickOrNumber;
-        NickName.active = !SPmHelperConfig.get().paymentNickOrNumber;
+        cardNumberButton.active = SPmHelperConfig.get().paymentWithNick;
+        nickNameButton.active = !SPmHelperConfig.get().paymentWithNick;
 
         int buttonWidth = 120;
         int buttonHeight = 20;
@@ -103,7 +109,7 @@ public class PayScreen extends Screen {
         }
 
         cardButtons = new ButtonWidget[SPmHelperConfig.get().getCards().size()];
-        selectButton = addDrawableChild(ButtonWidget.builder(
+        selectCardButton = addDrawableChild(ButtonWidget.builder(
                 Text.translatable(!selectedCard.isEmpty() ? getCardButtonText(selectedCard) : "text.spmhelper.pays_SelectСard"),
                 button -> toggleCards()
         ).dimensions(centerX - 170, startY - 50, buttonWidth, buttonHeight).build());
@@ -119,37 +125,24 @@ public class PayScreen extends Screen {
             this.addDrawableChild(cardButtons[index]);
             index++;
         }
-
+        index = 0;
         // Чел выбирает по карте - false (по умолчанию), true - по нику, включается или сразу в настройках
-        if (SPmHelperConfig.get().paymentNickOrNumber) {
-            cardButtons = new ButtonWidget[SPmHelperConfig.get().getCards().size()];
-            selectButton = addDrawableChild(ButtonWidget.builder(
-                    Text.translatable(!selectedCard.isEmpty() ? getCardButtonText(selectedCard) : "text.spmhelper.pays_SelectСard"),
-                    button -> toggleCards()
+        if (SPmHelperConfig.get().paymentWithNick) {
+            selectReceieverCardButton = addDrawableChild(ButtonWidget.builder(
+                    Text.translatable("text.spmhelper.pays_SelectСard"),
+                    button -> toggleRecieverCards()
             ).dimensions(centerX + 170, startY - 50, buttonWidth, buttonHeight).build());
-
-            // Кнопки карт (изначально скрыты)
-            int index2 = 0;
-            for (String name : SPmHelperConfig.get().getCards().keySet()) {
-                cardButtons[index2] = ButtonWidget.builder(
-                        Text.of(getCardButtonText(name)),
-                        btn -> selectCard(name)
-                ).dimensions(centerX + 170, startY - 25 + index2 * 25, buttonWidth, buttonHeight).build();
-                cardButtons[index2].visible = cardsExpanded;
-                this.addDrawableChild(cardButtons[index2]);
-                index2++;
-            }
         }
 
         // Поле для номера карты получателя
-        this.receiverCardField = new TextFieldWidget(
+        this.receiverCardOrNameField = new TextFieldWidget(
                 this.textRenderer,
                 this.width / 2 - 100,
                 this.height / 2 - 50,
                 200, 20,
                 Text.translatable("text.spmhelper.pays_CardNumber")
         );
-        this.addDrawableChild(receiverCardField);
+        this.addDrawableChild(receiverCardOrNameField);
 
         // Поле для суммы перевода
         this.amountField = new TextFieldWidget(
@@ -171,7 +164,7 @@ public class PayScreen extends Screen {
         );
         this.addDrawableChild(commentField);
         if (isSPmPay) {
-            receiverCardField.setText(p_number);
+            receiverCardOrNameField.setText(p_number);
             amountField.setText(p_amount);
             commentField.setText(p_comment);
         }
@@ -193,8 +186,12 @@ public class PayScreen extends Screen {
                 setStatus("text.spmhelper.pays_processTransfer_senderCardNull", 0xFF5555);
                 return;
             }
-
-            String receiverCardNumber = receiverCardField.getText().trim();
+            String receiverCardNumber;
+            if(SPmHelperConfig.get().paymentWithNick){
+                receiverCardNumber = selectedReceiverCard;
+            } else {
+                receiverCardNumber = receiverCardOrNameField.getText().trim();
+            }
             if (receiverCardNumber.isEmpty()) {
                 setStatus("text.spmhelper.pays_processTransfer_receiverCardNumberNull", 0xFF5555);
                 return;
@@ -274,8 +271,51 @@ public class PayScreen extends Screen {
 
     }
 
+    private void toggleRecieverCards() {
+        if((receiverName.equals(receiverCardOrNameField.getText()) || receiverCardsExpanded) && !receiverCardOrNameField.getText().isEmpty()){
+            receiverCardsExpanded = !receiverCardsExpanded;
+            updateReceiverCardsVisibility();
+        } else {
+            if (SPmHelperConfig.get().getMainCardName().isEmpty()) {
+                setStatus("Привяжите хотя бы одну карту", 0xFF5555);
+                return;
+            }
+            if (receiverCardOrNameField.getText().isEmpty()) {
+                setStatus("Вы не вписали ник игрока", 0xFF5555);
+                return;
+            }
+            BaseCard[] cards = SPWorldsApi.getCards(receiverCardOrNameField.getText());
+            if (cards == null || cards.length == 0) {
+                setStatus("Такого игрока не существует или он не имеет карт", 0xFF5555);
+                return;
+            }
+            receiverName = receiverCardOrNameField.getText();
+            int buttonWidth = 120;
+            int buttonHeight = 20;
+            int startY = this.height / 2;
+            int centerX = this.width / 2 - buttonWidth / 2;
+            receiverCardButtons = new ButtonWidget[cards.length];
+            int index = 0;
+            for (BaseCard card : cards) {
+                receiverCardButtons[index] = ButtonWidget.builder(
+                        Text.of(getCardButtonText(card)),
+                        btn -> selectRecieverCard(card)
+                ).dimensions(centerX + 170, startY - 25 + index * 25, buttonWidth, buttonHeight).build();
+                receiverCardButtons[index].visible = cardsExpanded;
+                this.addDrawableChild(receiverCardButtons[index]);
+                index++;
+            }
+            receiverCardsExpanded = !receiverCardsExpanded;
+            updateReceiverCardsVisibility();
+        }
+}
+
+
     private String getCardButtonText(String name) {
         return name + " | " + SPmHelperConfig.get().getCard(name).number;
+    }
+    private String getCardButtonText(BaseCard card){
+        return  card.getName() + " | " + card.getNumber();
     }
 
     private void selectCard(String card) {
@@ -284,13 +324,28 @@ public class PayScreen extends Screen {
         cardsExpanded = false;
         updateCardsVisibility();
         selectedCard = card;
-        selectButton.setMessage(Text.literal(getCardButtonText(selectedCard)));
+        selectCardButton.setMessage(Text.literal(getCardButtonText(selectedCard)));
+    }
+
+    private void selectRecieverCard(BaseCard card) {
+        setStatus("text.spmhelper.pays.CurrentBalance" + card + "\": " + SPWorldsApi.getBalance(SPmHelperConfig.get().getMainCard()) + "text.spmhelper.pays_DiamondOre", 0x55FF55);
+        receiverCardsExpanded = false;
+        updateReceiverCardsVisibility();
+        selectedReceiverCard = card.getNumber();
+        selectReceieverCardButton.setMessage(Text.literal(getCardButtonText(card)));
     }
 
     private void updateCardsVisibility() {
         for (ButtonWidget cardButton : cardButtons) {
             cardButton.visible = cardsExpanded;
             cardButton.active = !cardButton.getMessage().getString().equals(getCardButtonText(SPmHelperConfig.get().getMainCardName()));
+        }
+    }
+
+    private void updateReceiverCardsVisibility() {
+        for (ButtonWidget cardButton : receiverCardButtons) {
+            cardButton.visible = receiverCardsExpanded;
+            cardButton.active = !cardButton.getMessage().getString().equals(selectReceieverCardButton.getMessage().getString());
         }
     }
 
@@ -318,18 +373,18 @@ public class PayScreen extends Screen {
         context.drawText(
                 this.textRenderer,
                 Text.translatable(
-                        SPmHelperConfig.get().paymentNickOrNumber ? "text.spmhelper.pays_render_Nickname" : "text.spmhelper.pays_render_CardNumber"),
+                        SPmHelperConfig.get().paymentWithNick ? "text.spmhelper.pays_render_Nickname" : "text.spmhelper.pays_render_CardNumber"),
                 this.width / 2 - 100,
                 this.height / 2 - 60,
                 0xA0A0A0,
                 true
         );
 
-        if (receiverCardField.getText().isEmpty()) {
+        if (receiverCardOrNameField.getText().isEmpty()) {
             context.drawText(
                     textRenderer,
                     Text.translatable(
-                            SPmHelperConfig.get().paymentNickOrNumber ? "text.spmhelper.pays_render_ExampleNick" : "text.spmhelper.pays_render_Example"),
+                            SPmHelperConfig.get().paymentWithNick ? "text.spmhelper.pays_render_ExampleNick" : "text.spmhelper.pays_render_Example"),
                     width / 2 - 95,
                     height / 2 - 44,
                     0xbbbbbb,
@@ -386,7 +441,7 @@ public class PayScreen extends Screen {
             );
         }
 
-        if (SPmHelperConfig.get().paymentNickOrNumber) {
+        if (SPmHelperConfig.get().paymentWithNick) {
             context.drawText(
                     this.textRenderer,
                     Text.translatable("text.spmhelper.pays_render_CardWillComeAR"),
