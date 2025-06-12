@@ -16,7 +16,6 @@ public abstract class ScreenMixin {
     public int height;
     @Shadow
     protected MinecraftClient client;
-
     @Shadow
     protected abstract <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement);
 }

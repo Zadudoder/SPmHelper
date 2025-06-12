@@ -163,10 +163,8 @@ public class ModEvents {
                     .then(ClientCommandManager.literal("status")
                             .executes(context -> dispatcher.execute("spmhelper status", context.getSource()))
                     );
-
             dispatcher.register(mainCommand);
             dispatcher.register(aliasMainCommand);
-
         });
     }
 }
