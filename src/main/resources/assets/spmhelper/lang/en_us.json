@@ -8,7 +8,7 @@
   "text.spmhelper.config.category": "Настройки мода",
   "text.spmhelper.option.enableMenuButton": "Включить кнопку SPmHelper в основном меню: ",
   "text.spmhelper.option.defaultScreen": "На какой экран будет вести эта кнопка: ",
-  "text.spmhelper.option.paymentNickOrNumber": "Оплата по нику:",
+  "text.spmhelper.option.numberOfCardInComment": "Указывать номер карты куда вы переводите в комментарии?",
   "text.spmhelper.screen_type.main": "Главный экран",
   "text.spmhelper.screen_type.settings": "Настройки",
   "text.spmhelper.screen_type.pay": "Оплата",

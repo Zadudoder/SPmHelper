@@ -52,6 +52,9 @@ public class ModMenuIntegration implements ModMenuApi {
                     })
                     .build());
 
+            general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("text.spmhelper.option.numberOfCardInComment"), config.numberOfCardInComment)
+                    .setSaveConsumer(newValue -> config.numberOfCardInComment = newValue)
+                    .build());
             return builder.build();
         };
     }

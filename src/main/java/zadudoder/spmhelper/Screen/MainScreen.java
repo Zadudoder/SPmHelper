@@ -99,28 +99,29 @@ public class MainScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
 
-        Identifier MainText = Identifier.of("spmhelper", "titles/spmhelpertextmain.png");
-        int originalWidth = 932 / 4;
-        int originalHeight = 152 / 4;
+            Identifier MainText = Identifier.of("spmhelper", "titles/spmhelpertextmain.png");
+            int originalWidth = 932 / 4;
+            int originalHeight = 152 / 4;
 
-        // Рассчитываем размер изображения
-        int availableWidth = width - 2 * SCREEN_PADDING;
-        int imageWidth = Math.min(originalWidth, availableWidth);
-        float scale = (float) imageWidth / originalWidth;
-        int imageHeight = (int) (originalHeight * scale);
+            // Рассчитываем размер изображения
+            int availableWidth = width - 2 * SCREEN_PADDING;
+            int imageWidth = Math.min(originalWidth, availableWidth);
+            float scale = (float) imageWidth / originalWidth;
+            int imageHeight = (int) (originalHeight * scale);
 
-        // Позиционируем изображение по центру сверху
-        int totalRows = (int) Math.ceil((double) BUTTON_COUNT /
-                Math.max(1, Math.min(BUTTON_COUNT,
-                        availableWidth / (MIN_BUTTON_WIDTH + HORIZONTAL_SPACING))));
-        int totalButtonsHeight = totalRows * BUTTON_HEIGHT + (totalRows - 1) * VERTICAL_SPACING;
-        int totalBlockHeight = imageHeight + IMAGE_BOTTOM_MARGIN + totalButtonsHeight;
-        int startY = (height - totalBlockHeight) / 2;
+            // Позиционируем изображение по центру сверху
+            int totalRows = (int) Math.ceil((double) BUTTON_COUNT /
+                    Math.max(1, Math.min(BUTTON_COUNT,
+                            availableWidth / (MIN_BUTTON_WIDTH + HORIZONTAL_SPACING))));
+            int totalButtonsHeight = totalRows * BUTTON_HEIGHT + (totalRows - 1) * VERTICAL_SPACING;
+            int totalBlockHeight = imageHeight + IMAGE_BOTTOM_MARGIN + totalButtonsHeight;
+            int startY = (height - totalBlockHeight) / 2;
 
-        int imageX = (width - imageWidth) / 2;
-        int imageY = startY;
+            int imageX = (width - imageWidth) / 2;
+            int imageY = startY;
 
-        context.drawTexture(MainText, imageX, imageY, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+            context.drawTexture(MainText, imageX, imageY, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+
     }
 
     private void handleButtonClick(int buttonLabel) {

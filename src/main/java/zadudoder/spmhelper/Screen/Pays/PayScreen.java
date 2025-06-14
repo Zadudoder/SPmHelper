@@ -24,6 +24,7 @@ public class PayScreen extends Screen {
     private TextFieldWidget receiverCardOrNameField;
     private TextFieldWidget amountField;
     private TextFieldWidget commentField;
+
     private String p_number;
     private String p_amount;
     private String p_comment;
@@ -216,8 +217,14 @@ public class PayScreen extends Screen {
                 return;
             }
 
-            if ((MinecraftClient.getInstance().getSession().getUsername().length() + commentField.getText().length()) > 32) {
-                setStatus (String.format(Text.translatable("text.spmhelper.pays_processTransfer_CommentIsLong").getString(), (30 - MinecraftClient.getInstance().getSession().getUsername().length())), 0xFF5555);
+            String comment = commentField.getText();
+
+            if (SPmHelperConfig.get().numberOfCardInComment) {
+                comment = commentField.getText() + " " + receiverCardNumber;
+            }
+
+            if ((MinecraftClient.getInstance().getSession().getUsername().length() + commentField.getText().length()) + Integer.parseInt(receiverCardNumber) > 32) {
+                setStatus (String.format(Text.translatable("text.spmhelper.pays_processTransfer_CommentIsLong").getString(), (29 - MinecraftClient.getInstance().getSession().getUsername().length()) - Integer.parseInt(receiverCardNumber)), 0xFF5555);
                 return;
             }
 
@@ -226,7 +233,8 @@ public class PayScreen extends Screen {
                     senderCard,
                     receiverCardNumber,
                     amount,
-                    commentField.getText()
+                    comment
+
             );
             if (response.has("error")) {
                 String error = response.get("error").toString();

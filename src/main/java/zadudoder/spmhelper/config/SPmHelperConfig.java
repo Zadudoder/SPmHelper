@@ -17,6 +17,7 @@ public class SPmHelperConfig implements ConfigData {
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public ScreenType defaultScreen = ScreenType.MAIN;
     public Boolean paymentWithNick = false; // true - ник, false - по номеру
+    public Boolean numberOfCardInComment = false; // true - включено, false - выключено в переводе будет указывать карту куда вы переводите
 
     String API_TOKEN = "";
     Map<String, Card> cards = new HashMap<>();
