@@ -80,14 +80,14 @@ public class PayScreen extends Screen {
 
         // Выбор оплаты по нику или по карте
 
-        cardNumberButton = ButtonWidget.builder(Text.of("Карта"), (btn) -> {
+        cardNumberButton = ButtonWidget.builder(Text.translatable("text.spmhelper.pays_cardNumberButton"), (btn) -> {
             SPmHelperConfig.get().setPayWithNick(false);
             cardNumberButton.active = false;
             nickNameButton.active = true;
             this.client.setScreen(new PayScreen());
         }).dimensions(width / 2 - 50, this.height / 2 - 80, 50, 20).build();
 
-        nickNameButton = ButtonWidget.builder(Text.of("Ник"), (btn) -> {
+        nickNameButton = ButtonWidget.builder(Text.translatable("text.spmhelper.pays_nickNameButton"), (btn) -> {
             SPmHelperConfig.get().setPayWithNick(true);
             cardNumberButton.active = true;
             nickNameButton.active = false;

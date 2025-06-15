@@ -47,6 +47,8 @@
   "text.spmhelper.addCard_DeclineButton": "Отклонить",
   "text.spmhelper.addCard_DoYouWantAdd": "Вы хотите добавить карту %s ?",
 
+  "text.spmhelper.pays_cardNumberButton": "Карта",
+  "text.spmhelper.pays_nickNameButton": "Ник",
   "text.spmhelper.pays_SelectСard": "Выберите карту ⬇",
   "text.spmhelper.pays_CardNumber": "Номер карты получателя",
   "text.spmhelper.pays_Amount": "Сумма (АР):",
