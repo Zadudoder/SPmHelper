@@ -218,7 +218,6 @@ public class PayScreen extends Screen {
             }
 
             String comment = commentField.getText();
-
             if (SPmHelperConfig.get().numberOfCardInComment) {
                 comment = commentField.getText() + " " + receiverCardNumber;
             }

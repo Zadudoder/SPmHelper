@@ -144,13 +144,13 @@ public class CallsScreen extends Screen {
 
     public void callService(String serviceType, String personName) {
         if (!hasToken) {
-            setStatus("text.spmhelper.calls_callService_NotHasToken", 0xFF5555);
+            setStatus(Text.translatable("text.spmhelper.calls_callService_NotHasToken").getString(), 0xFF5555);
             return;
         }
 
         String comment = commentField.getText().trim();
         if (comment.isEmpty()) {
-            setStatus("text.spmhelper.calls_callService_CommentIsEmpty", 0xFF5555);
+            setStatus(Text.translatable("text.spmhelper.calls_callService_CommentIsEmpty").getString(), 0xFF5555);
             return;
         }
         String world = switch (MinecraftClient.getInstance().player.getWorld().getRegistryKey().getValue().toString()) {
@@ -160,17 +160,17 @@ public class CallsScreen extends Screen {
         };
         String coordinates = sendCoordinates && playerPos != null ?
                 "**" + playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ() + ' ' + world + "**" : " ";
-        setStatus("text.spmhelper.calls_callService_SendRequest", 0xFFFF55);
+        setStatus(Text.translatable("text.spmhelper.calls_callService_SendRequest").getString(), 0xFFFF55);
         updateButtonsState();
 
 
         SPmHelperApi.makeCall(serviceType, coordinates, comment)
                 .thenAccept(success -> MinecraftClient.getInstance().execute(() -> {
                     if (success) {
-                        setStatus(personName + "text.spmhelper.calls_callService_WasCalled", 0x55FF55);
+                        setStatus(String.format(Text.translatable("text.spmhelper.calls_callService_WasCalled").getString(), personName), 0x55FF55);
                         updateButtonsState();
                     } else {
-                        setStatus("text.spmhelper.calls_callService_ErrorSendingCall", 0xFF5555);
+                        setStatus(Text.translatable("text.spmhelper.calls_callService_ErrorSendingCall").getString(), 0xFF5555);
                         detectiveButton.active = true;
                         fsbButton.active = true;
                         bankerButton.active = true;
@@ -220,22 +220,15 @@ public class CallsScreen extends Screen {
         if (statusMessage != null) {
             context.drawCenteredTextWithShadow(
                     this.textRenderer,
-                    Text.translatable(statusMessage),
+                    Text.of(statusMessage),
                     this.width / 2,
                     this.height / 2 + 65,
                     statusColor
             );
         }
 
-        // Заголовок
         renderTitle(context);
     }
-
-
-    /*private void drawCenteredText(DrawContext context, String text, int x, int y, int color) {
-        context.drawText(textRenderer, text,
-                x - textRenderer.getWidth(text) / 2, y, color, false);
-    }*/
 
     private void renderTitle(DrawContext context) {
         Identifier texture = Identifier.of("spmhelper", "titles/callstextrender.png");

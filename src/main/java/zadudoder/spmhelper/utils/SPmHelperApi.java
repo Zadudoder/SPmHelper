@@ -29,7 +29,7 @@ public class SPmHelperApi {
         JsonObject json = new JsonObject();
         json.addProperty("minecraft_uuid", playerUuid);
         try {
-            SocketClient socketClient = new SocketClient(new URI("wss://api.spmhelpers.ru/api/authorize/ws"));
+            SocketClient socketClient = new SocketClient(new URI("wss://api.spmhelper.ru/api/authorize/ws"));
             socketClient.setOnOpenCallback(() -> {
                 player.sendMessage(Text.translatable("text.spmhelper.SPmHAPI_GettingLink"));
                 socketClient.send(json.toString());
