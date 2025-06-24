@@ -16,10 +16,11 @@ public class SPmHelperConfig implements ConfigData {
     public Boolean enableMenuButton = true;
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public ScreenType defaultScreen = ScreenType.MAIN;
-    public Boolean enableSPmNav = true;
     public Boolean paymentWithNick = false; // true - ник, false - по номеру
     public Boolean numberOfCardInComment = false; // true - включено, false - выключено в переводе будет указывать карту куда вы переводите
-
+    public Boolean enableSPmNav = true;
+    public int SPmNavX = 50;
+    public int SPmNavY = 1;
     String API_TOKEN = "";
     Map<String, Card> cards = new HashMap<>();
     String mainCardName = "";

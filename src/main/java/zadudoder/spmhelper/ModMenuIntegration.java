@@ -44,10 +44,6 @@ public class ModMenuIntegration implements ModMenuApi {
                     .setSaveConsumer(newValue -> config.enableMenuButton = newValue)
                     .build());
 
-            general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("text.spmhelper.option.enableSPmNav"), config.enableSPmNav)
-                    .setSaveConsumer(newValue -> config.enableSPmNav = newValue)
-                    .build());
-
             general.addEntry(entryBuilder.startEnumSelector(Text.translatable("text.spmhelper.option.defaultScreen"), ScreenType.class, config.defaultScreen)
                     .setSaveConsumer(newValue -> config.defaultScreen = newValue)
                     .setEnumNameProvider(value -> {
@@ -59,6 +55,21 @@ public class ModMenuIntegration implements ModMenuApi {
             general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("text.spmhelper.option.numberOfCardInComment"), config.numberOfCardInComment)
                     .setSaveConsumer(newValue -> config.numberOfCardInComment = newValue)
                     .build());
+
+            general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("text.spmhelper.option.enableSPmHelperNav"), config.enableSPmNav)
+                    .setSaveConsumer(newValue -> config.enableSPmNav = newValue)
+                    .build());
+
+            general.addEntry(entryBuilder.startIntSlider(Text.translatable("text.spmhelper.option.SPmHelperNavX"), config.SPmNavX, 1, 100)
+                    .setTextGetter(value -> Text.literal(value + " %"))
+                    .setSaveConsumer(newValue -> config.SPmNavX = newValue)
+                    .build());
+
+            general.addEntry(entryBuilder.startIntSlider(Text.translatable("text.spmhelper.option.SPmHelperNavY"), config.SPmNavY, 1, 100)
+                    .setTextGetter(value -> Text.literal(value + " %"))
+                    .setSaveConsumer(newValue -> config.SPmNavY = newValue)
+                    .build());
+
             return builder.build();
         };
     }

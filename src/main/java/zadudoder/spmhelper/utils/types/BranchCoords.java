@@ -16,10 +16,10 @@ public class BranchCoords {
     public int getBranchColor(){
         int color = 0xFFFFFF;
         switch (branch){
-            case RED ->  color = 0xFF0000;
-            case BLUE -> color = 0x0000FF;
-            case GREEN -> color = 0x00FF00;
-            case YELLOW -> color = 0xFFFF00;
+            case RED ->  color = 0xFF3232;
+            case BLUE -> color = 0x3232FF;
+            case GREEN -> color = 0x32FF32;
+            case YELLOW -> color = 0xFFFF32;
         }
         return color;
     }

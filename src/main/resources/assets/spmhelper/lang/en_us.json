@@ -7,10 +7,14 @@
   "key.spmhelper.open_map_screen": "Open map",
   "key.spmhelper.open_laws_screen": "Open laws",
   "text.spmhelper.config.category": "Mod settings",
+
   "text.spmhelper.option.enableMenuButton": "Enable SPmHelper button in main menu: ",
   "text.spmhelper.option.enableSPmNav" : "Enable SPmNav",
   "text.spmhelper.option.defaultScreen": "Select which screen the button will lead to: ",
   "text.spmhelper.option.numberOfCardInComment": "Show the card number in comments?",
+  "text.spmhelper.option.SPmHelperNavX": "SPmHelperNav X-axis position (width):",
+  "text.spmhelper.option.SPmHelperNavY": "SPmHelperNav Y-axis position (height):",
+
   "text.spmhelper.screen_type.main": "Main screen",
   "text.spmhelper.screen_type.settings": "Settings",
   "text.spmhelper.screen_type.pay": "Payment",
