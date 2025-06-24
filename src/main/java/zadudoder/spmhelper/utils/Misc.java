@@ -21,19 +21,19 @@ public class Misc {
         BranchCoords branchCoords = new BranchCoords();
         int absX = Math.abs(blockPos.getX());
         int absZ = Math.abs(blockPos.getZ());
-        if(blockPos.getZ()<-50 && absZ>absX){
+        if(blockPos.getZ()<-40 && absZ>absX){
             branchCoords.branch = HubBranch.RED;
             branchCoords.pos = absZ;
         } else
-        if(blockPos.getX()<-50 && absX>absZ){
+        if(blockPos.getX()<-40 && absX>absZ){
             branchCoords.branch = HubBranch.BLUE;
             branchCoords.pos = absX;
         } else
-        if(blockPos.getX()>50 && absX>absZ){
+        if(blockPos.getX()>40 && absX>absZ){
             branchCoords.branch = HubBranch.GREEN;
             branchCoords.pos = absX;
         } else
-        if(blockPos.getZ()>50 && absZ>absX){
+        if(blockPos.getZ()>40 && absZ>absX){
             branchCoords.branch = HubBranch.YELLOW;
             branchCoords.pos = absZ;
         }
