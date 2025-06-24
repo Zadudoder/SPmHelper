@@ -49,17 +49,14 @@ public abstract class GameHudMixin {
             int screenHeight = client.getWindow().getScaledHeight();
 
             if(branchCoords.branch == HubBranch.HUB) {
-                // Для HUB
                 int X = (int) (screenWidth * (SPmHelperConfig.get().SPmNavX / 100.0) - textRenderer.getWidth(branchName) / 2);
                 int Y = (int) (screenHeight * (SPmHelperConfig.get().SPmNavY / 100.0));
                 X = Math.max(0, Math.min(X, screenWidth - textRenderer.getWidth(branchName) - 4));
                 Y = Math.max(0, Math.min(Y, screenHeight - 10));
 
-                // Сначала фон, потом текст
                 context.fill(X - 4, Y - 4, X + textRenderer.getWidth(branchName) + 4, Y + textRenderer.fontHeight + 2, 0x60000000);
                 context.drawTextWithShadow(textRenderer, branchName, X, Y, 0xFFFFFF);
             } else {
-                // Для других веток
                 Text fullText = branchName.copy().append(Text.literal(" | " + branchCoords.pos));
                 int X = (int) (screenWidth * (SPmHelperConfig.get().SPmNavX / 100.0) - textRenderer.getWidth(fullText) / 2);
                 int Y = (int) (screenHeight * (SPmHelperConfig.get().SPmNavY / 100.0));

@@ -17,27 +17,40 @@ public class Misc {
         }
     }
 
-    public static BranchCoords getBranch(BlockPos blockPos){
-        BranchCoords branchCoords = new BranchCoords();
-        int absX = Math.abs(blockPos.getX());
-        int absZ = Math.abs(blockPos.getZ());
-        if(blockPos.getZ()<-40 && absZ>absX){
-            branchCoords.branch = HubBranch.RED;
-            branchCoords.pos = absZ;
-        } else
-        if(blockPos.getX()<-40 && absX>absZ){
-            branchCoords.branch = HubBranch.BLUE;
-            branchCoords.pos = absX;
-        } else
-        if(blockPos.getX()>40 && absX>absZ){
-            branchCoords.branch = HubBranch.GREEN;
-            branchCoords.pos = absX;
-        } else
-        if(blockPos.getZ()>40 && absZ>absX){
-            branchCoords.branch = HubBranch.YELLOW;
-            branchCoords.pos = absZ;
+    public static BranchCoords getBranch(BlockPos blockPos) {
+        int x = blockPos.getX();
+        int z = blockPos.getZ();
+        int absX = Math.abs(x);
+        int absZ = Math.abs(z);
+
+        final int BRANCH_BORDER = 40;
+        if (absX <= BRANCH_BORDER && absZ <= BRANCH_BORDER) {
+            return new BranchCoords(HubBranch.HUB, 0);
         }
-        return branchCoords;
+        boolean onDiagonal = (x == z) || (x == -z);
+
+        if (onDiagonal && absX > BRANCH_BORDER) {
+            if (x < -BRANCH_BORDER && z < -BRANCH_BORDER) {
+                return new BranchCoords(HubBranch.PURPLE, absX); // Красная+Синяя
+            } else if (x > BRANCH_BORDER && z < -BRANCH_BORDER) {
+                return new BranchCoords(HubBranch.ORANGE, absX); // Красная+Зелёная
+            } else if (x > BRANCH_BORDER && z > BRANCH_BORDER) {
+                return new BranchCoords(HubBranch.LIME, absX); // Жёлтая+Зелёная
+            } else if (x < -BRANCH_BORDER && z > BRANCH_BORDER) {
+                return new BranchCoords(HubBranch.CYAN, absX); // Жёлтая+Синяя
+            }
+        }
+        if (z < -BRANCH_BORDER && absZ >= absX) {
+            return new BranchCoords(HubBranch.RED, absZ);
+        } else if (x < -BRANCH_BORDER && absX >= absZ) {
+            return new BranchCoords(HubBranch.BLUE, absX);
+        } else if (x > BRANCH_BORDER && absX >= absZ) {
+            return new BranchCoords(HubBranch.GREEN, absX);
+        } else if (z > BRANCH_BORDER && absZ >= absX) {
+            return new BranchCoords(HubBranch.YELLOW, absZ);
+        }
+
+        return new BranchCoords(HubBranch.HUB, 0);
     }
 }
 

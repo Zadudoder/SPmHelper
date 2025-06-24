@@ -9,7 +9,7 @@
   "text.spmhelper.config.category": "Mod settings",
 
   "text.spmhelper.option.enableMenuButton": "Enable SPmHelper button in main menu: ",
-  "text.spmhelper.option.enableSPmHelperNav" : "Enable SPmNav",
+  "text.spmhelper.option.enableSPmHelperNav" : "Enable SPmHelperNav",
   "text.spmhelper.option.defaultScreen": "Select which screen the button will lead to: ",
   "text.spmhelper.option.numberOfCardInComment": "Show the card number in comments?",
   "text.spmhelper.option.SPmHelperNavX": "SPmHelperNav X-axis position (width):",
@@ -134,5 +134,9 @@
   "text.spmhelper.branch_name.blue": "Blue",
   "text.spmhelper.branch_name.green": "Green",
   "text.spmhelper.branch_name.yellow": "Yellow",
+  "text.spmhelper.branch_name.purple": "Purple",
+  "text.spmhelper.branch_name.orange": "Orange",
+  "text.spmhelper.branch_name.lime": "Lime",
+  "text.spmhelper.branch_name.cyan": "Cyan",
   "text.spmhelper.branch_name.hub": "Hub"
 }
