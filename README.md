@@ -1,5 +1,7 @@
 # RU
 SPmHelper — мод, который облегчит твою игру на [СПм](https://spworlds.ru).
+
+Идея по навигации была взята с мода [SPworlds Nav](https://modrinth.com/mod/spwn).
 ## Зависимости мода:
 1. Fabric-loader 0.16.14 или выше | [Скачать](https://fabricmc.net/use/installer/)
 2. Fabric-api | [Скачать](https://modrinth.com/mod/fabric-api)
@@ -115,6 +117,8 @@ SPmHelper — мод, который облегчит твою игру на [С
 
 # EN
 SPmHelper is a mod that will make your game easier on [SPm](https://spworlds.ru ).
+
+The idea for navigation was taken from the [SPworlds Nav](https://modrinth.com/mod/spwn) mod.
 ## Mod Dependencies:
 1. Fabric-loader 0.16.14 or higher | [Download](https://fabricmc.net/use/installer)
 2. Fabric-api | [Download](https://modrinth.com/mod/fabric-api )
