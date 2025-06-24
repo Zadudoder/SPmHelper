@@ -123,7 +123,11 @@
 
   "text.spmhelper.status_FeedBackMessageCase200": "§a[SPmHelper]: Token active",
   "text.spmhelper.status_FeedBackMessageCase401": "§c[SPmHelper]: Token invalid or doesn't exist",
-  "text.spmhelper.status_FeedBackMessageCaseDefault": "§c[SPmHelper]: API error: "
+  "text.spmhelper.status_FeedBackMessageCaseDefault": "§c[SPmHelper]: API error: ",
 
-
+  "text.spmhelper.branch_name.red": "Red",
+  "text.spmhelper.branch_name.blue": "Blue",
+  "text.spmhelper.branch_name.green": "Green",
+  "text.spmhelper.branch_name.yellow": "Yellow",
+  "text.spmhelper.branch_name.hub": "Hub"
 }

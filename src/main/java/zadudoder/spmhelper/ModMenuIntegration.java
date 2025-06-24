@@ -44,6 +44,10 @@ public class ModMenuIntegration implements ModMenuApi {
                     .setSaveConsumer(newValue -> config.enableMenuButton = newValue)
                     .build());
 
+            general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("text.spmhelper.option.enableSPmNav"), config.enableSPmNav)
+                    .setSaveConsumer(newValue -> config.enableSPmNav = newValue)
+                    .build());
+
             general.addEntry(entryBuilder.startEnumSelector(Text.translatable("text.spmhelper.option.defaultScreen"), ScreenType.class, config.defaultScreen)
                     .setSaveConsumer(newValue -> config.defaultScreen = newValue)
                     .setEnumNameProvider(value -> {

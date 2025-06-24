@@ -18,7 +18,6 @@
   "text.spmhelper.screen_type.laws": "Законы",
   "text.spmhelper.current_screen": "SPmHelper — ",
   "text.spmhelper.select_screen": "Выбрать экран: %s",
-
   "text.spmhelper.calls_calls_TextFieldWidget": "Введите комментарий для вызова:",
   "text.spmhelper.calls_detective": "Детектив",
   "text.spmhelper.calls_fsb": "ФСБ",
@@ -37,16 +36,12 @@
   "text.spmhelper.calls_render_SendCoordinatesAndPlayerPos": "Координаты: X:%d Y:%d Z:%d",
   "text.spmhelper.calls_render_Comment": "Комментарий:",
   "text.spmhelper.calls_render_EnterTextHere": "Введите сюда текст",
-
   "text.spmhelper.laws_InDevelopment": "Канал с Законами, на данном этапе находится в разработке",
-
   "text.spmhelper.maps_InDevelopment": "Канал с Картой, на данном этапе находится в разработке",
-
   "text.spmhelper.addCard_AcceptButton": "Принять",
   "text.spmhelper.addCard_AcceptFeedBack": "§a[SPmHelper]: Карта успешно привязана!",
   "text.spmhelper.addCard_DeclineButton": "Отклонить",
   "text.spmhelper.addCard_DoYouWantAdd": "Вы хотите добавить карту %s ?",
-
   "text.spmhelper.pays_cardNumberButton": "Карта",
   "text.spmhelper.pays_nickNameButton": "Ник",
   "text.spmhelper.pays_SelectСard": "Выберите карту ⬇",
@@ -82,13 +77,11 @@
   "text.spmhelper.pays_toggleRecieverCards_LinkOneCard": "Привяжите хотя бы одну карту",
   "text.spmhelper.pays_toggleRecieverCards_PlayerNotEntry": "Вы не вписали ник игрока",
   "text.spmhelper.pays_toggleRecieverCards_PlayerNotOrNoCard": "Такого игрока не существует или он не имеет карт",
-
   "text.spmhelper.mainMenu_ButtonLabels.payment": "Оплата",
   "text.spmhelper.mainMenu_ButtonLabels.map": "Карта",
   "text.spmhelper.mainMenu_ButtonLabels.settings": "Настройки",
   "text.spmhelper.mainMenu_ButtonLabels.calls": "Вызовы",
   "text.spmhelper.mainMenu_ButtonLabels.laws": "Законы",
-
   "text.spmhelper.settings_SelectCard": "Выберите карту ⬇",
   "text.spmhelper.settings_Delete": "Удалить",
   "text.spmhelper.settings_DeleteSuccess": "✔ Карта успешно удалена!",
@@ -103,27 +96,25 @@
   "text.spmhelper.settings_SelectedForPayment": "\" выбрана для оплаты!",
   "text.spmhelper.settings_Login": "Авторизоваться",
   "text.spmhelper.settings_NoLinkedCard": "Нет привязанных карт!",
-
   "text.spmhelper.SPmHAPI_GettingLink": "§a[SPmHelper]: Получение ссылки на авторизации",
   "text.spmhelper.SPmHAPI_ErrorConnectingServer": "§c[SPmHelper]: Ошибка подключения к серверу",
   "text.spmhelper.SPmHAPI_ErrorConnectingWebSocket": "§c[SPmHelper]: Ошибка подключения к WebSocket",
   "text.spmhelper.SPmHAPI_ErrorServer": "§c[SPmHelper]: Ошибка сервера",
-
   "text.spmhelper.WebSocketClient_OpenURL": "§a[SPmHelper]: Открытие ссылки на авторизацию",
   "text.spmhelper.WebSocketClient_WaitingAuth": "§a[SPmHelper]: Ожидание авторизации",
   "text.spmhelper.WebSocketClient_AuthorizationCancelledByYou": "§c[SPmHelper]: Авторизация отменена вами",
   "text.spmhelper.WebSocketClient_FailedToGetLink": "§c[SPmHelper]: Не удалось получить ссылку на авторизацию",
   "text.spmhelper.WebSocketClient_TokenWritten": "§a[SPmHelper]: Вы успешно авторизованы.",
-
   "text.spmhelper.updateMod_message_firstPart": "[SPmHelper]: Доступно обновление! Ваша версия: ",
   "text.spmhelper.updateMod_message_betweenPart": ". Доступна новая: ",
   "text.spmhelper.updateMod_message_lastPart": ". Нажмите на текст, чтобы перейти на Modrinth. ",
-
   "text.spmhelper.auth_FeedBackMessage": "§a[SPmHelper]: Токен активен! Новая авторизация не нужна.",
-
   "text.spmhelper.status_FeedBackMessageCase200": "§a[SPmHelper]: Токен работает",
   "text.spmhelper.status_FeedBackMessageCase401": "§c[SPmHelper]: Токен недействителен или отсутсвует",
-  "text.spmhelper.status_FeedBackMessageCaseDefault": "§c[SPmHelper]: Ошибка API: "
-
-
+  "text.spmhelper.status_FeedBackMessageCaseDefault": "§c[SPmHelper]: Ошибка API: ",
+  "text.spmhelper.branch_name.red": "Красная",
+  "text.spmhelper.branch_name.blue": "Синяя",
+  "text.spmhelper.branch_name.green": "Зелёная",
+  "text.spmhelper.branch_name.yellow": "Жёлтая",
+  "text.spmhelper.branch_name.hub": "Хаб"
 }
