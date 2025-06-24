@@ -9,7 +9,7 @@
   "text.spmhelper.config.category": "Mod settings",
 
   "text.spmhelper.option.enableMenuButton": "Enable SPmHelper button in main menu: ",
-  "text.spmhelper.option.enableSPmNav" : "Enable SPmNav",
+  "text.spmhelper.option.enableSPmHelperNav" : "Enable SPmNav",
   "text.spmhelper.option.defaultScreen": "Select which screen the button will lead to: ",
   "text.spmhelper.option.numberOfCardInComment": "Show the card number in comments?",
   "text.spmhelper.option.SPmHelperNavX": "SPmHelperNav X-axis position (width):",
