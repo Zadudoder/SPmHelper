@@ -3,7 +3,6 @@ package zadudoder.spmhelper.config;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import zadudoder.spmhelper.utils.ScreenType;
 import zadudoder.spmhelper.utils.types.Card;
 
@@ -14,13 +13,14 @@ import java.util.Map;
 public class SPmHelperConfig implements ConfigData {
 
     public Boolean enableMenuButton = true;
-    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public ScreenType defaultScreen = ScreenType.MAIN;
     public Boolean paymentWithNick = false; // true - ник, false - по номеру
     public Boolean numberOfCardInComment = false; // true - включено, false - выключено в переводе будет указывать карту куда вы переводите
     public Boolean enableSPmNav = true;
+    public int SpmNavBackgroundColor = 0x60000000;
     public int SPmNavX = 50;
-    public int SPmNavY = 1;
+    public int SPmNavY = 2;
+    public int SPmNavScale = 100;
     String API_TOKEN = "";
     Map<String, Card> cards = new HashMap<>();
     String mainCardName = "";
@@ -94,7 +94,7 @@ public class SPmHelperConfig implements ConfigData {
         }
     }
 
-    public void setPayWithNick(boolean value){
+    public void setPayWithNick(boolean value) {
         paymentWithNick = value;
         AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
     }

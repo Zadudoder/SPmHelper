@@ -12,16 +12,10 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import zadudoder.spmhelper.Screen.MainScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
+import zadudoder.spmhelper.utils.Misc;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class CallsScreen extends Screen {
-    public static final List<String> ALLOWED_SERVERS = Arrays.asList(
-            "spm.spworlds.org",
-            "spm.spworlds.ru"
-    );
     private TextFieldWidget commentField;
     private boolean sendCoordinates = false;
     private BlockPos playerPos;
@@ -42,7 +36,7 @@ public class CallsScreen extends Screen {
     protected void init() {
         super.init();
         this.hasToken = SPmHelperConfig.get().getAPI_TOKEN() != null && !SPmHelperConfig.get().getAPI_TOKEN().isEmpty();
-        boolean isOnCorrectServer = checkServer();
+        boolean isOnCorrectServer = Misc.isOnAllowedServer();
         this.playerPos = MinecraftClient.getInstance().player != null ?
                 MinecraftClient.getInstance().player.getBlockPos() : null;
 
@@ -123,16 +117,6 @@ public class CallsScreen extends Screen {
                 .build());
         ButtonWidget Back = ButtonWidget.builder(Text.of("⬅"), (btn) -> this.client.setScreen(new MainScreen())).dimensions(5, 10, 15, 15).build();
         this.addDrawableChild(Back);
-    }
-
-    private boolean checkServer() {
-        if (MinecraftClient.getInstance().getCurrentServerEntry() == null) {
-            return false;
-        }
-        String address = MinecraftClient.getInstance().getCurrentServerEntry().address.toLowerCase();
-        return ALLOWED_SERVERS.stream().anyMatch(allowed ->
-                address.equals(allowed) ||
-                        address.startsWith(allowed + ":"));
     }
 
     private void updateButtonsState() {

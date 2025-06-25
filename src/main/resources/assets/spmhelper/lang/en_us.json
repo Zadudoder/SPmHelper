@@ -6,7 +6,8 @@
   "key.spmhelper.open_pay_screen": "Open payment menu",
   "key.spmhelper.open_map_screen": "Open map",
   "key.spmhelper.open_laws_screen": "Open laws",
-  "text.spmhelper.config.category": "Mod settings",
+  "text.spmhelper.config.mainCategory": "Main mod settings",
+  "text.spmhelper.config.navCategory": "SPmHelperNav settings",
 
   "text.spmhelper.option.enableMenuButton": "Enable SPmHelper button in main menu: ",
   "text.spmhelper.option.enableSPmHelperNav" : "Enable SPmHelperNav",
@@ -14,6 +15,7 @@
   "text.spmhelper.option.numberOfCardInComment": "Show the card number in comments?",
   "text.spmhelper.option.SPmHelperNavX": "SPmHelperNav X-axis position (width):",
   "text.spmhelper.option.SPmHelperNavY": "SPmHelperNav Y-axis position (height):",
+  "text.spmhelper.option.SPmHelperNavScale": "SPmHelperNav scale:",
 
   "text.spmhelper.screen_type.main": "Main screen",
   "text.spmhelper.screen_type.settings": "Settings",

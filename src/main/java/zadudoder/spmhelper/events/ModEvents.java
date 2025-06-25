@@ -12,7 +12,6 @@ import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ServerInfo;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -23,8 +22,6 @@ import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.Misc;
 import zadudoder.spmhelper.utils.SPmHelperApi;
-
-import static zadudoder.spmhelper.Screen.Calls.CallsScreen.ALLOWED_SERVERS;
 
 @Environment(EnvType.CLIENT)
 public class ModEvents {
@@ -58,19 +55,19 @@ public class ModEvents {
                                         execute(() -> MinecraftClient.getInstance().setScreen(new PayScreen(cardNumber, finalAmount, comment)));
                                 return ActionResult.SUCCESS;
                             }
-                        } else if(amount.isEmpty()){
+                        } else if (amount.isEmpty()) {
                             MinecraftClient.getInstance().
                                     execute(() -> MinecraftClient.getInstance().setScreen(new PayScreen(cardNumber)));
                             return ActionResult.SUCCESS;
                         }
-                    } else if (firstLine.toLowerCase().contains("оплата по карте")){
+                    } else if (firstLine.toLowerCase().contains("оплата по карте")) {
                         String secondLine = frontText.getMessage(1, false).getString();
-                        if(Misc.isNumeric(secondLine)){
+                        if (Misc.isNumeric(secondLine)) {
                             MinecraftClient.getInstance().
                                     execute(() -> MinecraftClient.getInstance().setScreen(new PayScreen(secondLine)));
                             return ActionResult.SUCCESS;
                         }
-                        return  ActionResult.PASS;
+                        return ActionResult.PASS;
                     }
                 }
             }
@@ -94,36 +91,25 @@ public class ModEvents {
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             client.execute(() -> {
-                ServerInfo serverInfo = client.getCurrentServerEntry();
-                if (serverInfo != null) {
-                    String serverAddress = serverInfo.address;
-                    String domain = serverAddress.split(":")[0];
+                if (Misc.isOnAllowedServer()) {
+                    String clientVersion = FabricLoader.getInstance().getModContainer(SPmHelper.MOD_ID).get().getMetadata().getVersion().toString();
+                    String lastVersion = SPmHelperApi.getLastModVersionInfo().get("version_number").getAsString();
 
-                    boolean onAllowedServer = ALLOWED_SERVERS.stream().anyMatch(allowed ->
-                            domain.equals(allowed) ||
-                                    domain.startsWith(allowed + ":"));
-
-                    //SPmHelper.LOGGER.debug(domain);
-
-                    if (onAllowedServer) {
-                        String clientVersion = FabricLoader.getInstance().getModContainer(SPmHelper.MOD_ID).get().getMetadata().getVersion().toString();
-                        String lastVersion = SPmHelperApi.getLastModVersionInfo().get("version_number").getAsString();
-
-                        if (!clientVersion.equals(lastVersion)) {
-                            client.player.sendMessage(
-                                    Text.translatable("text.spmhelper.updateMod_message_firstPart")
-                                            .formatted(Formatting.GREEN)
-                                            .styled(style -> style.withClickEvent(
-                                                    new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/spmhelper/version/" + lastVersion)
-                                            ))
-                                            .append(Text.literal(clientVersion).formatted(Formatting.YELLOW))
-                                            .append(Text.translatable("text.spmhelper.updateMod_message_betweenPart"))
-                                            .append(Text.literal(lastVersion).formatted(Formatting.GREEN))
-                                            .append(Text.translatable("text.spmhelper.updateMod_message_lastPart"))
-                            );
-                        }
+                    if (!clientVersion.equals(lastVersion)) {
+                        client.player.sendMessage(
+                                Text.translatable("text.spmhelper.updateMod_message_firstPart")
+                                        .formatted(Formatting.GREEN)
+                                        .styled(style -> style.withClickEvent(
+                                                new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/spmhelper/version/" + lastVersion)
+                                        ))
+                                        .append(Text.literal(clientVersion).formatted(Formatting.YELLOW))
+                                        .append(Text.translatable("text.spmhelper.updateMod_message_betweenPart"))
+                                        .append(Text.literal(lastVersion).formatted(Formatting.GREEN))
+                                        .append(Text.translatable("text.spmhelper.updateMod_message_lastPart"))
+                        );
                     }
                 }
+
             });
         });
     }

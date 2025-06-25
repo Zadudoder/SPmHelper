@@ -1,10 +1,21 @@
 package zadudoder.spmhelper.utils;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ServerInfo;
 import net.minecraft.util.math.BlockPos;
 import zadudoder.spmhelper.utils.types.BranchCoords;
 import zadudoder.spmhelper.utils.types.HubBranch;
 
+import java.util.Arrays;
+import java.util.List;
+
+
 public class Misc {
+    public static List<String> ALLOWED_SERVERS = Arrays.asList(
+            "spm.spworlds.org",
+            "spm.spworlds.ru"
+    );
+
     public static boolean isNumeric(String str) {
         if (str == null || str.isEmpty()) {
             return false;
@@ -51,6 +62,24 @@ public class Misc {
         }
 
         return new BranchCoords(HubBranch.HUB, 0);
+    }
+
+    public static boolean isOnAllowedServer() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        ServerInfo serverInfo = client.getCurrentServerEntry();
+        if (serverInfo == null) {
+            return false;
+        }
+
+        String serverAddress = serverInfo.address;
+        String domain = serverAddress.split(":")[0];
+
+        boolean onAllowedServer = ALLOWED_SERVERS.stream().anyMatch(allowed ->
+                domain.equals(allowed) ||
+                        domain.startsWith(allowed + ":"));
+
+        return onAllowedServer;
+
     }
 }
 
