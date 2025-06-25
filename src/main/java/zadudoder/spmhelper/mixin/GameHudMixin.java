@@ -33,9 +33,9 @@ public abstract class GameHudMixin {
 
     @Inject(method = "render", at = @At("TAIL"))
     public void render(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
-        /*if (!Misc.isOnAllowedServer() || client.options.hudHidden) {
+        if (!Misc.isOnAllowedServer() || client.options.hudHidden) {
             return;
-        }*/
+        }
 
         if (SPmHelperConfig.get().enableSPmNav && client.player.getWorld().getRegistryKey() == World.NETHER) {
             MatrixStack matrix = context.getMatrices();
