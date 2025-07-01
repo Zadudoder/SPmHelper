@@ -37,14 +37,15 @@ public class ModMenuIntegration implements ModMenuApi {
                     .setSavingRunnable(() -> AutoConfig.getConfigHolder(SPmHelperConfig.class).save());
 
             ConfigEntryBuilder entryBuilder = builder.entryBuilder();
-            ConfigCategory general = builder.getOrCreateCategory(Text.translatable("text.spmhelper.config.category"));
+            ConfigCategory mainCategory = builder.getOrCreateCategory(Text.translatable("text.spmhelper.config.mainCategory"));
+            ConfigCategory navCategory = builder.getOrCreateCategory(Text.translatable("text.spmhelper.config.navCategory"));
 
             // Добавляем настройки
-            general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("text.spmhelper.option.enableMenuButton"), config.enableMenuButton)
+            mainCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("text.spmhelper.option.enableMenuButton"), config.enableMenuButton)
                     .setSaveConsumer(newValue -> config.enableMenuButton = newValue)
                     .build());
 
-            general.addEntry(entryBuilder.startEnumSelector(Text.translatable("text.spmhelper.option.defaultScreen"), ScreenType.class, config.defaultScreen)
+            mainCategory.addEntry(entryBuilder.startEnumSelector(Text.translatable("text.spmhelper.option.defaultScreen"), ScreenType.class, config.defaultScreen)
                     .setSaveConsumer(newValue -> config.defaultScreen = newValue)
                     .setEnumNameProvider(value -> {
                         // Локализация значений enum
@@ -52,22 +53,31 @@ public class ModMenuIntegration implements ModMenuApi {
                     })
                     .build());
 
-            general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("text.spmhelper.option.numberOfCardInComment"), config.numberOfCardInComment)
+            mainCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("text.spmhelper.option.numberOfCardInComment"), config.numberOfCardInComment)
                     .setSaveConsumer(newValue -> config.numberOfCardInComment = newValue)
                     .build());
 
-            general.addEntry(entryBuilder.startBooleanToggle(Text.translatable("text.spmhelper.option.enableSPmHelperNav"), config.enableSPmNav)
+            navCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("text.spmhelper.option.enableSPmHelperNav"), config.enableSPmNav)
                     .setSaveConsumer(newValue -> config.enableSPmNav = newValue)
                     .build());
 
-            general.addEntry(entryBuilder.startIntSlider(Text.translatable("text.spmhelper.option.SPmHelperNavX"), config.SPmNavX, 1, 100)
+            navCategory.addEntry(entryBuilder.startAlphaColorField(Text.translatable("text.spmhelper.option.SpmNavBackgroundColor"), config.SpmNavBackgroundColor)
+                    .setSaveConsumer(newValue -> config.SpmNavBackgroundColor = newValue)
+                    .build());
+
+            navCategory.addEntry(entryBuilder.startIntSlider(Text.translatable("text.spmhelper.option.SPmHelperNavX"), config.SPmNavX, 1, 100)
                     .setTextGetter(value -> Text.literal(value + " %"))
                     .setSaveConsumer(newValue -> config.SPmNavX = newValue)
                     .build());
 
-            general.addEntry(entryBuilder.startIntSlider(Text.translatable("text.spmhelper.option.SPmHelperNavY"), config.SPmNavY, 1, 100)
+            navCategory.addEntry(entryBuilder.startIntSlider(Text.translatable("text.spmhelper.option.SPmHelperNavY"), config.SPmNavY, 1, 100)
                     .setTextGetter(value -> Text.literal(value + " %"))
                     .setSaveConsumer(newValue -> config.SPmNavY = newValue)
+                    .build());
+
+            navCategory.addEntry(entryBuilder.startIntSlider(Text.translatable("text.spmhelper.option.SPmHelperNavScale"), config.SPmNavScale, 1, 200)
+                    .setTextGetter(value -> Text.literal(value + " %"))
+                    .setSaveConsumer(newValue -> config.SPmNavScale = newValue)
                     .build());
 
             return builder.build();

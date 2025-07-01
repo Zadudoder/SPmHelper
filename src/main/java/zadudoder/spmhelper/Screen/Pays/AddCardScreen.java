@@ -9,13 +9,9 @@ import zadudoder.spmhelper.Screen.MainScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 
 public class AddCardScreen extends Screen {
-    private String id;
-    private String token;
-    private String name;
-
-    public AddCardScreen() {
-        super(Text.of("Экран принятия карты"));
-    }
+    private final String id;
+    private final String token;
+    private final String name;
 
     public AddCardScreen(String id, String token, String name) {
         super(Text.of("Экран принятия карты"));
