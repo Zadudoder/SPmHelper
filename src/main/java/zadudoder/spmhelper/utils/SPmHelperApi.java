@@ -6,6 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import zadudoder.spmhelper.config.SPmHelperConfig;
+import zadudoder.spmhelper.utils.types.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -47,14 +48,14 @@ public class SPmHelperApi {
 
     }
 
-    public static CompletableFuture<Boolean> makeCall(String service, String coordinates, String comment) {
+    public static CompletableFuture<Boolean> makeCall(Service service, String coordinates, String comment) {
         String token = SPmHelperConfig.get().getAPI_TOKEN();
         if (token == null || token.isEmpty()) {
             return CompletableFuture.completedFuture(false);
         }
 
         JsonObject json = new JsonObject();
-        json.addProperty("service", service);
+        json.addProperty("service", service.toString().toLowerCase());
         json.addProperty("coordinates", coordinates);
         json.addProperty("comment", comment);
 

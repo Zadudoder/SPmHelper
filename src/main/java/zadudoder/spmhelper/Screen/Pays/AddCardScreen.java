@@ -32,9 +32,13 @@ public class AddCardScreen extends Screen {
         this.addDrawableChild(Back);
 
         ButtonWidget AcceptButton = ButtonWidget.builder(Text.translatable("text.spmhelper.addCard_AcceptButton"), (btn) -> {
-            SPmHelperConfig.get().addCard(id, token, name); //Добавление карты
+            if (id == null) {
+                this.client.player.sendMessage(Text.translatable("text.spmhelper.status_FeedBackMessageCaseDefault"));
+            } else {
+                SPmHelperConfig.get().addCard(id, token, name); //Добавление карты
+                this.client.player.sendMessage(Text.translatable("text.spmhelper.addCard_AcceptFeedBack"));
+            }
             this.close();
-            this.client.player.sendMessage(Text.translatable("text.spmhelper.addCard_AcceptFeedBack"));
         }).dimensions(width / 2 - 120, height / 2, 80, 20).build();
         this.addDrawableChild(AcceptButton);
 

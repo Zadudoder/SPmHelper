@@ -26,6 +26,7 @@ public class PayScreen extends Screen {
     private TextFieldWidget commentField;
 
     private String p_number;
+    private String p_nick;
     private String p_amount;
     private String p_comment;
     private boolean isSPmPay = false;
@@ -62,6 +63,14 @@ public class PayScreen extends Screen {
         p_number = number;
         isSPmPay = true;
         SPmHelperConfig.get().setPayWithNick(false);
+    }
+
+    public PayScreen(String nickname, int amount) {
+        super(Text.of("Перевод СПм"));
+        p_nick = nickname;
+        p_amount = String.valueOf(amount);
+        isSPmPay = true;
+        SPmHelperConfig.get().setPayWithNick(true);
     }
 
     @Override
@@ -165,10 +174,15 @@ public class PayScreen extends Screen {
         );
         this.addDrawableChild(commentField);
         if (isSPmPay) {
-            receiverCardOrNameField.setText(p_number);
             amountField.setText(p_amount);
-            commentField.setText(p_comment);
+            if (SPmHelperConfig.get().paymentWithNick) {
+                receiverCardOrNameField.setText(p_nick);
+            } else {
+                receiverCardOrNameField.setText(p_number);
+                commentField.setText(p_comment);
+            }
         }
+
 
         // Кнопка перевода
         ButtonWidget transferButton = ButtonWidget.builder(Text.translatable("text.spmhelper.pays_Transfer"), button -> {
@@ -188,7 +202,7 @@ public class PayScreen extends Screen {
                 return;
             }
             String receiverCardNumber;
-            if(SPmHelperConfig.get().paymentWithNick){
+            if (SPmHelperConfig.get().paymentWithNick) {
                 receiverCardNumber = selectedReceiverCard;
             } else {
                 receiverCardNumber = receiverCardOrNameField.getText().trim();
@@ -201,7 +215,7 @@ public class PayScreen extends Screen {
                 setStatus(Text.translatable("text.spmhelper.pays_processTransfer_amountFieldNull").getString(), 0xFF5555);
                 return;
             }
-            if(!Misc.isNumeric(amountField.getText())){
+            if (!Misc.isNumeric(amountField.getText())) {
                 setStatus(Text.translatable("text.spmhelper.pays_processTransfer_amountFieldRandomSymbol").getString(), 0xFF5555);
                 return;
             }
@@ -223,12 +237,12 @@ public class PayScreen extends Screen {
             }
 
             if ((MinecraftClient.getInstance().getSession().getUsername().length() + commentField.getText().length()) > 32) {
-                setStatus (String.format(Text.translatable("text.spmhelper.pays_processTransfer_CommentIsLong").getString(), (30 - MinecraftClient.getInstance().getSession().getUsername().length())), 0xFF5555);
+                setStatus(String.format(Text.translatable("text.spmhelper.pays_processTransfer_CommentIsLong").getString(), (30 - MinecraftClient.getInstance().getSession().getUsername().length())), 0xFF5555);
                 return;
             }
 
             if (SPmHelperConfig.get().numberOfCardInComment && (MinecraftClient.getInstance().getSession().getUsername().length() + commentField.getText().length()) + Integer.parseInt(receiverCardNumber) > 32) {
-                setStatus (String.format(Text.translatable("text.spmhelper.pays_processTransfer_CommentIsLong").getString(), (29 - MinecraftClient.getInstance().getSession().getUsername().length()) - Integer.parseInt(receiverCardNumber)), 0xFF5555);
+                setStatus(String.format(Text.translatable("text.spmhelper.pays_processTransfer_CommentIsLong").getString(), (29 - MinecraftClient.getInstance().getSession().getUsername().length()) - Integer.parseInt(receiverCardNumber)), 0xFF5555);
                 return;
             }
 
@@ -282,7 +296,7 @@ public class PayScreen extends Screen {
     }
 
     private void toggleRecieverCards() {
-        if((receiverName.equals(receiverCardOrNameField.getText()) || receiverCardsExpanded) && !receiverCardOrNameField.getText().isEmpty()){
+        if ((receiverName.equals(receiverCardOrNameField.getText()) || receiverCardsExpanded) && !receiverCardOrNameField.getText().isEmpty()) {
             receiverCardsExpanded = !receiverCardsExpanded;
             updateReceiverCardsVisibility();
         } else {
@@ -318,14 +332,15 @@ public class PayScreen extends Screen {
             receiverCardsExpanded = !receiverCardsExpanded;
             updateReceiverCardsVisibility();
         }
-}
+    }
 
 
     private String getCardButtonText(String name) {
         return name + " | " + SPmHelperConfig.get().getCard(name).number;
     }
-    private String getCardButtonText(BaseCard card){
-        return  card.getName() + " | " + card.getNumber();
+
+    private String getCardButtonText(BaseCard card) {
+        return card.getName() + " | " + card.getNumber();
     }
 
     private void selectCard(String card) {

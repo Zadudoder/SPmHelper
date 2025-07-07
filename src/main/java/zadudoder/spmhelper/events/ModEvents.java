@@ -1,9 +1,13 @@
 package zadudoder.spmhelper.events;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -12,6 +16,9 @@ import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -22,6 +29,7 @@ import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.Misc;
 import zadudoder.spmhelper.utils.SPmHelperApi;
+import zadudoder.spmhelper.utils.types.Service;
 
 @Environment(EnvType.CLIENT)
 public class ModEvents {
@@ -58,6 +66,41 @@ public class ModEvents {
                         } else if (amount.isEmpty()) {
                             MinecraftClient.getInstance().
                                     execute(() -> MinecraftClient.getInstance().setScreen(new PayScreen(cardNumber)));
+                            return ActionResult.SUCCESS;
+                        }
+                    } else if (firstLine.contains("#SPmHCall")) {
+                        Service service = null;
+                        String secondLine = frontText.getMessage(1, false).getString().replaceAll(" ", "");
+                        switch (secondLine) {
+                            case "Детектив" -> service = Service.DETECTIVE;
+                            case "ФСБ" -> service = Service.FSB;
+                            case "Банкир" -> service = Service.BANKER;
+                            case "Гид" -> service = Service.GUIDE;
+                        }
+                        if (service == null || world.isClient) {
+                            return ActionResult.PASS;
+                        } else {
+                            String worldName = switch (world.getRegistryKey().getValue().toString()) {
+                                case "minecraft:the_nether" -> "Ад";
+                                case "minecraft:the_end" -> "Энд";
+                                default -> "Верхний мир";
+                            };
+                            String comment = frontText.getMessage(2, false).getString() + ' ' + frontText.getMessage(3, false).getString();
+                            String coordinates = "**" + player.getX() + " " + player.getY() + " " + player.getZ() + ' ' + worldName + "**";
+                            SPmHelperApi.makeCall(service, coordinates, comment)
+                                    .thenAccept(success -> MinecraftClient.getInstance().execute(() -> {
+                                        if (success) {
+                                            player.sendMessage(Text.translatable("text.spmhelper.calls_callService_WasCalled"));
+                                        } else {
+                                            SPmHelperApi.getAuthStatus().thenAccept(status -> {
+                                                if (status == 401) {
+                                                    player.sendMessage(Text.literal("Ошибка вызова ").append(Text.translatable("text.spmhelper.status_FeedBackMessageCase401")));
+                                                } else {
+                                                    player.sendMessage(Text.translatable("text.spmhelper.calls_callService_ErrorSendingCall"));
+                                                }
+                                            });
+                                        }
+                                    }));
                             return ActionResult.SUCCESS;
                         }
                     } else if (firstLine.toLowerCase().contains("оплата по карте")) {
@@ -149,8 +192,86 @@ public class ModEvents {
                     .then(ClientCommandManager.literal("status")
                             .executes(context -> dispatcher.execute("spmhelper status", context.getSource()))
                     );
+
+            var payCommand = ClientCommandManager.literal("pay")
+                    .then(ClientCommandManager.argument("nickname", StringArgumentType.string())
+                            .then(ClientCommandManager.argument("amount", IntegerArgumentType.integer())
+                                    .executes(context -> {
+                                        MinecraftClient.getInstance().execute(() -> {
+                                            MinecraftClient.getInstance().setScreen(
+                                                    new Screen(Text.literal("Тест")) {
+                                                        @Override
+                                                        public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+                                                            context.drawCenteredTextWithShadow(
+                                                                    textRenderer,
+                                                                    "Это тестовый экран",
+                                                                    width / 2,
+                                                                    height / 2,
+                                                                    0xFFFFFF
+                                                            );
+                                                        }
+                                                    }
+                                            );
+                                        });
+                                        return 1;
+                                    })
+                            )
+                    );
+
+            var deteciveCallCommand = createCallCommand("detective", Service.DETECTIVE);
+            var fsbCallCommand = createCallCommand("fsb", Service.FSB);
+            var bankerCallCommand = createCallCommand("banker", Service.BANKER);
+            var guideCallCommand = createCallCommand("guide", Service.GUIDE);
+
             dispatcher.register(mainCommand);
             dispatcher.register(aliasMainCommand);
+
+            dispatcher.register(payCommand);
+
+            dispatcher.register(deteciveCallCommand);
+            dispatcher.register(fsbCallCommand);
+            dispatcher.register(bankerCallCommand);
+            dispatcher.register(guideCallCommand);
         });
+    }
+
+    private static LiteralArgumentBuilder<FabricClientCommandSource> createCallCommand(String commandName, Service service) {
+        var callCommand = ClientCommandManager.literal(commandName)
+                .then(ClientCommandManager.argument("comment", StringArgumentType.greedyString())
+                        .executes(context -> {
+                            if (!hasToken) {
+                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.status_FeedBackMessageCase401"));
+                                return 0;
+                            }
+                            ClientPlayerEntity player = context.getSource().getPlayer();
+                            String world = switch (player.getWorld().getRegistryKey().getValue().toString()) {
+                                case "minecraft:the_nether" -> "Ад";
+                                case "minecraft:the_end" -> "Энд";
+                                default -> "Верхний мир";
+                            };
+                            String coordinates = "**" + player.getX() + " " + player.getY() + " " + player.getZ() + ' ' + world + "**";
+                            String comment = StringArgumentType.getString(context, "comment");
+                            SPmHelperApi.makeCall(service, coordinates, comment)
+                                    .thenAccept(success -> MinecraftClient.getInstance().execute(() -> {
+                                        if (success) {
+                                            context.getSource().sendFeedback(Text.translatable("text.spmhelper.calls_callService_WasCalled"));
+                                        } else {
+                                            SPmHelperApi.getAuthStatus().thenAccept(status -> {
+                                                if (status == 401) {
+                                                    context.getSource().sendFeedback(Text.literal("Ошибка вызова ").append(Text.translatable("text.spmhelper.status_FeedBackMessageCase401")));
+                                                } else {
+                                                    context.getSource().sendFeedback(Text.translatable("text.spmhelper.calls_callService_ErrorSendingCall"));
+                                                }
+                                            });
+                                        }
+                                    }));
+                            return 0;
+                        })
+                )
+                .executes(context -> {
+                    context.getSource().sendFeedback(Text.translatable("Введите комментарий"));
+                    return 0;
+                });
+        return callCommand;
     }
 }

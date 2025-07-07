@@ -18,9 +18,14 @@ public class Card {
         this.token = token;
         JsonObject ownerInfo = SPWorldsApi.getOwnerInfo(this);
         JsonArray cards = ownerInfo.getAsJsonArray("cards");
-        for (JsonElement card : cards) {
-            if (card.getAsJsonObject().get("id").getAsString().equals(id)) {
-                this.number = card.getAsJsonObject().get("number").getAsInt();
+        if (cards == null) {
+            this.id = null;
+            this.token = null;
+        } else {
+            for (JsonElement card : cards) {
+                if (card.getAsJsonObject().get("id").getAsString().equals(id)) {
+                    this.number = card.getAsJsonObject().get("number").getAsInt();
+                }
             }
         }
     }

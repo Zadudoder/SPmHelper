@@ -14,6 +14,7 @@ import zadudoder.spmhelper.Screen.MainScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.Misc;
 import zadudoder.spmhelper.utils.SPmHelperApi;
+import zadudoder.spmhelper.utils.types.Service;
 
 public class CallsScreen extends Screen {
     private TextFieldWidget commentField;
@@ -65,30 +66,26 @@ public class CallsScreen extends Screen {
 
 
         detectiveButton = ButtonWidget.builder(Text.translatable("text.spmhelper.calls_detective"), (btn) -> {
-            String serviceType = "detective";
-            String personName = "Детектив";
-            callService(serviceType, personName);
+            Service serviceType = Service.DETECTIVE;
+            callService(serviceType);
         }).dimensions(width / 2 - 150, buttonY, buttonWidth, 20).build();
         this.addDrawableChild(detectiveButton);
 
         fsbButton = ButtonWidget.builder(Text.translatable("text.spmhelper.calls_fsb"), (btn) -> {
-            String serviceType = "fsb";
-            String personName = "ФСБ";
-            callService(serviceType, personName);
+            Service serviceType = Service.FSB;
+            callService(serviceType);
         }).dimensions(width / 2 - 150 + buttonWidth + 10, buttonY, buttonWidth, 20).build();
         this.addDrawableChild(fsbButton);
 
         bankerButton = ButtonWidget.builder(Text.translatable("text.spmhelper.calls_banker"), (btn) -> {
-            String serviceType = "banker";
-            String personName = "Банкир";
-            callService(serviceType, personName);
+            Service serviceType = Service.BANKER;
+            callService(serviceType);
         }).dimensions(width / 2 - 150 + 2 * buttonWidth + 25, buttonY, buttonWidth, 20).build();
         this.addDrawableChild(bankerButton);
 
         guideButton = ButtonWidget.builder(Text.translatable("text.spmhelper.calls_guide"), (btn) -> {
-            String serviceType = "guide";
-            String personName = "Гид";
-            callService(serviceType, personName);
+            Service serviceType = Service.GUIDE;
+            callService(serviceType);
         }).dimensions(width / 2 - 150 + 3 * buttonWidth + 40, buttonY, buttonWidth, 20).build();
         this.addDrawableChild(guideButton);
 
@@ -126,7 +123,7 @@ public class CallsScreen extends Screen {
         guideButton.active = !guideButton.active;
     }
 
-    public void callService(String serviceType, String personName) {
+    public void callService(Service serviceType) {
         if (!hasToken) {
             setStatus(Text.translatable("text.spmhelper.calls_callService_NotHasToken").getString(), 0xFF5555);
             return;
@@ -147,6 +144,12 @@ public class CallsScreen extends Screen {
         setStatus(Text.translatable("text.spmhelper.calls_callService_SendRequest").getString(), 0xFFFF55);
         updateButtonsState();
 
+        String personName = switch (serviceType) {
+            case DETECTIVE -> "Детектив";
+            case FSB -> "ФСБ";
+            case BANKER -> "Банкир";
+            case GUIDE -> "Гид";
+        };
 
         SPmHelperApi.makeCall(serviceType, coordinates, comment)
                 .thenAccept(success -> MinecraftClient.getInstance().execute(() -> {
