@@ -16,8 +16,6 @@ import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
@@ -197,21 +195,10 @@ public class ModEvents {
                     .then(ClientCommandManager.argument("nickname", StringArgumentType.string())
                             .then(ClientCommandManager.argument("amount", IntegerArgumentType.integer())
                                     .executes(context -> {
-                                        MinecraftClient.getInstance().execute(() -> {
-                                            MinecraftClient.getInstance().setScreen(
-                                                    new Screen(Text.literal("Тест")) {
-                                                        @Override
-                                                        public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-                                                            context.drawCenteredTextWithShadow(
-                                                                    textRenderer,
-                                                                    "Это тестовый экран",
-                                                                    width / 2,
-                                                                    height / 2,
-                                                                    0xFFFFFF
-                                                            );
-                                                        }
-                                                    }
-                                            );
+                                        String nickname = StringArgumentType.getString(context, "nickname");
+                                        int amount = IntegerArgumentType.getInteger(context, "amount");
+                                        MinecraftClient.getInstance().send(() -> {
+                                            MinecraftClient.getInstance().setScreen(new PayScreen(nickname, amount));
                                         });
                                         return 1;
                                     })
