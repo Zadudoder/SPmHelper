@@ -28,9 +28,16 @@ public class CallsScreen extends Screen {
     private String statusMessage;
     private int statusColor;
     private String errorMessage = null;
+    private String comment;
 
     public CallsScreen() {
         super(Text.of("Экран вызова"));
+    }
+
+    public CallsScreen(String comment) {
+        super(Text.of("Экран вызова"));
+        this.comment = comment;
+
     }
 
     @Override
@@ -58,6 +65,9 @@ public class CallsScreen extends Screen {
                 300, 20,
                 Text.translatable("text.spmhelper.calls_TextFieldWidget")
         );
+        if (comment != null) {
+            commentField.setText(comment);
+        }
         this.addDrawableChild(commentField);
 
         // Кнопки вызова

@@ -16,7 +16,6 @@ import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -192,18 +191,24 @@ public class ModEvents {
                     );
 
             var payCommand = ClientCommandManager.literal("pay")
-                    .then(ClientCommandManager.argument("nickname", StringArgumentType.string())
-                            .then(ClientCommandManager.argument("amount", IntegerArgumentType.integer())
+                    .then(ClientCommandManager.argument("Ник", StringArgumentType.string())
+                            .then(ClientCommandManager.argument("Сумма", IntegerArgumentType.integer())
                                     .executes(context -> {
-                                        String nickname = StringArgumentType.getString(context, "nickname");
-                                        int amount = IntegerArgumentType.getInteger(context, "amount");
+                                        String nickname = StringArgumentType.getString(context, "Ник");
+                                        int amount = IntegerArgumentType.getInteger(context, "Сумма");
                                         MinecraftClient.getInstance().send(() -> {
                                             MinecraftClient.getInstance().setScreen(new PayScreen(nickname, amount));
                                         });
                                         return 1;
                                     })
-                            )
-                    );
+                            ).executes(context -> {
+                                context.getSource().sendFeedback(Text.translatable("Вы не сумму"));
+                                return 1;
+                            })
+                    ).executes(context -> {
+                        context.getSource().sendFeedback(Text.translatable("Вы не ввели ник или номер карты"));
+                        return 1;
+                    });
 
             var deteciveCallCommand = createCallCommand("detective", Service.DETECTIVE);
             var fsbCallCommand = createCallCommand("fsb", Service.FSB);
@@ -230,28 +235,10 @@ public class ModEvents {
                                 context.getSource().sendFeedback(Text.translatable("text.spmhelper.status_FeedBackMessageCase401"));
                                 return 0;
                             }
-                            ClientPlayerEntity player = context.getSource().getPlayer();
-                            String world = switch (player.getWorld().getRegistryKey().getValue().toString()) {
-                                case "minecraft:the_nether" -> "Ад";
-                                case "minecraft:the_end" -> "Энд";
-                                default -> "Верхний мир";
-                            };
-                            String coordinates = "**" + player.getX() + " " + player.getY() + " " + player.getZ() + ' ' + world + "**";
                             String comment = StringArgumentType.getString(context, "comment");
-                            SPmHelperApi.makeCall(service, coordinates, comment)
-                                    .thenAccept(success -> MinecraftClient.getInstance().execute(() -> {
-                                        if (success) {
-                                            context.getSource().sendFeedback(Text.translatable("text.spmhelper.calls_callService_WasCalled"));
-                                        } else {
-                                            SPmHelperApi.getAuthStatus().thenAccept(status -> {
-                                                if (status == 401) {
-                                                    context.getSource().sendFeedback(Text.literal("Ошибка вызова ").append(Text.translatable("text.spmhelper.status_FeedBackMessageCase401")));
-                                                } else {
-                                                    context.getSource().sendFeedback(Text.translatable("text.spmhelper.calls_callService_ErrorSendingCall"));
-                                                }
-                                            });
-                                        }
-                                    }));
+                            /*
+                            Сделай реализацию
+                            * */
                             return 0;
                         })
                 )
