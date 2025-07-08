@@ -65,12 +65,17 @@ public class PayScreen extends Screen {
         SPmHelperConfig.get().setPayWithNick(false);
     }
 
-    public PayScreen(String nickname, int amount) {
+    public PayScreen(String nicknameOrNumber, int amount) {
         super(Text.of("Перевод СПм"));
-        p_nick = nickname;
         p_amount = String.valueOf(amount);
         isSPmPay = true;
-        SPmHelperConfig.get().setPayWithNick(true);
+        if (Misc.isNumeric(nicknameOrNumber) && nicknameOrNumber.length() == 5) {
+            p_number = nicknameOrNumber;
+            SPmHelperConfig.get().setPayWithNick(false);
+        } else {
+            p_nick = nicknameOrNumber;
+            SPmHelperConfig.get().setPayWithNick(true);
+        }
     }
 
     @Override
