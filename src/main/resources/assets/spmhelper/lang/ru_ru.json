@@ -10,7 +10,7 @@
   "text.spmhelper.config.navCategory": "Настройки SPmHelperNav",
 
   "text.spmhelper.option.enableMenuButton": "Включить кнопку SPmHelper в основном меню: ",
-  "text.spmhelper.option.enableSPmHelperNav": "Включить SPmHelperNav",
+  "text.spmhelper.option.enableSPmHelperNav": "Включить SPmHelperNav:",
   "text.spmhelper.option.defaultScreen": "На какой экран будет вести эта кнопка: ",
   "text.spmhelper.option.numberOfCardInComment": "Указывать номер карты куда вы переводите в комментарии?",
   "text.spmhelper.option.SPmHelperNavX": "Расположение SPmHelperNav по оси Х (ширина):",

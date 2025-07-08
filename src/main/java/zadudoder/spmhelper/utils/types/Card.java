@@ -3,6 +3,9 @@ package zadudoder.spmhelper.utils.types;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.toast.SystemToast;
+import net.minecraft.text.Text;
 import zadudoder.spmhelper.utils.SPWorldsApi;
 
 public class Card {
@@ -10,8 +13,7 @@ public class Card {
     public String token;
     public int number;
 
-    public Card() {
-    } // Пустой конструктор для десериализации
+    public Card() {}
 
     public Card(String id, String token) {
         this.id = id;
@@ -21,6 +23,7 @@ public class Card {
         if (cards == null) {
             this.id = null;
             this.token = null;
+            MinecraftClient.getInstance().getToastManager().add(SystemToast.create(MinecraftClient.getInstance(), SystemToast.Type.NARRATOR_TOGGLE, Text.of("Ошибочка!"), Text.of("Вы недавно поменяли никнейм, подождите и повторите добавление карты")));
         } else {
             for (JsonElement card : cards) {
                 if (card.getAsJsonObject().get("id").getAsString().equals(id)) {

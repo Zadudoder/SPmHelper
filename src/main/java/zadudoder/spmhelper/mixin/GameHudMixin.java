@@ -74,9 +74,9 @@ public abstract class GameHudMixin {
     @Unique
     private void drawLabel(DrawContext context, Text text, int color) {
         TextRenderer textRenderer = client.textRenderer;
-        context.fill(X - 2, Y - 4, X + textRenderer.getWidth(text) + 2, Y - 3, SPmHelperConfig.get().SpmNavBackgroundColor);
-        context.fill(X - 3, Y - 3, X + textRenderer.getWidth(text) + 3, Y + textRenderer.fontHeight + 1, SPmHelperConfig.get().SpmNavBackgroundColor);
-        context.fill(X - 2, Y + textRenderer.fontHeight + 2, X + textRenderer.getWidth(text) + 2, Y + textRenderer.fontHeight + 1, SPmHelperConfig.get().SpmNavBackgroundColor);
+        context.fill(X - 2, Y - 4, X + textRenderer.getWidth(text) + 2, Y - 3, 0x60000000);
+        context.fill(X - 3, Y - 3, X + textRenderer.getWidth(text) + 3, Y + textRenderer.fontHeight + 1, 0x60000000);
+        context.fill(X - 2, Y + textRenderer.fontHeight + 2, X + textRenderer.getWidth(text) + 2, Y + textRenderer.fontHeight + 1, 0x60000000);
         context.drawText(textRenderer, text, X, Y, color, false);
     }
 }

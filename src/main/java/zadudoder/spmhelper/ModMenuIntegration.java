@@ -61,10 +61,6 @@ public class ModMenuIntegration implements ModMenuApi {
                     .setSaveConsumer(newValue -> config.enableSPmNav = newValue)
                     .build());
 
-            navCategory.addEntry(entryBuilder.startAlphaColorField(Text.translatable("text.spmhelper.option.SpmNavBackgroundColor"), config.SpmNavBackgroundColor)
-                    .setSaveConsumer(newValue -> config.SpmNavBackgroundColor = newValue)
-                    .build());
-
             navCategory.addEntry(entryBuilder.startIntSlider(Text.translatable("text.spmhelper.option.SPmHelperNavX"), config.SPmNavX, 1, 100)
                     .setTextGetter(value -> Text.literal(value + " %"))
                     .setSaveConsumer(newValue -> config.SPmNavX = newValue)
