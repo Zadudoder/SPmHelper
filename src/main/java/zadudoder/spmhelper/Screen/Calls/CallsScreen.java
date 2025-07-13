@@ -144,11 +144,7 @@ public class CallsScreen extends Screen {
             setStatus(Text.translatable("text.spmhelper.calls_callService_CommentIsEmpty").getString(), 0xFF5555);
             return;
         }
-        String world = switch (MinecraftClient.getInstance().player.getWorld().getRegistryKey().getValue().toString()) {
-            case "minecraft:the_nether" -> "Ад";
-            case "minecraft:the_end" -> "Энд";
-            default -> "Верхний мир";
-        };
+        String world = Misc.getWorldName(MinecraftClient.getInstance().world);
         String coordinates = sendCoordinates && playerPos != null ?
                 "**" + playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ() + ' ' + world + "**" : " ";
         setStatus(Text.translatable("text.spmhelper.calls_callService_SendRequest").getString(), 0xFFFF55);

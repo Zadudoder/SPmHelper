@@ -3,6 +3,7 @@ package zadudoder.spmhelper.utils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import zadudoder.spmhelper.utils.types.BranchCoords;
 import zadudoder.spmhelper.utils.types.HubBranch;
 
@@ -81,6 +82,16 @@ public class Misc {
         return onAllowedServer;
 
     }
+
+    public static String getWorldName(World world) {
+        String name = switch (world.getRegistryKey().getValue().toString()) {
+            case "minecraft:the_nether" -> "Ад";
+            case "minecraft:the_end" -> "Энд";
+            default -> "Верхний мир";
+        };
+        return name;
+    }
+
 }
 
 /*

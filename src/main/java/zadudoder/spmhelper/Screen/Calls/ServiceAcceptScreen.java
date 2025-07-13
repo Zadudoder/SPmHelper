@@ -1,23 +1,26 @@
 package zadudoder.spmhelper.Screen.Calls;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
-import zadudoder.spmhelper.Screen.MainScreen;
-import zadudoder.spmhelper.config.SPmHelperConfig;
+import zadudoder.spmhelper.utils.Misc;
+import zadudoder.spmhelper.utils.SPmHelperApi;
+import zadudoder.spmhelper.utils.types.Service;
 
-public class ServiceAccept extends Screen {
-    private final String id;
-    private final String token;
-    private final String name;
+public class ServiceAcceptScreen extends Screen {
+    private final Service service;
+    private final String comment;
+    private final PlayerEntity sender;
 
-    public ServiceAccept(String id, String token, String name) {
+    public ServiceAcceptScreen(Service service, String comment, PlayerEntity sender) {
         super(Text.of("Экран подтверждения вызова"));
-        this.id = id;
-        this.token = token;
-        this.name = name;
+        this.service = service;
+        this.comment = comment;
+        this.sender = sender;
     }
 
     protected void init() {
@@ -32,12 +35,17 @@ public class ServiceAccept extends Screen {
         this.addDrawableChild(Back);
 
         ButtonWidget AcceptButton = ButtonWidget.builder(Text.translatable("text.spmhelper.addCard_AcceptButton"), (btn) -> {
-            if (id == null) {
-                this.client.player.sendMessage(Text.translatable("text.spmhelper.status_FeedBackMessageCaseDefault"));
-            } else {
-                SPmHelperConfig.get().addCard(id, token, name); //Добавление карты
-                this.client.player.sendMessage(Text.translatable("text.spmhelper.addCard_AcceptFeedBack"));
-            }
+            String world = Misc.getWorldName(sender.getWorld());
+            String coordinates = "**" + sender.getBlockPos().getX() + " " + sender.getBlockPos().getY() + " " + sender.getBlockPos().getZ() + ' ' + world + "**";
+            SPmHelperApi.makeCall(service, coordinates, comment)
+                    .thenAccept(success -> MinecraftClient.getInstance().execute(() -> {
+                        if (success) {
+                            sender.sendMessage(Text.of(String.format(Text.translatable("text.spmhelper.calls_callService_WasCalled").getString(), service.name())));
+                        } else {
+                            sender.sendMessage(Text.of(Text.translatable("text.spmhelper.calls_callService_ErrorSendingCall").getString()));
+                        }
+                        this.close();
+                    }));
             this.close();
         }).dimensions(width / 2 - 120, height / 2, 80, 20).build();
         this.addDrawableChild(AcceptButton);
@@ -53,7 +61,7 @@ public class ServiceAccept extends Screen {
 
         context.drawCenteredTextWithShadow(
                 this.textRenderer,
-                Text.translatable("text.spmhelper.addCard_DoYouWantAdd", name),
+                Text.translatable("text.spmhelper.DoYouWantCall_" + service.name().toLowerCase()),
                 this.width / 2,
                 this.height / 2 - 40,
                 0xFFFFFF

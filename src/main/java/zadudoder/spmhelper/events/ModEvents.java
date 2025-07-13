@@ -21,6 +21,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import zadudoder.spmhelper.SPmHelper;
+import zadudoder.spmhelper.Screen.Calls.ServiceAcceptScreen;
 import zadudoder.spmhelper.Screen.Pays.AddCardScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
@@ -77,27 +78,11 @@ public class ModEvents {
                         if (service == null || world.isClient) {
                             return ActionResult.PASS;
                         } else {
-                            String worldName = switch (world.getRegistryKey().getValue().toString()) {
-                                case "minecraft:the_nether" -> "Ад";
-                                case "minecraft:the_end" -> "Энд";
-                                default -> "Верхний мир";
-                            };
                             String comment = frontText.getMessage(2, false).getString() + ' ' + frontText.getMessage(3, false).getString();
-                            String coordinates = "**" + player.getX() + " " + player.getY() + " " + player.getZ() + ' ' + worldName + "**";
-                            SPmHelperApi.makeCall(service, coordinates, comment)
-                                    .thenAccept(success -> MinecraftClient.getInstance().execute(() -> {
-                                        if (success) {
-                                            player.sendMessage(Text.translatable("text.spmhelper.calls_callService_WasCalled"));
-                                        } else {
-                                            SPmHelperApi.getAuthStatus().thenAccept(status -> {
-                                                if (status == 401) {
-                                                    player.sendMessage(Text.literal("Ошибка вызова ").append(Text.translatable("text.spmhelper.status_FeedBackMessageCase401")));
-                                                } else {
-                                                    player.sendMessage(Text.translatable("text.spmhelper.calls_callService_ErrorSendingCall"));
-                                                }
-                                            });
-                                        }
-                                    }));
+                            Service finalService = service;
+                            MinecraftClient.getInstance().send(() -> {
+                                MinecraftClient.getInstance().setScreen(new ServiceAcceptScreen(finalService, comment, player));
+                            });
                             return ActionResult.SUCCESS;
                         }
                     } else if (firstLine.toLowerCase().contains("оплата по карте")) {
@@ -236,9 +221,9 @@ public class ModEvents {
                                 return 0;
                             }
                             String comment = StringArgumentType.getString(context, "comment");
-                            /*
-                            Сделай реализацию
-                            * */
+                            MinecraftClient.getInstance().send(() -> {
+                                MinecraftClient.getInstance().setScreen(new ServiceAcceptScreen(service, comment, context.getSource().getPlayer()));
+                            });
                             return 0;
                         })
                 )
