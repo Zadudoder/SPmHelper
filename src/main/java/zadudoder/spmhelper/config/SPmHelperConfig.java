@@ -17,7 +17,6 @@ public class SPmHelperConfig implements ConfigData {
     public Boolean paymentWithNick = false; // true - ник, false - по номеру
     public Boolean numberOfCardInComment = false; // true - включено, false - выключено в переводе будет указывать карту куда вы переводите
     public Boolean enableSPmNav = true;
-    public int SpmNavBackgroundColor = 0x60000000;
     public int SPmNavX = 50;
     public int SPmNavY = 2;
     public int SPmNavScale = 100;

@@ -71,9 +71,12 @@ public class ModEvents {
                         String secondLine = frontText.getMessage(1, false).getString().replaceAll(" ", "");
                         switch (secondLine) {
                             case "Детектив" -> service = Service.DETECTIVE;
+                            case "Детектива" -> service = Service.DETECTIVE;
                             case "ФСБ" -> service = Service.FSB;
                             case "Банкир" -> service = Service.BANKER;
+                            case "Банкира" -> service = Service.BANKER;
                             case "Гид" -> service = Service.GUIDE;
+                            case "Гида" -> service = Service.GUIDE;
                         }
                         if (service == null || world.isClient) {
                             return ActionResult.PASS;
@@ -176,22 +179,22 @@ public class ModEvents {
                     );
 
             var payCommand = ClientCommandManager.literal("pay")
-                    .then(ClientCommandManager.argument("Ник", StringArgumentType.string())
-                            .then(ClientCommandManager.argument("Сумма", IntegerArgumentType.integer())
+                    .then(ClientCommandManager.argument(Text.translatable("text.spmhelper.argumentForPayment.NickOrNumCard").getString(), StringArgumentType.string())
+                            .then(ClientCommandManager.argument(Text.translatable("text.spmhelper.argumentForPayment.Amount").getString(), IntegerArgumentType.integer())
                                     .executes(context -> {
-                                        String nickname = StringArgumentType.getString(context, "Ник");
-                                        int amount = IntegerArgumentType.getInteger(context, "Сумма");
+                                        String nickname = StringArgumentType.getString(context, Text.translatable("text.spmhelper.argumentForPayment.NickOrNumCard").getString());
+                                        int amount = IntegerArgumentType.getInteger(context, Text.translatable("text.spmhelper.argumentForPayment.Amount").getString());
                                         MinecraftClient.getInstance().send(() -> {
                                             MinecraftClient.getInstance().setScreen(new PayScreen(nickname, amount));
                                         });
                                         return 1;
                                     })
                             ).executes(context -> {
-                                context.getSource().sendFeedback(Text.translatable("Вы не сумму"));
+                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.notEnteredAmount"));
                                 return 1;
                             })
                     ).executes(context -> {
-                        context.getSource().sendFeedback(Text.translatable("Вы не ввели ник или номер карты"));
+                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.notEnteredNickOrCardNum"));
                         return 1;
                     });
 
@@ -214,13 +217,13 @@ public class ModEvents {
 
     private static LiteralArgumentBuilder<FabricClientCommandSource> createCallCommand(String commandName, Service service) {
         var callCommand = ClientCommandManager.literal(commandName)
-                .then(ClientCommandManager.argument("comment", StringArgumentType.greedyString())
+                .then(ClientCommandManager.argument(Text.translatable("text.spmhelper.argumentForCalls.Comms").getString(), StringArgumentType.greedyString())
                         .executes(context -> {
                             if (!hasToken) {
                                 context.getSource().sendFeedback(Text.translatable("text.spmhelper.status_FeedBackMessageCase401"));
                                 return 0;
                             }
-                            String comment = StringArgumentType.getString(context, "comment");
+                            String comment = StringArgumentType.getString(context, Text.translatable("text.spmhelper.argumentForCalls.Comms").getString());
                             MinecraftClient.getInstance().send(() -> {
                                 MinecraftClient.getInstance().setScreen(new ServiceAcceptScreen(service, comment, context.getSource().getPlayer()));
                             });
@@ -228,7 +231,7 @@ public class ModEvents {
                         })
                 )
                 .executes(context -> {
-                    context.getSource().sendFeedback(Text.translatable("Введите комментарий"));
+                    context.getSource().sendFeedback(Text.translatable("text.spmhelper.enterComment"));
                     return 0;
                 });
         return callCommand;

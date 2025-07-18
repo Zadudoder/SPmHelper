@@ -35,7 +35,7 @@ public abstract class GameMenuScreenMixin extends ScreenMixin {
 
             for (Element widget : ((GameMenuScreen) (Object) this).children()) {
                 if (widget instanceof ButtonWidget button &&
-                        (button.getMessage().getString().equals("Моды") || button.getMessage().getString().equals("Mods"))) { //Не будет работать на других языках
+                        (button.getMessage().getString().equals("Моды") || button.getMessage().getString().equals("Mods"))) {
 
                     int buttonX = button.getX() - buttonWidth - 4;
                     int buttonY = button.getY();
