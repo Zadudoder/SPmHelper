@@ -45,11 +45,11 @@
   "text.spmhelper.calls_callService_WasCalled_BANKER": "Банкир был вызван!",
   "text.spmhelper.calls_callService_ErrorSendingCall": "Ошибка отправки вызова",
 
-  "text.spmhelper.calls_callServiceChat_WasCalled_GUIDE": "§aГид был вызван!",
-  "text.spmhelper.calls_callServiceChat_WasCalled_DETECTIVE": "§aДетектив был вызван!",
-  "text.spmhelper.calls_callServiceChat_WasCalled_FSB": "§aФСБ было вызван!",
-  "text.spmhelper.calls_callServiceChat_WasCalled_BANKER": "§aБанкир был вызван!",
-  "text.spmhelper.calls_callServiceChat_ErrorSendingCall": "§cОшибка отправки вызова",
+  "text.spmhelper.calls_callServiceChat_WasCalled_GUIDE": "§a[SPmHelper]: Гид был вызван!",
+  "text.spmhelper.calls_callServiceChat_WasCalled_DETECTIVE": "§a[SPmHelper]: Детектив был вызван!",
+  "text.spmhelper.calls_callServiceChat_WasCalled_FSB": "§a[SPmHelper]: ФСБ было вызвано!",
+  "text.spmhelper.calls_callServiceChat_WasCalled_BANKER": "§a[SPmHelper]: Банкир был вызван!",
+  "text.spmhelper.calls_callServiceChat_ErrorSendingCall": "§c[SPmHelper]: Ошибка отправки вызова",
 
   "text.spmhelper.calls_render_SendCoordinates": "Отправить координаты:",
   "text.spmhelper.calls_render_SendCoordinatesAndPlayerPos": "Координаты: X:%d Y:%d Z:%d",

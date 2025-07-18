@@ -45,11 +45,11 @@
   "text.spmhelper.calls_callService_WasCalled_BANKER": "Banker was called!",
   "text.spmhelper.calls_callService_ErrorSendingCall": "Couldn't send call",
 
-  "text.spmhelper.calls_callServiceChat_WasCalled_GUIDE": "§aGuide was called!",
-  "text.spmhelper.calls_callServiceChat_WasCalled_DETECTIVE": "§aDetective was called!",
-  "text.spmhelper.calls_callServiceChat_WasCalled_FSB": "§aFsb was called!",
-  "text.spmhelper.calls_callServiceChat_WasCalled_BANKER": "§aBanker was called!",
-  "text.spmhelper.calls_callServiceChat_ErrorSendingCall": "§cCouldn't send call",
+  "text.spmhelper.calls_callServiceChat_WasCalled_GUIDE": "§a[SPmHelper]: Guide was called!",
+  "text.spmhelper.calls_callServiceChat_WasCalled_DETECTIVE": "§a[SPmHelper]: Detective was called!",
+  "text.spmhelper.calls_callServiceChat_WasCalled_FSB": "§a[SPmHelper]: FSB was called!",
+  "text.spmhelper.calls_callServiceChat_WasCalled_BANKER": "§a[SPmHelper]: Banker was called!",
+  "text.spmhelper.calls_callServiceChat_ErrorSendingCall": "§c[SPmHelper]: Couldn't send call",
 
   "text.spmhelper.calls_render_SendCoordinates": "Send coordinates:",
   "text.spmhelper.calls_render_SendCoordinatesAndPlayerPos": "Coordinates: X:%d Y:%d Z:%d",
