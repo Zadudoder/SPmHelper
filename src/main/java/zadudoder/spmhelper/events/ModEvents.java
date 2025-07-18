@@ -55,12 +55,12 @@ public class ModEvents {
                         }
                         if (amount.contains("АР")) {
                             amount = amount.replaceFirst("АР", "");
-                            if (Misc.isNumeric(amount)) {
-                                String finalAmount = amount;
-                                MinecraftClient.getInstance().
-                                        execute(() -> MinecraftClient.getInstance().setScreen(new PayScreen(cardNumber, finalAmount, comment)));
-                                return ActionResult.SUCCESS;
-                            }
+                        }
+                        if (Misc.isNumeric(amount)) {
+                            String finalAmount = amount;
+                            MinecraftClient.getInstance().
+                                    execute(() -> MinecraftClient.getInstance().setScreen(new PayScreen(cardNumber, finalAmount, comment)));
+                            return ActionResult.SUCCESS;
                         } else if (amount.isEmpty()) {
                             MinecraftClient.getInstance().
                                     execute(() -> MinecraftClient.getInstance().setScreen(new PayScreen(cardNumber)));

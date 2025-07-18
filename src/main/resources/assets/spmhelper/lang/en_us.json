@@ -38,8 +38,19 @@
   "text.spmhelper.calls_callService_NotHasToken": "⬇ You must sign up first ⬇",
   "text.spmhelper.calls_callService_CommentIsEmpty": "Error: enter comment!",
   "text.spmhelper.calls_callService_SendRequest": "Sending request...",
-  "text.spmhelper.calls_callService_WasCalled": "%s was called!",
+
+  "text.spmhelper.calls_callService_WasCalled_GUIDE": "Guide was called!",
+  "text.spmhelper.calls_callService_WasCalled_DETECTIVE": "Detective was called!",
+  "text.spmhelper.calls_callService_WasCalled_FSB": "Fsb was called!",
+  "text.spmhelper.calls_callService_WasCalled_BANKER": "Banker was called!",
   "text.spmhelper.calls_callService_ErrorSendingCall": "Couldn't send call",
+
+  "text.spmhelper.calls_callServiceChat_WasCalled_GUIDE": "§aGuide was called!",
+  "text.spmhelper.calls_callServiceChat_WasCalled_DETECTIVE": "§aDetective was called!",
+  "text.spmhelper.calls_callServiceChat_WasCalled_FSB": "§aFsb was called!",
+  "text.spmhelper.calls_callServiceChat_WasCalled_BANKER": "§aBanker was called!",
+  "text.spmhelper.calls_callServiceChat_ErrorSendingCall": "§cCouldn't send call",
+
   "text.spmhelper.calls_render_SendCoordinates": "Send coordinates:",
   "text.spmhelper.calls_render_SendCoordinatesAndPlayerPos": "Coordinates: X:%d Y:%d Z:%d",
   "text.spmhelper.calls_render_Comment": "Comment:",

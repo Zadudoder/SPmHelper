@@ -52,13 +52,13 @@ public class ServiceAcceptScreen extends Screen {
 
         ButtonWidget AcceptButton = ButtonWidget.builder(Text.translatable("text.spmhelper.addCard_AcceptButton"), (btn) -> {
             String world = Misc.getWorldName(sender.getWorld());
-            String coordinates = sendCoordinates && playerPos != null ? "**" + sender.getBlockPos().getX() + " " + sender.getBlockPos().getY() + " " + sender.getBlockPos().getZ() + ' ' + world + "**"  : " ";
+            String coordinates = sendCoordinates && playerPos != null ? "**" + sender.getBlockPos().getX() + " " + sender.getBlockPos().getY() + " " + sender.getBlockPos().getZ() + ' ' + world + "**" : " ";
             SPmHelperApi.makeCall(service, coordinates, comment)
                     .thenAccept(success -> MinecraftClient.getInstance().execute(() -> {
                         if (success) {
-                            sender.sendMessage(Text.of(String.format(Text.translatable("text.spmhelper.calls_callService_WasCalled").getString(), service.name())));
+                            sender.sendMessage(Text.translatable("text.spmhelper.calls_callServiceChat_WasCalled_" + service.name()));
                         } else {
-                            sender.sendMessage(Text.of(Text.translatable("text.spmhelper.calls_callService_ErrorSendingCall").getString()));
+                            sender.sendMessage(Text.of(Text.translatable("text.spmhelper.calls_callServiceChat_ErrorSendingCall").getString()));
                         }
                         this.close();
                     }));
