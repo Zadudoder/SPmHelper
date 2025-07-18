@@ -138,12 +138,12 @@
 
   "text.spmhelper.argumentForPayment.NickOrNumCard": "Ник или номер карты",
   "text.spmhelper.argumentForPayment.Amount": "Сумма",
-  "text.spmhelper.argumentForCalls.Comms": "Комментарий к вызову",
+  "text.spmhelper.argumentForCalls.Comms": "комментарий",
 
-  "text.spmhelper.DoYouWantCall.guide": "Подтверждение вызова гида", // Confirmation of the guide's call
-  "text.spmhelper.DoYouWantCall.banker": "Подтверждение вызова банкира", // Confirmation of banker's call
-  "text.spmhelper.DoYouWantCall.detective": "Подтверждение вызова детектива", // Confirmation of the detective's call
-  "text.spmhelper.DoYouWantCall.fsb": "Подтверждение вызова ФСБ", // Confirmation of FSB call
+  "text.spmhelper.DoYouWantCall.guide": "Подтверждение вызова гида",
+  "text.spmhelper.DoYouWantCall.banker": "Подтверждение вызова банкира",
+  "text.spmhelper.DoYouWantCall.detective": "Подтверждение вызова детектива",
+  "text.spmhelper.DoYouWantCall.fsb": "Подтверждение вызова ФСБ",
 
   "text.spmhelper.branch_name.red": "Красная",
   "text.spmhelper.branch_name.blue": "Синяя",
