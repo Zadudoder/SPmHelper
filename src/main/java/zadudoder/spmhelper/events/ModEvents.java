@@ -221,6 +221,7 @@ public class ModEvents {
                         .executes(context -> {
                             if (!hasToken) {
                                 context.getSource().sendFeedback(Text.translatable("text.spmhelper.status_FeedBackMessageCase401"));
+                                SPmHelperApi.startAuthProcess(context.getSource().getPlayer());
                                 return 0;
                             }
                             String comment = StringArgumentType.getString(context, Text.translatable("text.spmhelper.argumentForCalls.Comms").getString());

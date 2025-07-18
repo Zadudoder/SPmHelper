@@ -43,7 +43,6 @@ public abstract class GameMenuScreenMixin extends ScreenMixin {
                     Text tooltipText = Text.translatable("text.spmhelper.current_screen")
                             .append(Text.translatable("text.spmhelper.screen_type." + SPmHelperConfig.get().defaultScreen.name().toLowerCase()));
 
-
                     this.menuButton = ButtonWidget.builder(
                                     Text.literal(""),
                                     btn -> openSelectedScreen())

@@ -142,10 +142,10 @@
   "text.spmhelper.argumentForPayment.Amount": "Amount",
   "text.spmhelper.argumentForCalls.Comms": "сomment",
 
-  "text.spmhelper.DoYouWantCall.guide": "Confirmation of the guide's call",
-  "text.spmhelper.DoYouWantCall.banker": "Confirmation of banker's call",
-  "text.spmhelper.DoYouWantCall.detective": "Confirmation of the detective's call",
-  "text.spmhelper.DoYouWantCall.fsb": "Confirmation of FSB call",
+  "text.spmhelper.DoYouWantCall_guide": "Confirmation of the guide's call",
+  "text.spmhelper.DoYouWantCall_banker": "Confirmation of banker's call",
+  "text.spmhelper.DoYouWantCall_detective": "Confirmation of the detective's call",
+  "text.spmhelper.DoYouWantCall_fsb": "Confirmation of FSB call",
 
   "text.spmhelper.branch_name.red": "Red",
   "text.spmhelper.branch_name.blue": "Blue",

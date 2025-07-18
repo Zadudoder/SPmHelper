@@ -38,7 +38,7 @@ public class ServiceAcceptScreen extends Screen {
         }).dimensions(5, 10, 15, 15).build();
         this.addDrawableChild(Back);
 
-        CheckboxWidget coordinatesCheckbox = CheckboxWidget.builder(Text.of(Text.translatable("text.spmhelper.SAScalls_coordinatesCheckbox").getString()), textRenderer)
+        CheckboxWidget coordinatesCheckbox = CheckboxWidget.builder(Text.of(""), textRenderer)
                 .pos(width / 2 - 10, height / 2 - 10)
                 .checked(false)
                 .callback((checkbox, checked) -> sendCoordinates = checked)

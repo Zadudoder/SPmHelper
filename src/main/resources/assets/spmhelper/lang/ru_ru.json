@@ -140,10 +140,10 @@
   "text.spmhelper.argumentForPayment.Amount": "Сумма",
   "text.spmhelper.argumentForCalls.Comms": "комментарий",
 
-  "text.spmhelper.DoYouWantCall.guide": "Подтверждение вызова гида",
-  "text.spmhelper.DoYouWantCall.banker": "Подтверждение вызова банкира",
-  "text.spmhelper.DoYouWantCall.detective": "Подтверждение вызова детектива",
-  "text.spmhelper.DoYouWantCall.fsb": "Подтверждение вызова ФСБ",
+  "text.spmhelper.DoYouWantCall_guide": "Подтверждение вызова гида",
+  "text.spmhelper.DoYouWantCall_banker": "Подтверждение вызова банкира",
+  "text.spmhelper.DoYouWantCall_detective": "Подтверждение вызова детектива",
+  "text.spmhelper.DoYouWantCall_fsb": "Подтверждение вызова ФСБ",
 
   "text.spmhelper.branch_name.red": "Красная",
   "text.spmhelper.branch_name.blue": "Синяя",
