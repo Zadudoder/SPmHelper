@@ -66,7 +66,7 @@ public class SPmHelperConfig implements ConfigData {
 
     public void removeCard(String cardName) {
         if (mainCardName.equals(cardName)) {
-            mainCardName = null;
+            mainCardName = "";
         }
         cards.remove(cardName);
         AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
@@ -87,7 +87,7 @@ public class SPmHelperConfig implements ConfigData {
     }
 
     public String getMainCardName() {
-        if (!(mainCardName == null)) {
+        if (mainCardName != null) {
             return mainCardName;
         } else {
             return null;

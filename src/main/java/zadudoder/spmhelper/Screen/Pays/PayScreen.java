@@ -291,7 +291,7 @@ public class PayScreen extends Screen {
     }
 
     private void toggleCards() {
-        if (!SPmHelperConfig.get().getCards().isEmpty()) {
+        if (SPmHelperConfig.get().getCards() != null || !SPmHelperConfig.get().getCards().isEmpty()) {
             cardsExpanded = !cardsExpanded;
             updateCardsVisibility();
         } else {

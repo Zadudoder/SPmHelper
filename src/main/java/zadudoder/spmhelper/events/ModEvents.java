@@ -68,24 +68,20 @@ public class ModEvents {
                         }
                     } else if (firstLine.contains("#SPmHCall")) {
                         Service service = null;
-                        String secondLine = frontText.getMessage(1, false).getString().replaceAll(" ", "");
+                        String secondLine = frontText.getMessage(1, false).getString().replaceAll(" ", "").toLowerCase();
                         switch (secondLine) {
-                            case "Детектив" -> service = Service.DETECTIVE;
-                            case "Детектива" -> service = Service.DETECTIVE;
-                            case "ФСБ" -> service = Service.FSB;
-                            case "Банкир" -> service = Service.BANKER;
-                            case "Банкира" -> service = Service.BANKER;
-                            case "Гид" -> service = Service.GUIDE;
-                            case "Гида" -> service = Service.GUIDE;
+                            case "детектив", "детектива" -> service = Service.DETECTIVE;
+                            case "фсб" -> service = Service.FSB;
+                            case "банкир", "банкира" -> service = Service.BANKER;
+                            case "гид", "гида" -> service = Service.GUIDE;
                         }
-                        if (service == null || world.isClient) {
+                        if (service == null) {
                             return ActionResult.PASS;
                         } else {
                             String comment = frontText.getMessage(2, false).getString() + ' ' + frontText.getMessage(3, false).getString();
                             Service finalService = service;
-                            MinecraftClient.getInstance().send(() -> {
-                                MinecraftClient.getInstance().setScreen(new ServiceAcceptScreen(finalService, comment, player));
-                            });
+                            MinecraftClient.getInstance().
+                                    execute(() -> MinecraftClient.getInstance().setScreen(new ServiceAcceptScreen(finalService, comment, player)));
                             return ActionResult.SUCCESS;
                         }
                     } else if (firstLine.toLowerCase().contains("оплата по карте")) {
