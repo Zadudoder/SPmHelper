@@ -20,6 +20,7 @@ import zadudoder.spmhelper.Screen.MainScreen;
 import zadudoder.spmhelper.Screen.Map.MapScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
+import zadudoder.spmhelper.events.Commands;
 import zadudoder.spmhelper.events.ModEvents;
 import zadudoder.spmhelper.utils.SoundManager;
 
@@ -94,31 +95,5 @@ public class SPmHelperClient implements ClientModInitializer {
         });
     }
 
-    private void registerParticleRendering() {
-        // Статическая тропинка
-        WorldRenderEvents.AFTER_ENTITIES.register(context -> {
-            if (SPmHelperConfig.get().particlesEnabled && MinecraftClient.getInstance().player != null) {
-                for (int x = 0; x < 10; x++) {
-                    MinecraftClient.getInstance().world.addParticle(
-                            ParticleTypes.ELECTRIC_SPARK,
-                            100 + x, 64, 200,
-                            0, 0, 0
-                    );
-                }
-            }
-        });
-    }
 
-    // Метод для ручного создания частиц в других частях кода
-    public static void spawnParticle(ParticleEffect type, double x, double y, double z) {
-        if (MinecraftClient.getInstance().world != null && SPmHelperConfig.get().particlesEnabled) {
-            MinecraftClient.getInstance().world.addParticle(
-                    type,
-                    x, y, z,
-                    0, 0, 0
-            );
-        }
-    }
-    // Пример того что выше
-    // SPmHelperClient.spawnParticle(ParticleTypes.HEART, player.getX(), player.getY(), player.getZ());
 }
