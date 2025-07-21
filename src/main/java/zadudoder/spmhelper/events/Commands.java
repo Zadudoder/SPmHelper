@@ -23,7 +23,13 @@ public class Commands {
             var mainCommand = ClientCommandManager.literal("spmhelper")
                     .then(ClientCommandManager.literal("auth")
                             .executes(context -> {
-                                SPmHelperApi.startAuthProcess(context.getSource().getPlayer());
+                                SPmHelperApi.getAuthStatus().thenAccept(status -> {
+                                    if (status == 200) {
+                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.status_FeedBackMessageCase200"));
+                                    } else {
+                                        SPmHelperApi.startAuthProcess(context.getSource().getPlayer());
+                                    }
+                                });
                                 return 1;
                             })
                     )
