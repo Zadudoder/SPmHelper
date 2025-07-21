@@ -142,7 +142,9 @@
   "text.spmhelper.auth_FeedBackMessage": "§a[SPmHelper]: Token activated! New log in not needed.",
 
   "text.spmhelper.status_FeedBackMessageCase200": "§a[SPmHelper]: Token active",
+  "text.spmhelper.status_FeedBackMessageCase400": "§c[SPmHelper]: CHANGE TEXT",
   "text.spmhelper.status_FeedBackMessageCase401": "§c[SPmHelper]: Token invalid or doesn't exist",
+  "text.spmhelper.status_FeedBackMessageCase500": "§c[SPmHelper]: CHANGE TEXT",
   "text.spmhelper.status_FeedBackMessageCaseDefault": "§c[SPmHelper]: API error: ",
 
   "text.spmhelper.notEnteredAmount": "§c[SPmHelper]: You didn't enter the amount",

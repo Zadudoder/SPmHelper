@@ -54,8 +54,8 @@ public class ServiceAcceptScreen extends Screen {
             String world = Misc.getWorldName(sender.getWorld());
             String coordinates = sendCoordinates && playerPos != null ? "**" + sender.getBlockPos().getX() + " " + sender.getBlockPos().getY() + " " + sender.getBlockPos().getZ() + ' ' + world + "**" : " ";
             SPmHelperApi.makeCall(service, coordinates, comment)
-                    .thenAccept(success -> MinecraftClient.getInstance().execute(() -> {
-                        if (success) {
+                    .thenAccept(statusCode -> MinecraftClient.getInstance().execute(() -> {
+                        if (statusCode == 200) {
                             sender.sendMessage(Text.translatable("text.spmhelper.calls_callServiceChat_WasCalled_" + service.name()));
                         } else {
                             sender.sendMessage(Text.of(Text.translatable("text.spmhelper.calls_callServiceChat_ErrorSendingCall").getString()));

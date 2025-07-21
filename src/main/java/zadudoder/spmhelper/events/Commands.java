@@ -16,18 +16,15 @@ import zadudoder.spmhelper.utils.types.Service;
 
 public class Commands {
     private static final boolean hasToken = SPmHelperConfig.get().getAPI_TOKEN() != null && !SPmHelperConfig.get().getAPI_TOKEN().isEmpty();
+
     public static void registerCommands() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             // Главная команда
             var mainCommand = ClientCommandManager.literal("spmhelper")
                     .then(ClientCommandManager.literal("auth")
                             .executes(context -> {
-                                if (!hasToken) {
-                                    SPmHelperApi.startAuthProcess(context.getSource().getPlayer());
-                                    return 1;
-                                }
-                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.auth_FeedBackMessage"));
-                                return 0;
+                                SPmHelperApi.startAuthProcess(context.getSource().getPlayer());
+                                return 1;
                             })
                     )
                     .then(ClientCommandManager.literal("status")
@@ -35,7 +32,9 @@ public class Commands {
                                 SPmHelperApi.getAuthStatus().thenAccept(status -> {
                                     String message = switch (status) {
                                         case 200 -> "text.spmhelper.status_FeedBackMessageCase200";
+                                        case 400 -> "text.spmhelper.status_FeedBackMessageCase400";
                                         case 401 -> "text.spmhelper.status_FeedBackMessageCase401";
+                                        case 500 -> "text.spmhelper.status_FeedBackMessageCase500";
                                         default -> "text.spmhelper.status_FeedBackMessageCaseDefault" + status;
                                     };
                                     context.getSource().sendFeedback(Text.translatable(message));

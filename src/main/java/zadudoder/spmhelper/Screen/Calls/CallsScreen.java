@@ -158,8 +158,8 @@ public class CallsScreen extends Screen {
         };
 
         SPmHelperApi.makeCall(serviceType, coordinates, comment)
-                .thenAccept(success -> MinecraftClient.getInstance().execute(() -> {
-                    if (success) {
+                .thenAccept(statusCode -> MinecraftClient.getInstance().execute(() -> {
+                    if (statusCode == 200) {
                         setStatus(Text.translatable("text.spmhelper.calls_callService_WasCalled_" + serviceType.name()).getString(), 0x55FF55);
                         updateButtonsState();
                     } else {

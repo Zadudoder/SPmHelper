@@ -48,10 +48,10 @@ public class SPmHelperApi {
 
     }
 
-    public static CompletableFuture<Boolean> makeCall(Service service, String coordinates, String comment) {
+    public static CompletableFuture<Integer> makeCall(Service service, String coordinates, String comment) {
         String token = SPmHelperConfig.get().getAPI_TOKEN();
         if (token == null || token.isEmpty()) {
-            return CompletableFuture.completedFuture(false);
+            return CompletableFuture.completedFuture(400);
         }
 
         JsonObject json = new JsonObject();
@@ -67,18 +67,8 @@ public class SPmHelperApi {
                 .build();
 
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(response -> {
-                    if (response.statusCode() == 200) {
-                        return true;
-                    } else {
-                        System.err.println("Call failed: " + response.body());
-                        return false;
-                    }
-                })
-                .exceptionally(e -> {
-                    System.err.println("Call error: " + e.getMessage());
-                    return false;
-                });
+                .thenApply(HttpResponse::statusCode)
+                .exceptionally(e -> 400);
     }
 
     public static CompletableFuture<Integer> getAuthStatus() {
