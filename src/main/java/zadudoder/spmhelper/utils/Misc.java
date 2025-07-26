@@ -7,16 +7,18 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.multi.GenericMultipleBarcodeReader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.util.ScreenshotRecorder;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
 import zadudoder.spmhelper.utils.types.BranchCoords;
 import zadudoder.spmhelper.utils.types.HubBranch;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.nio.ByteBuffer;
 import java.util.*;
 
 
@@ -105,10 +107,11 @@ public class Misc {
         if (client.player == null) {
             return;
         }
-        NativeImage screenshot;
+        BufferedImage screenshot;
         try {
             System.out.println("1. Захват экрана");
-            screenshot = ScreenshotRecorder.takeScreenshot(client.getFramebuffer());
+            screenshot = captureScreen();
+
             if (screenshot == null) {
                 client.player.sendMessage(Text.of("§cНе удалось сделать скриншот"), false);
                 return;
@@ -116,22 +119,7 @@ public class Misc {
         } catch (Exception ex) {
             return;
         }
-
-        System.out.println("2. Декодирование QR-кода");
-        BufferedImage bufferedImage = new BufferedImage(
-                screenshot.getWidth(),
-                screenshot.getHeight(),
-                BufferedImage.TYPE_INT_RGB
-        );
-
-        for (int y = 0; y < screenshot.getHeight(); y++) {
-            for (int x = 0; x < screenshot.getWidth(); x++) {
-                int argb = screenshot.getColor(x, y);
-                int rgb = (argb & 0x00FFFFFF) | ((argb >> 24) << 24);
-                bufferedImage.setRGB(x, screenshot.getHeight() - 1 - y, rgb);
-            }
-        }
-        String result = decodeQRCode(bufferedImage);
+        String result = decodeQRCode(screenshot);
         if (result == null) {
             client.player.sendMessage(Text.of("§cНе удалось отсканировать QR-CODE"), false);
             return;
@@ -143,6 +131,29 @@ public class Misc {
                         ))
         );
     }
+
+    private static BufferedImage captureScreen() {
+        try {
+            GLFW.glfwPollEvents();
+            int width = MinecraftClient.getInstance().getWindow().getWidth();
+            int height = MinecraftClient.getInstance().getWindow().getHeight();
+
+            BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+
+            ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 4);
+            GLFW.glfwGetFramebufferSize(MinecraftClient.getInstance().getWindow().getHandle(),
+                    new int[1], new int[1]);
+            GL11.glReadPixels(0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+
+            buffer.asIntBuffer().get(pixels);
+            return image;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     private static String decodeQRCode(BufferedImage image) {
         Map<DecodeHintType, Object> hints = new EnumMap<>(DecodeHintType.class);
