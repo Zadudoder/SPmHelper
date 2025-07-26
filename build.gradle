@@ -39,6 +39,8 @@ dependencies {
     modApi "com.terraformersmc:modmenu:${project.mod_menu_version}"
     modImplementation "com.googlecode.soundlibs:tritonus-share:0.3.7.4"
     include "com.googlecode.soundlibs:tritonus-share:0.3.7.4"
+    include implementation("com.google.zxing:core:3.5.1")
+    include implementation("com.google.zxing:javase:3.5.1")
 }
 
 processResources {

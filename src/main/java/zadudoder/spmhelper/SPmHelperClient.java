@@ -7,12 +7,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 import zadudoder.spmhelper.Screen.Calls.CallsScreen;
 import zadudoder.spmhelper.Screen.Laws.LawsScreen;
@@ -20,8 +16,8 @@ import zadudoder.spmhelper.Screen.MainScreen;
 import zadudoder.spmhelper.Screen.Map.MapScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
-import zadudoder.spmhelper.events.Commands;
 import zadudoder.spmhelper.events.ModEvents;
+import zadudoder.spmhelper.utils.Misc;
 import zadudoder.spmhelper.utils.SoundManager;
 
 @Environment(EnvType.CLIENT)
@@ -31,6 +27,7 @@ public class SPmHelperClient implements ClientModInitializer {
     private static KeyBinding keyOpenPayScreen;
     private static KeyBinding keyOpenMapScreen;
     private static KeyBinding keyOpenLawsScreen;
+    private static KeyBinding keyScanQrCode;
 
 
     @Override
@@ -75,6 +72,12 @@ public class SPmHelperClient implements ClientModInitializer {
                 GLFW.GLFW_KEY_L,
                 "category.spmhelper"
         ));
+
+        keyScanQrCode = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.spmhelper.scan_qr_code",
+                GLFW.GLFW_KEY_R,
+                "category.spmhelper"
+        ));
     }
 
     private void registerKeyHandlers() {
@@ -90,6 +93,8 @@ public class SPmHelperClient implements ClientModInitializer {
                     MinecraftClient.getInstance().setScreen(new MapScreen());
                 } else if (keyOpenLawsScreen.wasPressed()) {
                     MinecraftClient.getInstance().setScreen(new LawsScreen());
+                } else if (keyScanQrCode.wasPressed()) {
+                    Misc.ScanQrCode(MinecraftClient.getInstance());
                 }
             }
         });
