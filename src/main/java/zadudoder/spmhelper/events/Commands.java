@@ -40,7 +40,6 @@ public class Commands {
                                         case 200 -> "text.spmhelper.status_FeedBackMessageCase200";
                                         case 400 -> "text.spmhelper.status_FeedBackMessageCase400";
                                         case 401 -> "text.spmhelper.status_FeedBackMessageCase401";
-                                        case 500 -> "text.spmhelper.status_FeedBackMessageCase500";
                                         default -> "text.spmhelper.status_FeedBackMessageCaseDefault" + status;
                                     };
                                     context.getSource().sendFeedback(Text.translatable(message));

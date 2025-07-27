@@ -35,6 +35,6 @@ public class ModEvents {
         BlockClickHandler.registerBlockClickHandler();
         ChatEventHandler.registerChatEventHandler();
         Commands.registerCommands();
-        ParticleManager.registerParticleRendering();
+        // ParticleManager.registerParticleRendering();
     }
 }

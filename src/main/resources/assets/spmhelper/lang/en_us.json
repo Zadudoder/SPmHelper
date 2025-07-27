@@ -6,6 +6,7 @@
   "key.spmhelper.open_pay_screen": "Open payment menu",
   "key.spmhelper.open_map_screen": "Open map",
   "key.spmhelper.open_laws_screen": "Open laws",
+  "key.spmhelper.scan_qr_code": "Scan QR code",
   "text.spmhelper.config.mainCategory": "Main mod settings",
   "text.spmhelper.config.navCategory": "SPmHelperNav settings",
 
@@ -139,13 +140,12 @@
   "text.spmhelper.updateMod_message_betweenPart": ". New version: ",
   "text.spmhelper.updateMod_message_lastPart": ". Click here to go to Modrinth. ",
 
-  "text.spmhelper.auth_FeedBackMessage": "§a[SPmHelper]: Token activated! New log in not needed.",
+  "text.spmhelper.auth_FeedBackMessage": "§a[SPmHelper]: Token is active! No need for new authorization.",
+  "text.spmhelper.status_FeedBackMessageCase200": "§a[SPmHelper]: Token is working",
+  "text.spmhelper.status_FeedBackMessageCase400": "§c[SPmHelper]: Token is invalid or missing",
+  "text.spmhelper.status_FeedBackMessageCase401": "§c[SPmHelper]: Token is missing.",
+  "text.spmhelper.status_FeedBackMessageCaseDefault": "§c[SPmHelper]: API Error: ",
 
-  "text.spmhelper.status_FeedBackMessageCase200": "§a[SPmHelper]: Token active",
-  "text.spmhelper.status_FeedBackMessageCase400": "§c[SPmHelper]: CHANGE TEXT",
-  "text.spmhelper.status_FeedBackMessageCase401": "§c[SPmHelper]: Token invalid or doesn't exist",
-  "text.spmhelper.status_FeedBackMessageCase500": "§c[SPmHelper]: CHANGE TEXT",
-  "text.spmhelper.status_FeedBackMessageCaseDefault": "§c[SPmHelper]: API error: ",
 
   "text.spmhelper.notEnteredAmount": "§c[SPmHelper]: You didn't enter the amount",
   "text.spmhelper.notEnteredNickOrCardNum": "§c[SPmHelper]: You didn't enter a nickname or card number",
@@ -159,6 +159,17 @@
   "text.spmhelper.DoYouWantCall_banker": "Confirmation of banker's call",
   "text.spmhelper.DoYouWantCall_detective": "Confirmation of the detective's call",
   "text.spmhelper.DoYouWantCall_fsb": "Confirmation of FSB call",
+
+  "text.spmhelper.followTheLink": "§aProceed",
+  "text.spmhelper.cancel": "§cCancel",
+  "text.spmhelper.AcceptLinkClick": "Do you want to visit this link:",
+  "text.spmhelper.FailedOpenLink": "[QR Scanner]: §cFailed to open link",
+  "text.spmhelper.FailedTakeScreenshot": "[QR Scanner]: §cFailed to capture screenshot",
+  "text.spmhelper.foundLink": "[QR Scanner]: §aLink found: %s",
+  "text.spmhelper.QRCodeNotFound": "[QR Scanner]: §cQR code not found",
+  "text.spmhelper.error": "[QR Scanner]: §cError: %s",
+  "text.spmhelper.qrscanner.hover_tip": "§eClick to open link",
+
 
   "text.spmhelper.branch_name.red": "Red",
   "text.spmhelper.branch_name.blue": "Blue",

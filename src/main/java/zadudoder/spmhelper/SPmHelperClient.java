@@ -38,8 +38,6 @@ public class SPmHelperClient implements ClientModInitializer {
         registerKeyHandlers();
         SoundManager.initialize();
         ModEvents.registerEvents();
-
-        //registerParticleRendering();
     }
 
     private void registerKeyBindings() {
@@ -63,13 +61,13 @@ public class SPmHelperClient implements ClientModInitializer {
 
         keyOpenMapScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.spmhelper.open_map_screen",
-                GLFW.GLFW_KEY_M,
+                GLFW.GLFW_FALSE,
                 "category.spmhelper"
         ));
 
         keyOpenLawsScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.spmhelper.open_laws_screen",
-                GLFW.GLFW_KEY_L,
+                GLFW.GLFW_FALSE,
                 "category.spmhelper"
         ));
 
@@ -99,6 +97,5 @@ public class SPmHelperClient implements ClientModInitializer {
             }
         });
     }
-
 
 }
