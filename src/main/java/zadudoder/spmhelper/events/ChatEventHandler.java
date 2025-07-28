@@ -9,6 +9,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import zadudoder.spmhelper.SPmHelper;
 import zadudoder.spmhelper.Screen.Pays.AddCardScreen;
+import zadudoder.spmhelper.TutorialManager;
 import zadudoder.spmhelper.utils.Misc;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 
@@ -49,6 +50,10 @@ public class ChatEventHandler {
                 }
 
             });
+        });
+
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            TutorialManager.stopTutorial();
         });
     }
 

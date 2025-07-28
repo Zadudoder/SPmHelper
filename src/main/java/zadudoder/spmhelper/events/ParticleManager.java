@@ -6,6 +6,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zadudoder.spmhelper.TutorialManager;
+import zadudoder.spmhelper.utils.Misc;
 
 public class ParticleManager {
     public static void registerParticleManager() {
@@ -14,28 +15,36 @@ public class ParticleManager {
                 return;
             }
             PlayerEntity player = client.player;
+            if (player == null) {
+                return;
+            }
             World world = player.getWorld();
+
             BlockPos deletePos = null;
             for (int index = 0; index < TutorialManager.checkpoints.size(); index++) {
                 BlockPos checkpointPosition = TutorialManager.checkpoints.get(index).pos;
                 world.addParticle(
                         ParticleTypes.FLAME,
                         checkpointPosition.getX(), checkpointPosition.getY(), checkpointPosition.getZ(),
-                        5, 0.2, 0.2
+                        0, 0.1, 0
                 );
-                if (player.getBlockPos() == checkpointPosition) {
+                if (Misc.getDistance(player.getBlockPos(), checkpointPosition) <= 1) {
                     deletePos = checkpointPosition;
                 }
             }
             if (deletePos == null) {
                 return;
             }
-            while (TutorialManager.checkpoints.getFirst().pos != deletePos) {
-                Runnable action = TutorialManager.checkpoints.getFirst().action;
-                TutorialManager.checkpoints.remove(0);
-                if (action != null) {
-                    action.run();
-                }
+            while (!TutorialManager.checkpoints.getFirst().pos.toCenterPos().equals(deletePos.toCenterPos())) {
+                TutorialManager.checkpoints.removeFirst();
+            }
+            Runnable action = TutorialManager.checkpoints.getFirst().action;
+            TutorialManager.checkpoints.removeFirst();
+            if (action != null) {
+                action.run();
+            }
+            if (TutorialManager.checkpoints.isEmpty()) {
+                TutorialManager.stopTutorial();
             }
         });
     }

@@ -92,6 +92,13 @@ public class Misc {
         };
         return name;
     }
+
+    public static int getDistance(BlockPos pos1, BlockPos pos2) {
+        double distanceX = pos1.getX() - pos2.getX();
+        double distanceY = pos1.getY() - pos2.getY();
+        double distanceZ = pos1.getZ() - pos2.getZ();
+        return (int) Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
+    }
 }
 
 /*
