@@ -6,7 +6,6 @@ import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import zadudoder.spmhelper.TutorialManager;
 import zadudoder.spmhelper.utils.Misc;
 
 public class ParticleManager {

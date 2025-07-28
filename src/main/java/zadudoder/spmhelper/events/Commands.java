@@ -10,7 +10,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import zadudoder.spmhelper.Screen.Calls.ServiceAcceptScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
-import zadudoder.spmhelper.TutorialManager;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 import zadudoder.spmhelper.utils.types.Service;

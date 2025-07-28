@@ -1,4 +1,4 @@
-package zadudoder.spmhelper;
+package zadudoder.spmhelper.events;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
