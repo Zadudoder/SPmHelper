@@ -6,6 +6,7 @@
   "key.spmhelper.open_pay_screen": "Открыть меню оплаты",
   "key.spmhelper.open_map_screen": "Открыть карту",
   "key.spmhelper.open_laws_screen": "Открыть законы",
+  "key.spmhelper.scan_qr_code": "Сканировать QR код",
   "text.spmhelper.config.mainCategory": "Основные настройки мода",
   "text.spmhelper.config.navCategory": "Настройки SPmHelperNav",
 
@@ -140,8 +141,10 @@
 
   "text.spmhelper.auth_FeedBackMessage": "§a[SPmHelper]: Токен активен! Новая авторизация не нужна.",
   "text.spmhelper.status_FeedBackMessageCase200": "§a[SPmHelper]: Токен работает",
-  "text.spmhelper.status_FeedBackMessageCase401": "§c[SPmHelper]: Токен недействителен или отсутсвует",
+  "text.spmhelper.status_FeedBackMessageCase400": "§c[SPmHelper]: Токен недействителен или отсутсвует",
+  "text.spmhelper.status_FeedBackMessageCase401": "§c[SPmHelper]: Токен отсутствует.",
   "text.spmhelper.status_FeedBackMessageCaseDefault": "§c[SPmHelper]: Ошибка API: ",
+
 
   "text.spmhelper.notEnteredAmount": "§c[SPmHelper]: Вы не ввели сумму",
   "text.spmhelper.notEnteredNickOrCardNum": "§c[SPmHelper]: Вы не ввели ник или номер карты",
@@ -155,6 +158,16 @@
   "text.spmhelper.DoYouWantCall_banker": "Подтверждение вызова банкира",
   "text.spmhelper.DoYouWantCall_detective": "Подтверждение вызова детектива",
   "text.spmhelper.DoYouWantCall_fsb": "Подтверждение вызова ФСБ",
+
+  "text.spmhelper.followTheLink": "§aПерейти",
+  "text.spmhelper.cancel": "§cОтменить",
+  "text.spmhelper.AcceptLinkClick": "Вы хотите перейти по ссылке:",
+  "text.spmhelper.FailedOpenLink": "§c[SPmHelper]: Не удалось открыть ссылку",
+  "text.spmhelper.FailedTakeScreenshot": "§c[SPmHelper]: Не удалось сделать скриншот",
+  "text.spmhelper.foundLink": "§a[SPmHelper]: Найдена ссылка: §a%s",
+  "text.spmhelper.QRCodeNotFound": "§c[SPmHelper]: QR-код не найден",
+  "text.spmhelper.error": "§c[SPmHelper]: Ошибка: %s",
+  "text.spmhelper.qrscanner.hover_tip": "§eНажмите, чтобы открыть ссылку",
 
   "text.spmhelper.branch_name.red": "Красная",
   "text.spmhelper.branch_name.blue": "Синяя",
