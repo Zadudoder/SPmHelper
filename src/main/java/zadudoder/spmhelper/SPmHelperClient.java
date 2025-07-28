@@ -17,7 +17,7 @@ import zadudoder.spmhelper.Screen.Map.MapScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.events.ModEvents;
-import zadudoder.spmhelper.utils.Misc;
+import zadudoder.spmhelper.utils.QRCodeScanner;
 import zadudoder.spmhelper.utils.SoundManager;
 
 @Environment(EnvType.CLIENT)
@@ -94,7 +94,7 @@ public class SPmHelperClient implements ClientModInitializer {
                 } else if (keyOpenLawsScreen.wasPressed()) {
                     MinecraftClient.getInstance().setScreen(new LawsScreen());
                 } else if (keyScanQrCode.wasPressed()) {
-                    Misc.ScanQrCode(MinecraftClient.getInstance());
+                    QRCodeScanner.ScanQrCode(MinecraftClient.getInstance());
                 }
             }
         });

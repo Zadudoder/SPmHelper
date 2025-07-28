@@ -10,6 +10,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import zadudoder.spmhelper.Screen.Calls.ServiceAcceptScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
+import zadudoder.spmhelper.TutorialManager;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 import zadudoder.spmhelper.utils.types.Service;
@@ -77,6 +78,13 @@ public class Commands {
                         return 1;
                     });
 
+            var tutorialCommand = ClientCommandManager.literal("tutorial")
+                    .executes(context -> {
+                        TutorialManager.startTutorial();
+                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.startTutorialMessage"));
+                        return 1;
+                    });
+
             var deteciveCallCommand = createCallCommand("detective", Service.DETECTIVE);
             var fsbCallCommand = createCallCommand("fsb", Service.FSB);
             var bankerCallCommand = createCallCommand("banker", Service.BANKER);
@@ -86,6 +94,7 @@ public class Commands {
             dispatcher.register(aliasMainCommand);
 
             dispatcher.register(payCommand);
+            dispatcher.register(tutorialCommand);
 
             dispatcher.register(deteciveCallCommand);
             dispatcher.register(fsbCallCommand);
