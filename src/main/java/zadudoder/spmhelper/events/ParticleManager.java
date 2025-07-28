@@ -2,6 +2,7 @@ package zadudoder.spmhelper.events;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -23,8 +24,12 @@ public class ParticleManager {
             BlockPos deletePos = null;
             for (int index = 0; index < TutorialManager.checkpoints.size(); index++) {
                 BlockPos checkpointPosition = TutorialManager.checkpoints.get(index).pos;
+                ParticleEffect particleEffect = ParticleTypes.CRIT;
+                if (TutorialManager.checkpoints.get(index).action != null) {
+                    particleEffect = ParticleTypes.FLAME;
+                }
                 world.addParticle(
-                        ParticleTypes.FLAME,
+                        particleEffect,
                         checkpointPosition.getX(), checkpointPosition.getY(), checkpointPosition.getZ(),
                         0, 0.1, 0
                 );

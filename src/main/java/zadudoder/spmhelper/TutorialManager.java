@@ -23,6 +23,7 @@ public class TutorialManager {
 
     private static void startBankTutorial() {
         checkpoints.add(new TutorialPoint(11, 240, 25, null));
+        checkpoints.add(new TutorialPoint(9, 240, 25, null));
         checkpoints.add(new TutorialPoint(7, 240, 33, TutorialManager::startBankAction));
     }
 
