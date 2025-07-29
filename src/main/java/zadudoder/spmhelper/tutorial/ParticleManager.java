@@ -1,4 +1,4 @@
-package zadudoder.spmhelper.events;
+package zadudoder.spmhelper.tutorial;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,13 +23,13 @@ public class ParticleManager {
             BlockPos deletePos = null;
             for (int index = 0; index < TutorialManager.checkpoints.size(); index++) {
                 BlockPos checkpointPosition = TutorialManager.checkpoints.get(index).pos;
-                ParticleEffect particleEffect = ParticleTypes.CRIT;
-                if (TutorialManager.checkpoints.get(index).action != null) {
+                ParticleEffect particleEffect = ParticleTypes.END_ROD;
+                if (TutorialManager.checkpoints.get(index).last) {
                     particleEffect = ParticleTypes.FLAME;
                 }
                 world.addParticle(
                         particleEffect,
-                        checkpointPosition.getX(), checkpointPosition.getY(), checkpointPosition.getZ(),
+                        checkpointPosition.getX() + 0.5, checkpointPosition.getY(), checkpointPosition.getZ() + 0.5,
                         0, 0.1, 0
                 );
                 if (Misc.getDistance(player.getBlockPos(), checkpointPosition) <= 1) {

@@ -14,7 +14,8 @@ import java.util.List;
 public class Misc {
     public static List<String> ALLOWED_SERVERS = Arrays.asList(
             "spm.spworlds.org",
-            "spm.spworlds.ru"
+            "spm.spworlds.ru",
+            "sp.spworlds.ru" // Убрать в конечной версии, для теста, пока у Zadudoderr есть проходка
     );
 
     public static boolean isNumeric(String str) {

@@ -139,6 +139,9 @@
   "text.spmhelper.updateMod_message_betweenPart": ". Доступна новая: ",
   "text.spmhelper.updateMod_message_lastPart": ". Нажмите на текст, чтобы перейти на Modrinth. ",
 
+  "text.spmhelper.addCardOpenScreen": "§a[SPmHelper]: Нажмите на текст, чтобы добавить карту %s",
+  "text.spmhelper.addCardOpenScreen.hover_tip": "Нажмите, чтобы перейти к добавлению карты %s",
+
   "text.spmhelper.auth_FeedBackMessage": "§a[SPmHelper]: Токен активен! Новая авторизация не нужна.",
   "text.spmhelper.status_FeedBackMessageCase200": "§a[SPmHelper]: Токен работает",
   "text.spmhelper.status_FeedBackMessageCase400": "§c[SPmHelper]: Токен недействителен или отсутсвует",

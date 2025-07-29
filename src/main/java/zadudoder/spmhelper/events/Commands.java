@@ -9,8 +9,10 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import zadudoder.spmhelper.Screen.Calls.ServiceAcceptScreen;
+import zadudoder.spmhelper.Screen.Pays.AddCardScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
+import zadudoder.spmhelper.tutorial.TutorialManager;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 import zadudoder.spmhelper.utils.types.Service;
 
@@ -46,6 +48,20 @@ public class Commands {
                                 });
                                 return 1;
                             })
+                    ).then(ClientCommandManager.literal("addcard")
+                            .then(ClientCommandManager.argument("id", StringArgumentType.string())
+                                    .then(ClientCommandManager.argument("token", StringArgumentType.string())
+                                            .then(ClientCommandManager.argument("name", StringArgumentType.string())
+                                                    .executes(context -> {
+                                                        String id = StringArgumentType.getString(context, "id");
+                                                        String token = StringArgumentType.getString(context, "token");
+                                                        String name = StringArgumentType.getString(context, "name");
+
+                                                        MinecraftClient.getInstance().send(() -> {
+                                                            MinecraftClient.getInstance().setScreen(new AddCardScreen(id, token, name));
+                                                        });
+                                                        return 1;
+                                                    }))))
                     );
 
             var aliasMainCommand = ClientCommandManager.literal("spmh")

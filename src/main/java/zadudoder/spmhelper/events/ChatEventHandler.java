@@ -5,10 +5,12 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.ClickEvent;
+import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import zadudoder.spmhelper.SPmHelper;
 import zadudoder.spmhelper.Screen.Pays.AddCardScreen;
+import zadudoder.spmhelper.tutorial.TutorialManager;
 import zadudoder.spmhelper.utils.Misc;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 
@@ -16,14 +18,30 @@ public class ChatEventHandler {
 
     public static void registerChatEventHandler() {
         ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
-            if (message.getString().contains("Управление картой [Копир. токен] [Копир. айди]") && message.getSiblings().get(0).getSiblings().get(0).getStyle().getClickEvent().getAction() == ClickEvent.Action.COPY_TO_CLIPBOARD) {
+            if (message.getString().contains("Управление картой [Копир. токен] [Копир. айди]") &&
+                    message.getSiblings().get(0).getSiblings().get(0).getStyle().getClickEvent().getAction() == ClickEvent.Action.COPY_TO_CLIPBOARD) {
+
                 String token = message.getSiblings().get(0).getSiblings().get(0).getStyle().getClickEvent().getValue();
                 String id = message.getSiblings().get(0).getSiblings().get(1).getStyle().getClickEvent().getValue();
                 String name = message.getString().substring(1);
                 name = name.substring(0, name.indexOf(']'));
                 String finalName = name;
+
                 MinecraftClient.getInstance().
                         execute(() -> MinecraftClient.getInstance().setScreen(new AddCardScreen(id, token, finalName)));
+
+                Text addCard = Text.translatable("text.spmhelper.addCardOpenScreen", finalName)
+                        .styled(style -> style
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                                        String.format("/spmhelper addcard %s %s %s", id, token, finalName)))
+                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                                        Text.translatable("text.spmhelper.addCardOpenScreen.hover_tip", finalName)))
+                        );
+
+                MinecraftClient.getInstance().player.sendMessage(
+                        Text.translatable("", addCard),
+                        false
+                );
             }
         });
 
