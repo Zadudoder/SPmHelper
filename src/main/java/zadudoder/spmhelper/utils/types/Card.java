@@ -11,9 +11,10 @@ import zadudoder.spmhelper.utils.SPWorldsApi;
 public class Card {
     public String id;
     public String token;
-    public int number;
+    public String number;
 
-    public Card() {}
+    public Card() {
+    }
 
     public Card(String id, String token) {
         this.id = id;
@@ -27,7 +28,7 @@ public class Card {
         } else {
             for (JsonElement card : cards) {
                 if (card.getAsJsonObject().get("id").getAsString().equals(id)) {
-                    this.number = card.getAsJsonObject().get("number").getAsInt();
+                    this.number = card.getAsJsonObject().get("number").getAsString();
                 }
             }
         }
