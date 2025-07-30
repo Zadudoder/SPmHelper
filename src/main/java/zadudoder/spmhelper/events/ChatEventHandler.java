@@ -1,5 +1,6 @@
 package zadudoder.spmhelper.events;
 
+import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -10,6 +11,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import zadudoder.spmhelper.SPmHelper;
 import zadudoder.spmhelper.Screen.Pays.AddCardScreen;
+import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.tutorial.TutorialManager;
 import zadudoder.spmhelper.utils.Misc;
 import zadudoder.spmhelper.utils.SPmHelperApi;
@@ -26,6 +28,11 @@ public class ChatEventHandler {
                 String name = message.getString().substring(1);
                 name = name.substring(0, name.indexOf(']'));
                 String finalName = name;
+
+                MinecraftClient.getInstance().player.sendMessage(
+                        Text.translatable("text.spmhelper.AddCardDontOpenMessage"),
+                        false
+                );
 
                 MinecraftClient.getInstance().
                         execute(() -> MinecraftClient.getInstance().setScreen(new AddCardScreen(id, token, finalName)));
@@ -63,6 +70,12 @@ public class ChatEventHandler {
                                         .append(Text.literal(lastVersion).formatted(Formatting.GREEN))
                                         .append(Text.translatable("text.spmhelper.updateMod_message_lastPart"))
                         );
+                    }
+
+                    if (SPmHelperConfig.get().isFirstRun) {
+                        client.player.sendMessage(Text.translatable("text.spmhelper.welcomeMessage"));
+                        SPmHelperConfig.get().isFirstRun = false;
+                        AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
                     }
                 }
 

@@ -18,6 +18,7 @@ public class SPmHelperConfig implements ConfigData {
     public Boolean numberOfCardInComment = false; // true - включено, false - выключено в переводе будет указывать карту куда вы переводите
     public Boolean enableSPmNav = true;
     public Boolean particlesEnabled = true;
+    public Boolean isFirstRun = true;
     public int SPmNavX = 50;
     public int SPmNavY = 2;
     public int SPmNavScale = 100;
