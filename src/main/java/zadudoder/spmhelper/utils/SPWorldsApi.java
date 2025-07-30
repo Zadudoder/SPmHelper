@@ -19,6 +19,20 @@ public class SPWorldsApi {
     private static final HttpClient httpClient = HttpClient.newHttpClient();
     private static final String API_URL = "https://spworlds.ru/api/public/";
 
+    public static int getAuthStatus(String id, String token) {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(API_URL + "card"))
+                    .header("Authorization", getAuthorizationHeader(id, token))
+                    .timeout(Duration.ofSeconds(10))
+                    .build();
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.statusCode();
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
     public static int getBalance(Card card) {
         try {
 
@@ -101,10 +115,10 @@ public class SPWorldsApi {
         }
     }
 
-    public  static BaseCard[] getCards(String nick){
+    public static BaseCard[] getCards(String nick) {
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(API_URL + "accounts/"+nick+"/cards"))
+                    .uri(URI.create(API_URL + "accounts/" + nick + "/cards"))
                     .header("Authorization", getAuthorizationHeader(SPmHelperConfig.get().getMainCard()))
                     .build();
 
@@ -119,6 +133,13 @@ public class SPWorldsApi {
     }
 
     private static String getAuthorizationHeader(Card card) {
+        return "Bearer " + card.getBase64Key();
+    }
+
+    private static String getAuthorizationHeader(String id, String token) {
+        Card card = new Card();
+        card.id = id;
+        card.token = token;
         return "Bearer " + card.getBase64Key();
     }
 }

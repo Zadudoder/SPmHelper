@@ -13,6 +13,7 @@ import zadudoder.spmhelper.Screen.Pays.AddCardScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.tutorial.TutorialManager;
+import zadudoder.spmhelper.utils.SPWorldsApi;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 import zadudoder.spmhelper.utils.types.Service;
 
@@ -56,10 +57,15 @@ public class Commands {
                                                         String id = StringArgumentType.getString(context, "id");
                                                         String token = StringArgumentType.getString(context, "token");
                                                         String name = StringArgumentType.getString(context, "name");
-                                                        
-                                                        MinecraftClient.getInstance().send(() -> {
-                                                            MinecraftClient.getInstance().setScreen(new AddCardScreen(id, token, name));
-                                                        });
+
+                                                        if (SPWorldsApi.getAuthStatus(id, token) == 200) {
+                                                            MinecraftClient.getInstance().send(() -> {
+                                                                MinecraftClient.getInstance().setScreen(new AddCardScreen(id, token, name));
+                                                            });
+                                                        } else {
+                                                            context.getSource().sendFeedback(Text.translatable("text.spmhelper.TokenOrIdIsIncorrect"));
+                                                        }
+
                                                         return 1;
                                                     }))))
                     );
