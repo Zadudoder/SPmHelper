@@ -22,18 +22,21 @@ public class ParticleManager {
 
             BlockPos deletePos = null;
             for (int index = 0; index < TutorialManager.checkpoints.size(); index++) {
-                BlockPos checkpointPosition = TutorialManager.checkpoints.get(index).pos;
+                TutorialPoint checkpoint = TutorialManager.checkpoints.get(index);
+                if (checkpoint.world != world.getRegistryKey()) {
+                    continue;
+                }
                 ParticleEffect particleEffect = ParticleTypes.END_ROD;
-                if (TutorialManager.checkpoints.get(index).last) {
+                if (checkpoint.last) {
                     particleEffect = ParticleTypes.FLAME;
                 }
                 world.addParticle(
                         particleEffect,
-                        checkpointPosition.getX() + 0.5, checkpointPosition.getY(), checkpointPosition.getZ() + 0.5,
+                        checkpoint.pos.getX() + 0.5, checkpoint.pos.getY(), checkpoint.pos.getZ() + 0.5,
                         0, 0.1, 0
                 );
-                if (Misc.getDistance(player.getBlockPos(), checkpointPosition) <= 1) {
-                    deletePos = checkpointPosition;
+                if (Misc.getDistance(player.getBlockPos(), checkpoint.pos) <= 1) {
+                    deletePos = checkpoint.pos;
                 }
             }
             if (deletePos == null) {
