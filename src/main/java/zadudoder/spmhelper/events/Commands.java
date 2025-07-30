@@ -68,6 +68,25 @@ public class Commands {
 
                                                         return 1;
                                                     }))))
+                    ).then(ClientCommandManager.literal("tutorial")
+                            .then(ClientCommandManager.literal("start")
+                                    .executes(context -> {
+                                        TutorialManager.startTutorial();
+                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.startTutorialMessage"));
+                                        return 1;
+                                    }))
+                            .then(ClientCommandManager.literal("stop")
+                                    .executes(context -> {
+                                        TutorialManager.stopTutorial();
+                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.stopTutorialMessage"));
+                                        return 1;
+                                    }))
+                            .then(ClientCommandManager.literal("skip")
+                                    .executes(context -> {
+                                        TutorialManager.skipTutorial();
+                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.skipTutorialMessage"));
+                                        return 1;
+                                    }))
                     );
 
             var aliasMainCommand = ClientCommandManager.literal("spmh")
@@ -76,6 +95,9 @@ public class Commands {
                     )
                     .then(ClientCommandManager.literal("status")
                             .executes(context -> dispatcher.execute("spmhelper status", context.getSource()))
+                    )
+                    .then(ClientCommandManager.literal("tutorial")
+                            .executes(context -> dispatcher.execute("spmhelper tutorial", context.getSource()))
                     );
 
             var payCommand = ClientCommandManager.literal("pay")
@@ -98,25 +120,7 @@ public class Commands {
                         return 1;
                     });
 
-            var tutorialCommand = ClientCommandManager.literal("tutorial")
-                    .then(ClientCommandManager.literal("start")
-                            .executes(context -> {
-                                TutorialManager.startTutorial();
-                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.startTutorialMessage"));
-                                return 1;
-                            }))
-                    .then(ClientCommandManager.literal("stop")
-                            .executes(context -> {
-                                TutorialManager.stopTutorial();
-                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.stopTutorialMessage"));
-                                return 1;
-                            }))
-                    .then(ClientCommandManager.literal("skip")
-                            .executes(context -> {
-                                TutorialManager.skipTutorial();
-                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.skipTutorialMessage"));
-                                return 1;
-                            }));
+
 
             var deteciveCallCommand = createCallCommand("detective", Service.DETECTIVE);
             var fsbCallCommand = createCallCommand("fsb", Service.FSB);
@@ -127,7 +131,6 @@ public class Commands {
             dispatcher.register(aliasMainCommand);
 
             dispatcher.register(payCommand);
-            dispatcher.register(tutorialCommand);
 
             dispatcher.register(deteciveCallCommand);
             dispatcher.register(fsbCallCommand);
