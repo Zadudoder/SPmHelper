@@ -1,5 +1,7 @@
 {
-  "FisrtSound": {
-    "sounds": ["spmhelper:test"]
+  "start_tutorial_audio": {
+    "sounds": [
+      "spmhelper:start_tutorial_audio"
+    ]
   }
 }

@@ -11,7 +11,7 @@ import zadudoder.spmhelper.SPmHelper;
 
 public class SoundManager {
     MinecraftClient client = MinecraftClient.getInstance();
-    public static final SoundEvent FisrtSound = registerSoundEvent("my_custom_sound");
+    public static final SoundEvent start_tutorial_audio = registerSoundEvent("start_tutorial_audio");
 
     public static void initialize() {
         // Можно добавить инициализацию дополнительных звуков здесь
