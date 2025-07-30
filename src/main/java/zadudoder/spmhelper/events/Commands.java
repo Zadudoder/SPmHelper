@@ -56,7 +56,7 @@ public class Commands {
                                                         String id = StringArgumentType.getString(context, "id");
                                                         String token = StringArgumentType.getString(context, "token");
                                                         String name = StringArgumentType.getString(context, "name");
-
+                                                        
                                                         MinecraftClient.getInstance().send(() -> {
                                                             MinecraftClient.getInstance().setScreen(new AddCardScreen(id, token, name));
                                                         });
@@ -93,11 +93,24 @@ public class Commands {
                     });
 
             var tutorialCommand = ClientCommandManager.literal("tutorial")
-                    .executes(context -> {
-                        TutorialManager.startTutorial();
-                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.startTutorialMessage"));
-                        return 1;
-                    });
+                    .then(ClientCommandManager.literal("start")
+                            .executes(context -> {
+                                TutorialManager.startTutorial();
+                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.startTutorialMessage"));
+                                return 1;
+                            }))
+                    .then(ClientCommandManager.literal("stop")
+                            .executes(context -> {
+                                TutorialManager.stopTutorial();
+                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.stopTutorialMessage"));
+                                return 1;
+                            }))
+                    .then(ClientCommandManager.literal("skip")
+                            .executes(context -> {
+                                TutorialManager.skipTutorial();
+                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.skipTutorialMessage"));
+                                return 1;
+                            }));
 
             var deteciveCallCommand = createCallCommand("detective", Service.DETECTIVE);
             var fsbCallCommand = createCallCommand("fsb", Service.FSB);
