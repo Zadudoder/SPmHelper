@@ -192,6 +192,20 @@ public class TutorialManager {
         checkpoints.add(new TutorialPoint(28, 59, 0, END, null, false));
         checkpoints.add(new TutorialPoint(18, 59, 0, END, null, false));
         checkpoints.add(new TutorialPoint(8, 60, 0, END, null, false));
-        checkpoints.add(new TutorialPoint(3, 61, 0, END, null, true)); // Соо прыгай в энд
+        checkpoints.add(new TutorialPoint(3, 61, 0, END, TutorialManager::EndAction, true)); // Соо прыгай в энд
+    }
+
+    private static void EndAction() {
+        pullText("Прыгайте в портал и бегите к палатке новичков, там, где вы начинали.");
+        goToFSB();
+    }
+
+    private static void goToFSB() {
+        checkpoints.add(new TutorialPoint(11, 81, 25, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(12, 81, 32, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(14, 80, 44, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(16, 80, 52, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(20, 80, 60, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(20, 80, 66, OVERWORLD, null, false));
     }
 }
