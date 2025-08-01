@@ -22,7 +22,9 @@ public class TutorialManager {
 
     public static void stopTutorial() {
         isEnabled = false;
-        checkpoints.clear();
+        if (checkpoints != null) {
+            checkpoints.clear();
+        }
     }
 
     public static void skipTutorial() {

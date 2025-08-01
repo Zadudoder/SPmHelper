@@ -1,13 +1,11 @@
 package zadudoder.spmhelper.mixin;
 
-
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
@@ -31,40 +29,54 @@ public abstract class GameMenuScreenMixin extends ScreenMixin {
 
     @Inject(at = @At("TAIL"), method = "init()V")
     private void init(CallbackInfo info) {
-        if (SPmHelperConfig.get().enableMenuButton) {
-            int buttonWidth = 20;
-            int buttonHeight = 20;
+        if (!SPmHelperConfig.get().enableMenuButton) return;
 
-            for (Element widget : ((GameMenuScreen) (Object) this).children()) {
-                if (widget instanceof ButtonWidget button) {
-                    Text buttonText = button.getMessage();
-                    if (buttonText.getContent() instanceof TranslatableTextContent translatableText &&
-                            translatableText.getKey().equals("menu.modded")) {
+        int buttonWidth = 20;
+        int buttonHeight = 20;
 
-                        int buttonX = button.getX() - buttonWidth - 4;
-                        int buttonY = button.getY();
-
-                        Text tooltipText = Text.translatable("text.spmhelper.current_screen")
-                                .append(Text.translatable("text.spmhelper.screen_type." + SPmHelperConfig.get().defaultScreen.name().toLowerCase()));
-
-                        this.menuButton = ButtonWidget.builder(
-                                        Text.literal(""),
-                                        btn -> openSelectedScreen())
-                                .dimensions(buttonX, buttonY, buttonWidth, buttonHeight)
-                                .tooltip(Tooltip.of(tooltipText))
-                                .build();
-
-                        this.addDrawableChild(menuButton);
-                        break;
-                    }
+        for (Element widget : ((GameMenuScreen) (Object) this).children()) {
+            if (widget instanceof ButtonWidget button) {
+                if (isModsButton(button)) {
+                    createMenuButton(button, buttonWidth, buttonHeight);
+                    break;
                 }
             }
         }
     }
 
     @Unique
-    private void openSelectedScreen() {
-        if (client == null) return;
+    private boolean isModsButton(ButtonWidget button) {
+        Text buttonText = button.getMessage();
+        if (buttonText.getContent() instanceof TranslatableTextContent translatableText) {
+            return translatableText.getKey().equals("menu.modded");
+        }
+        // Резервная проверка для нестандартных серверов
+        String text = buttonText.getString();
+        return text.equals("Моды") || text.equals("Mods");
+    }
+
+    @Unique
+    private void createMenuButton(ButtonWidget referenceButton, int width, int height) {
+        int buttonX = referenceButton.getX() - width - 4;
+        int buttonY = referenceButton.getY();
+
+        Text tooltipText = Text.translatable("text.spmhelper.current_screen")
+                .append(Text.translatable("text.spmhelper.screen_type."
+                        + SPmHelperConfig.get().defaultScreen.name().toLowerCase()));
+
+        this.menuButton = ButtonWidget.builder(
+                        Text.literal(""),
+                        openSelectedScreen())
+                .dimensions(buttonX, buttonY, width, height)
+                .tooltip(Tooltip.of(tooltipText))
+                .build();
+
+        this.addDrawableChild(menuButton);
+    }
+
+    @Unique
+    private ButtonWidget.PressAction openSelectedScreen() {
+        if (this.client == null) return null;
 
         Screen screenToOpen = switch (SPmHelperConfig.get().defaultScreen) {
             case SETTINGS -> new Settings();
@@ -75,23 +87,24 @@ public abstract class GameMenuScreenMixin extends ScreenMixin {
             default -> new MainScreen();
         };
 
-        client.setScreen(screenToOpen);
+        this.client.setScreen(screenToOpen);
+        return null;
     }
 
     @Inject(method = "render", at = @At("TAIL"))
     private void onRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (SPmHelperConfig.get().enableMenuButton) {
-            int iconSize = 16;
-            int x = menuButton.getX() + (menuButton.getWidth() - iconSize) / 2;
-            int y = menuButton.getY() + (menuButton.getHeight() - iconSize) / 2;
-            Identifier BUTTON_ICON = Identifier.of("spmhelper", "gui/bookwithfeather.png");
-            context.drawTexture(
-                    BUTTON_ICON,
-                    x, y,
-                    0, 0,
-                    iconSize, iconSize,
-                    iconSize, iconSize
-            );
-        }
+        if (!SPmHelperConfig.get().enableMenuButton || this.menuButton == null) return;
+
+        int iconSize = 16;
+        int x = menuButton.getX() + (menuButton.getWidth() - iconSize) / 2;
+        int y = menuButton.getY() + (menuButton.getHeight() - iconSize) / 2;
+
+        context.drawTexture(
+                Identifier.of("spmhelper", "gui/bookwithfeather.png"),
+                x, y,
+                0, 0,
+                iconSize, iconSize,
+                iconSize, iconSize
+        );
     }
 }
