@@ -24,13 +24,15 @@ public class TutorialManager {
         isEnabled = false;
         if (checkpoints != null) {
             checkpoints.clear();
-        }
+            pullText("Туториал окончен");
+        } else pullText("Вы не начинали туториал");
     }
 
     public static void skipTutorial() {
         Runnable action = checkpoints.getLast().action;
         checkpoints.clear();
         action.run();
+        pullText("Часть скипнута");
     }
 
     private static void pullText(String text) {
@@ -73,6 +75,7 @@ public class TutorialManager {
         checkpoints.add(new TutorialPoint(-25, 73, -42, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(-25, 72, -49, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(-28, 71, -55, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-27, 71, -59, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(-26, 72, -66, OVERWORLD, TutorialManager::BankAction, true));
     }
 
@@ -209,5 +212,98 @@ public class TutorialManager {
         checkpoints.add(new TutorialPoint(16, 80, 52, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(20, 80, 60, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(20, 80, 66, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(20, 76, 74, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(20, 72, 82, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(16, 71, 91, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(12, 71, 99, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(11, 71, 108, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(4, 71, 110, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(0, 71, 111, OVERWORLD, TutorialManager::FSBAction, true));
+    }
+
+    private static void FSBAction() {
+        pullText("Прыгайте в портал и бегите к палатке новичков, там, где вы начинали.");
+        goToBiblioteka();
+    }
+
+    private static void goToBiblioteka() {
+        checkpoints.add(new TutorialPoint(-1, 71, 110, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-7, 71, 109, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(11, 71, 106, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-14, 72, 108, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-21, 72, 104, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-26, 72, 104, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-34, 72, 104, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-42, 72, 104, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-48, 72, 104, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-53, 72, 104, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-61, 71, 105, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-68, 72, 106, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-75, 73, 107, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-84, 73, 108, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-92, 72, 110, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-99, 71, 111, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-104, 71, 114, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-104, 71, 121, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-106, 71, 125, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-110, 72, 127, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-111, 72, 132, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-112, 72, 138, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-116, 72, 144, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-121, 72, 148, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-126, 72, 149, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-131, 72, 146, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-136, 72, 143, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-136, 71, 135, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-139, 71, 131, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-136, 71, 125, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-136, 72, 119, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-133, 72, 116, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-127, 72, 114, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-120, 72, 115, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-116, 72, 120, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-112, 72, 125, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-109, 72, 127, OVERWORLD, TutorialManager::BibliotekaAction, true));
+    }
+
+    private static void BibliotekaAction() {
+        pullText("Вы посетили библиотеку");
+        goToSpawn();
+    }
+
+    private static void goToSpawn() {
+        checkpoints.add(new TutorialPoint(-105, 71, 124, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-104, 71, 118, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-102, 71, 112, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-96, 72, 110, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-88, 73, 109, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-78, 73, 107, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-69, 73, 106, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-62, 71, 104, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-60, 71, 99, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-61, 72, 93, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-62, 73, 84, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-61, 73, 75, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-61, 73, 67, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-61, 73, 59, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-63, 75, 53, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-64, 76, 47, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-60, 75, 43, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-54, 72, 36, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-48, 72, 31, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-44, 74, 29, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-39, 77, 28, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-31, 79, 24, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-24, 79, 20, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-18, 79, 17, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-11, 80, 16, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(-2, 81, 17, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(4, 81, 22, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(10, 81, 27, OVERWORLD, null, false));
+        checkpoints.add(new TutorialPoint(7, 81, 33, OVERWORLD, TutorialManager::SpawnAction, true));
+    }
+
+    private static void SpawnAction() {
+        pullText("Вы закончили экскурсию!");
     }
 }
