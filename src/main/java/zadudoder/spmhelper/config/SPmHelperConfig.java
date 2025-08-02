@@ -20,7 +20,7 @@ public class SPmHelperConfig implements ConfigData {
     public Boolean enableSPmNav = true;
     public Boolean particlesEnabled = true;
     public Boolean EnableVoiceGuide = true;
-    public VoiceType voiceType = VoiceType.MALE;
+    public VoiceType voiceType = null;
     public Boolean isFirstRun = true;
     public int SPmNavX = 50;
     public int SPmNavY = 2;

@@ -19,6 +19,9 @@ import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.events.ModEvents;
 import zadudoder.spmhelper.utils.QRCodeScanner;
 import zadudoder.spmhelper.utils.SoundManager;
+import zadudoder.spmhelper.utils.types.VoiceType;
+
+import java.util.Random;
 
 @Environment(EnvType.CLIENT)
 public class SPmHelperClient implements ClientModInitializer {
@@ -38,6 +41,11 @@ public class SPmHelperClient implements ClientModInitializer {
         registerKeyHandlers();
         SoundManager.initialize();
         ModEvents.registerEvents();
+
+        if (SPmHelperConfig.get().voiceType == null) {
+            SPmHelperConfig.get().voiceType = VoiceType.values()[new Random().nextInt(VoiceType.values().length)];
+            AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
+        }
     }
 
     private void registerKeyBindings() {
