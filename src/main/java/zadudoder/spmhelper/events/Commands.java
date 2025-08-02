@@ -113,7 +113,7 @@ public class Commands {
                                     }))
                             .then(ClientCommandManager.literal("Энд")
                                     .executes(context -> {
-                                        TutorialManager.startGoToEndAndTalkAboutTrade();
+                                        TutorialManager.StartEnd();
                                         context.getSource().sendFeedback(Text.translatable("text.spmhelper.startEndTutorialMessage"));
                                         return 1;
                                     }))
@@ -132,6 +132,12 @@ public class Commands {
                             .then(ClientCommandManager.literal("Детективы")
                                     .executes(context -> {
                                         TutorialManager.goToSpawn();
+                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.startGoToSpawnTutorialMessage"));
+                                        return 1;
+                                    }))
+                            .then(ClientCommandManager.literal("Торговля")
+                                    .executes(context -> {
+                                        TutorialManager.startGoToEndAndTalkAboutTrade();
                                         context.getSource().sendFeedback(Text.translatable("text.spmhelper.startGoToSpawnTutorialMessage"));
                                         return 1;
                                     })))
