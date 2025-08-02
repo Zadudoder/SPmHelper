@@ -37,7 +37,9 @@ public class TutorialManager {
     }
 
     private static void pullText(String text) {
-        MinecraftClient.getInstance().player.sendMessage(Text.literal(text));
+        if (MinecraftClient.getInstance().player != null) {
+            MinecraftClient.getInstance().player.sendMessage(Text.literal(text));
+        }
     }
 
     public static void startPNTutorial() {
@@ -216,6 +218,9 @@ public class TutorialManager {
     }
 
     public static void StartEnd() {
+        if (!isEnabled || checkpoints == null) {
+            preTutorial();
+        }
         checkpoints.add(new TutorialPoint(96, 49, 0, END, null, false));
         checkpoints.add(new TutorialPoint(90, 49, 0, END, null, false));
         checkpoints.add(new TutorialPoint(87, 54, 0, END, null, false));
