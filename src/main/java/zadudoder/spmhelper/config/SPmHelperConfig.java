@@ -5,6 +5,7 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import zadudoder.spmhelper.utils.ScreenType;
 import zadudoder.spmhelper.utils.types.Card;
+import zadudoder.spmhelper.utils.types.VoiceType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,8 @@ public class SPmHelperConfig implements ConfigData {
     public Boolean numberOfCardInComment = false; // true - включено, false - выключено в переводе будет указывать карту куда вы переводите
     public Boolean enableSPmNav = true;
     public Boolean particlesEnabled = true;
+    public Boolean EnableVoiceGuide = true;
+    public VoiceType voiceType = VoiceType.MALE;
     public Boolean isFirstRun = true;
     public int SPmNavX = 50;
     public int SPmNavY = 2;

@@ -2,7 +2,6 @@ package zadudoder.spmhelper.tutorial;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
-import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
@@ -13,11 +12,14 @@ public class TutorialManager {
 
     public static ArrayList<TutorialPoint> checkpoints;
 
-    public static void startTutorial() {
+    public static void preTutorial() {
         isEnabled = true;
         checkpoints = new ArrayList<>();
-        StartTutorial();
+    }
+
+    public static void startFullTutorial() {
         pullText("Включите частицы в настройках и направляйтесь в путь по ним.");
+        startPNTutorial();
     }
 
     public static void stopTutorial() {
@@ -32,14 +34,16 @@ public class TutorialManager {
         Runnable action = checkpoints.getLast().action;
         checkpoints.clear();
         action.run();
-        pullText("Часть скипнута");
     }
 
     private static void pullText(String text) {
         MinecraftClient.getInstance().player.sendMessage(Text.literal(text));
     }
 
-    private static void StartTutorial() {
+    public static void startPNTutorial() {
+        if (!isEnabled || checkpoints == null) {
+            preTutorial();
+        }
         checkpoints.add(new TutorialPoint(18, 81, 16, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(14, 81, 22, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(11, 81, 28, OVERWORLD, null, false));
@@ -51,7 +55,10 @@ public class TutorialManager {
         startCIKTutorial();
     }
 
-    private static void startCIKTutorial() {
+    public static void startCIKTutorial() {
+        if (!isEnabled || checkpoints == null) {
+            preTutorial();
+        }
         checkpoints.add(new TutorialPoint(10, 81, 30, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(6, 81, 23, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(0, 81, 19, OVERWORLD, null, false));
@@ -68,7 +75,10 @@ public class TutorialManager {
         startBankTutorial();
     }
 
-    private static void startBankTutorial() {
+    public static void startBankTutorial() {
+        if (!isEnabled || checkpoints == null) {
+            preTutorial();
+        }
         checkpoints.add(new TutorialPoint(-31, 78, -17, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(-30, 78, -26, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(-29, 75, -34, OVERWORLD, null, false));
@@ -84,7 +94,10 @@ public class TutorialManager {
         startGalleryTutorial();
     }
 
-    private static void startGalleryTutorial() {
+    public static void startGalleryTutorial() {
+        if (!isEnabled || checkpoints == null) {
+            preTutorial();
+        }
         checkpoints.add(new TutorialPoint(-22, 72, -67, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(-17, 71, -68, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(-10, 71, -72, OVERWORLD, null, false));
@@ -108,7 +121,10 @@ public class TutorialManager {
         startLawCourtTutorial();
     }
 
-    private static void startLawCourtTutorial() {
+    public static void startLawCourtTutorial() {
+        if (!isEnabled || checkpoints == null) {
+            preTutorial();
+        }
         checkpoints.add(new TutorialPoint(59, 50, -166, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(59, 50, -154, OVERWORLD, null, false)); // Написать поднимайтесь наверх
         checkpoints.add(new TutorialPoint(59, 64, -147, OVERWORLD, null, false));
@@ -129,12 +145,16 @@ public class TutorialManager {
         checkpoints.add(new TutorialPoint(16, 79, -27, OVERWORLD, TutorialManager::LawCourtAction, true));
 
     }
+
     private static void LawCourtAction() {
         pullText("Вы пришли в суд");
         startGoToHell();
     }
 
-    private static void startGoToHell() {
+    public static void startGoToHell() {
+        if (!isEnabled || checkpoints == null) {
+            preTutorial();
+        }
         checkpoints.add(new TutorialPoint(16, 79, -24, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(10, 80, -18, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(8, 81, -12, OVERWORLD, null, false));
@@ -153,7 +173,10 @@ public class TutorialManager {
         startGoToEndAndTalkAboutTrade();
     }
 
-    private static void startGoToEndAndTalkAboutTrade() {
+    public static void startGoToEndAndTalkAboutTrade() {
+        if (!isEnabled || checkpoints == null) {
+            preTutorial();
+        }
         checkpoints.add(new TutorialPoint(-17, 137, 14, NETHER, null, false));
         checkpoints.add(new TutorialPoint(-18, 136, 10, NETHER, null, false));
         checkpoints.add(new TutorialPoint(-23, 131, 0, NETHER, null, false));
@@ -205,7 +228,10 @@ public class TutorialManager {
         goToFSB();
     }
 
-    private static void goToFSB() {
+    public static void goToFSB() {
+        if (!isEnabled || checkpoints == null) {
+            preTutorial();
+        }
         checkpoints.add(new TutorialPoint(11, 81, 25, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(12, 81, 32, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(14, 80, 44, OVERWORLD, null, false));
@@ -226,7 +252,10 @@ public class TutorialManager {
         goToBiblioteka();
     }
 
-    private static void goToBiblioteka() {
+    public static void goToBiblioteka() {
+        if (!isEnabled || checkpoints == null) {
+            preTutorial();
+        }
         checkpoints.add(new TutorialPoint(-1, 71, 110, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(-7, 71, 109, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(11, 71, 106, OVERWORLD, null, false));
@@ -271,7 +300,10 @@ public class TutorialManager {
         goToSpawn();
     }
 
-    private static void goToSpawn() {
+    public static void goToSpawn() {
+        if (!isEnabled || checkpoints == null) {
+            preTutorial();
+        }
         checkpoints.add(new TutorialPoint(-105, 71, 124, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(-104, 71, 118, OVERWORLD, null, false));
         checkpoints.add(new TutorialPoint(-102, 71, 112, OVERWORLD, null, false));
