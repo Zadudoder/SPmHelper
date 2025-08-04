@@ -17,6 +17,9 @@ import zadudoder.spmhelper.utils.SPWorldsApi;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 import zadudoder.spmhelper.utils.types.Service;
 
+import java.net.http.HttpResponse;
+import java.util.concurrent.CompletableFuture;
+
 public class Commands {
     private static final boolean hasToken = SPmHelperConfig.get().getAPI_TOKEN() != null && !SPmHelperConfig.get().getAPI_TOKEN().isEmpty();
 
@@ -76,71 +79,71 @@ public class Commands {
                                         return 1;
                                     })
                                     .then(ClientCommandManager.literal("Палатка новичков")
-                                    .executes(context -> {
-                                        TutorialManager.startPNTutorial();
-                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.startPNTutorialMessage"));
-                                        return 1;
-                                    }))
+                                            .executes(context -> {
+                                                TutorialManager.startPNTutorial();
+                                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.startPNTutorialMessage"));
+                                                return 1;
+                                            }))
                                     .then(ClientCommandManager.literal("ЦИК")
                                             .executes(context -> {
-                                            TutorialManager.startCIKTutorial();
-                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.startCIKTutorialMessage"));
-                                        return 1;
-                                    }))
-                            .then(ClientCommandManager.literal("Банк")
-                                    .executes(context -> {
-                                        TutorialManager.startBankTutorial();
-                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.startBankTutorialMessage"));
-                                        return 1;
-                                    }))
-                            .then(ClientCommandManager.literal("Галерея")
-                                    .executes(context -> {
-                                        TutorialManager.startGalleryTutorial();
-                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.startGalleryTutorialMessage"));
-                                        return 1;
-                                    }))
-                            .then(ClientCommandManager.literal("Суд")
-                                    .executes(context -> {
-                                        TutorialManager.startLawCourtTutorial();
-                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.startLawTutorialMessage"));
-                                        return 1;
-                                    }))
-                            .then(ClientCommandManager.literal("Ад")
-                                    .executes(context -> {
-                                        TutorialManager.startGoToHell();
-                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.startHellTutorialMessage"));
-                                        return 1;
-                                    }))
-                            .then(ClientCommandManager.literal("Энд")
-                                    .executes(context -> {
-                                        TutorialManager.StartEnd();
-                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.startEndTutorialMessage"));
-                                        return 1;
-                                    }))
-                            .then(ClientCommandManager.literal("ФСБ")
-                                    .executes(context -> {
-                                        TutorialManager.goToFSB();
-                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.startFSBTutorialMessage"));
-                                        return 1;
-                                    }))
-                            .then(ClientCommandManager.literal("Библиотека")
-                                    .executes(context -> {
-                                        TutorialManager.goToBiblioteka();
-                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.startLibraryTutorialMessage"));
-                                        return 1;
-                                    }))
-                            .then(ClientCommandManager.literal("Детективы")
-                                    .executes(context -> {
-                                        TutorialManager.goToSpawn();
-                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.startGoToSpawnTutorialMessage"));
-                                        return 1;
-                                    }))
-                            .then(ClientCommandManager.literal("Торговля")
-                                    .executes(context -> {
-                                        TutorialManager.startGoToEndAndTalkAboutTrade();
-                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.startGoToSpawnTutorialMessage"));
-                                        return 1;
-                                    })))
+                                                TutorialManager.startCIKTutorial();
+                                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.startCIKTutorialMessage"));
+                                                return 1;
+                                            }))
+                                    .then(ClientCommandManager.literal("Банк")
+                                            .executes(context -> {
+                                                TutorialManager.startBankTutorial();
+                                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.startBankTutorialMessage"));
+                                                return 1;
+                                            }))
+                                    .then(ClientCommandManager.literal("Галерея")
+                                            .executes(context -> {
+                                                TutorialManager.startGalleryTutorial();
+                                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.startGalleryTutorialMessage"));
+                                                return 1;
+                                            }))
+                                    .then(ClientCommandManager.literal("Суд")
+                                            .executes(context -> {
+                                                TutorialManager.startLawCourtTutorial();
+                                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.startLawTutorialMessage"));
+                                                return 1;
+                                            }))
+                                    .then(ClientCommandManager.literal("Ад")
+                                            .executes(context -> {
+                                                TutorialManager.startGoToHell();
+                                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.startHellTutorialMessage"));
+                                                return 1;
+                                            }))
+                                    .then(ClientCommandManager.literal("Энд")
+                                            .executes(context -> {
+                                                TutorialManager.StartEnd();
+                                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.startEndTutorialMessage"));
+                                                return 1;
+                                            }))
+                                    .then(ClientCommandManager.literal("ФСБ")
+                                            .executes(context -> {
+                                                TutorialManager.goToFSB();
+                                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.startFSBTutorialMessage"));
+                                                return 1;
+                                            }))
+                                    .then(ClientCommandManager.literal("Библиотека")
+                                            .executes(context -> {
+                                                TutorialManager.goToBiblioteka();
+                                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.startLibraryTutorialMessage"));
+                                                return 1;
+                                            }))
+                                    .then(ClientCommandManager.literal("Детективы")
+                                            .executes(context -> {
+                                                TutorialManager.goToSpawn();
+                                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.startGoToSpawnTutorialMessage"));
+                                                return 1;
+                                            }))
+                                    .then(ClientCommandManager.literal("Торговля")
+                                            .executes(context -> {
+                                                TutorialManager.startGoToEndAndTalkAboutTrade();
+                                                context.getSource().sendFeedback(Text.translatable("text.spmhelper.startGoToSpawnTutorialMessage"));
+                                                return 1;
+                                            })))
                             .then(ClientCommandManager.literal("stop")
                                     .executes(context -> {
                                         if (TutorialManager.isEnabled) {
@@ -163,6 +166,24 @@ public class Commands {
 
                                         return 1;
                                     }))
+                            .then(ClientCommandManager.literal("feedback")
+                                    .then(ClientCommandManager.argument(Text.translatable("text.spmhelper.feedback").getString(), StringArgumentType.greedyString())
+                                            .executes(context -> {
+                                                String comment = StringArgumentType.getString(context, Text.translatable("text.spmhelper.feedback").getString());
+                                                CompletableFuture<HttpResponse<String>> responseFuture = SPmHelperApi.sendFeedback(context.getSource().getPlayer().getName().getLiteralString(), comment);
+                                                responseFuture.thenApply(response -> {
+                                                    if (response.statusCode() == 200) {
+                                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.feedbackIsSended"));
+                                                    } else {
+                                                        context.getSource().sendFeedback(Text.translatable("text.spmhelper.feedbackSendError"));
+                                                    }
+                                                    return 1;
+                                                }).exceptionally(ex -> {
+                                                    context.getSource().sendFeedback(Text.translatable("text.spmhelper.feedbackSendError"));
+                                                    return 1;
+                                                });
+                                                return 1;
+                                            })))
                     );
 
             var aliasMainCommand = ClientCommandManager.literal("spmh").redirect(mainCommand.build());
