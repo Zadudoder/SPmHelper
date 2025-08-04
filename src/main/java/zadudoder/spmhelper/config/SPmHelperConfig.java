@@ -18,7 +18,6 @@ public class SPmHelperConfig implements ConfigData {
     public Boolean paymentWithNick = false; // true - ник, false - по номеру
     public Boolean numberOfCardInComment = false; // true - включено, false - выключено в переводе будет указывать карту куда вы переводите
     public Boolean enableSPmNav = true;
-    public Boolean particlesEnabled = true;
     public Boolean EnableVoiceGuide = true;
     public VoiceType voiceType = null;
     public Boolean isFirstRun = true;
