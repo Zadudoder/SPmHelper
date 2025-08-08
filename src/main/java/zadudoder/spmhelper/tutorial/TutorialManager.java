@@ -6,6 +6,7 @@ import net.minecraft.text.Text;
 import java.util.ArrayList;
 
 import static net.minecraft.world.World.*;
+import static zadudoder.spmhelper.utils.SoundManager.*;
 
 public class TutorialManager {
     public static boolean isEnabled;
@@ -19,6 +20,7 @@ public class TutorialManager {
 
     public static void startFullTutorial() {
         pullText("Включите частицы в настройках и направляйтесь в путь по ним.");
+        playSound(start_tutorial_audio, 1.0f, 1.0f);
         startPNTutorial();
     }
 
