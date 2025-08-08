@@ -19,7 +19,6 @@ import java.util.concurrent.CompletableFuture;
 
 public class SPmHelperApi {
     private static final String API_BASE = "https://api.spmhelper.ru/api";
-    private static final String FEEDBACK_API = "http://127.0.0.1:7000/api";
     private static final HttpClient httpClient = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_2)
             .connectTimeout(Duration.ofSeconds(10))
@@ -128,7 +127,7 @@ public class SPmHelperApi {
             json.addProperty("name", name);
             json.addProperty("comment", comment);
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(FEEDBACK_API + "/feedback/send"))
+                    .uri(URI.create(API_BASE + "/feedback/send"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
                     .build();
