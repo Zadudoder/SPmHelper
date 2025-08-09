@@ -48,11 +48,10 @@ public abstract class GameMenuScreenMixin extends ScreenMixin {
     private boolean isModsButton(ButtonWidget button) {
         Text buttonText = button.getMessage();
         if (buttonText.getContent() instanceof TranslatableTextContent translatableText) {
-            return translatableText.getKey().equals("menu.modded");
+            return translatableText.getKey().equals("modmenu.title");
+        } else {
+            return false;
         }
-        // Резервная проверка для нестандартных серверов
-        String text = buttonText.getString();
-        return text.equals("Моды") || text.equals("Mods");
     }
 
     @Unique
@@ -66,29 +65,22 @@ public abstract class GameMenuScreenMixin extends ScreenMixin {
 
         this.menuButton = ButtonWidget.builder(
                         Text.literal(""),
-                        openSelectedScreen())
+                        btn -> {
+                            Screen screenToOpen = switch (SPmHelperConfig.get().defaultScreen) {
+                                case SETTINGS -> new Settings();
+                                case PAY -> new PayScreen();
+                                case CALLS -> new CallsScreen();
+                                case MAP -> new MapScreen();
+                                case LAWS -> new LawsScreen();
+                                default -> new MainScreen();
+                            };
+                            this.client.setScreen(screenToOpen);
+                        })
                 .dimensions(buttonX, buttonY, width, height)
                 .tooltip(Tooltip.of(tooltipText))
                 .build();
 
         this.addDrawableChild(menuButton);
-    }
-
-    @Unique
-    private ButtonWidget.PressAction openSelectedScreen() {
-        if (this.client == null) return null;
-
-        Screen screenToOpen = switch (SPmHelperConfig.get().defaultScreen) {
-            case SETTINGS -> new Settings();
-            case PAY -> new PayScreen();
-            case CALLS -> new CallsScreen();
-            case MAP -> new MapScreen();
-            case LAWS -> new LawsScreen();
-            default -> new MainScreen();
-        };
-
-        this.client.setScreen(screenToOpen);
-        return null;
     }
 
     @Inject(method = "render", at = @At("TAIL"))
