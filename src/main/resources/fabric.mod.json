@@ -17,11 +17,8 @@
   "icon": "assets/spmhelper/SPmHelperLogo.png",
   "environment": "client",
   "entrypoints": {
-    "main": [
-      "zadudoder.spmhelper.SPmHelper"
-    ],
     "client": [
-      "zadudoder.spmhelper.SPmHelperClient"
+      "zadudoder.spmhelper.SPmHelper"
     ],
     "modmenu": [
       "zadudoder.spmhelper.ModMenuIntegration"
