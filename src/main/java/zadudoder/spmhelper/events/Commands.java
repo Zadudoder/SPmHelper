@@ -12,13 +12,9 @@ import zadudoder.spmhelper.Screen.Calls.ServiceAcceptScreen;
 import zadudoder.spmhelper.Screen.Pays.AddCardScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
-import zadudoder.spmhelper.tutorial.TutorialManager;
 import zadudoder.spmhelper.utils.SPWorldsApi;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 import zadudoder.spmhelper.utils.types.Service;
-
-import java.net.http.HttpResponse;
-import java.util.concurrent.CompletableFuture;
 
 public class Commands {
     private static final boolean hasToken = SPmHelperConfig.get().getAPI_TOKEN() != null && !SPmHelperConfig.get().getAPI_TOKEN().isEmpty();
@@ -71,7 +67,7 @@ public class Commands {
 
                                                         return 1;
                                                     }))))
-                    ).then(ClientCommandManager.literal("tutorial")
+                    );/*.then(ClientCommandManager.literal("tutorial")
                             .then(ClientCommandManager.literal("start")
                                     .executes(context -> {
                                         TutorialManager.startFullTutorial();
@@ -183,8 +179,7 @@ public class Commands {
                                                     return 1;
                                                 });
                                                 return 1;
-                                            })))
-                    );
+                                            })))*/
 
             var aliasMainCommand = ClientCommandManager.literal("spmh").redirect(mainCommand.build());
 

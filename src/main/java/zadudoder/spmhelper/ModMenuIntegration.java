@@ -15,7 +15,6 @@ import net.minecraft.client.gui.screen.NoticeScreen;
 import net.minecraft.text.Text;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.ScreenType;
-import zadudoder.spmhelper.utils.types.VoiceType;
 
 @Environment(EnvType.CLIENT)
 public class ModMenuIntegration implements ModMenuApi {
@@ -40,7 +39,7 @@ public class ModMenuIntegration implements ModMenuApi {
             ConfigEntryBuilder entryBuilder = builder.entryBuilder();
             ConfigCategory mainCategory = builder.getOrCreateCategory(Text.translatable("text.spmhelper.config.mainCategory"));
             ConfigCategory navCategory = builder.getOrCreateCategory(Text.translatable("text.spmhelper.config.navCategory"));
-            ConfigCategory guideCategory = builder.getOrCreateCategory(Text.translatable("text.spmhelper.config.guideCategory"));
+            //ConfigCategory guideCategory = builder.getOrCreateCategory(Text.translatable("text.spmhelper.config.guideCategory"));
 
             // Добавляем настройки
             mainCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("text.spmhelper.option.enableMenuButton"), config.enableMenuButton)
@@ -78,7 +77,7 @@ public class ModMenuIntegration implements ModMenuApi {
                     .setSaveConsumer(newValue -> config.SPmNavScale = newValue)
                     .build());
 
-            guideCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("text.spmhelper.option.enableVoiceInGuide"), config.EnableVoiceGuide)
+            /*guideCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("text.spmhelper.option.enableVoiceInGuide"), config.EnableVoiceGuide)
                     .setSaveConsumer(newValue -> config.EnableVoiceGuide = newValue)
                     .build());
 
@@ -88,7 +87,7 @@ public class ModMenuIntegration implements ModMenuApi {
                         // Локализация значений enum
                         return Text.translatable("text.spmhelper.voice_type_." + value.name().toLowerCase());
                     })
-                    .build());
+                    .build());*/
 
 
             return builder.build();
