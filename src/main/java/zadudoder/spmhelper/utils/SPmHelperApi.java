@@ -9,10 +9,10 @@ import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.types.Service;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.net.http.WebSocket;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 
@@ -23,6 +23,7 @@ public class SPmHelperApi {
             .version(HttpClient.Version.HTTP_2)
             .connectTimeout(Duration.ofSeconds(10))
             .build();
+    public static WebSocket webSocket;
 
     public static void startAuthProcess(ClientPlayerEntity player) {
         MinecraftClient client = MinecraftClient.getInstance();
@@ -30,15 +31,12 @@ public class SPmHelperApi {
         JsonObject json = new JsonObject();
         json.addProperty("minecraft_uuid", playerUuid);
         try {
-            SocketClient socketClient = new SocketClient(new URI("wss://api.spmhelper.ru/api/authorize/ws"));
-            socketClient.setOnOpenCallback(() -> {
-                player.sendMessage(Text.translatable("text.spmhelper.SPmHAPI_GettingLink"));
-                socketClient.send(json.toString());
-            });
-            socketClient.setClientPlayer(player);
-            socketClient.connect();
-        } catch (URISyntaxException e) {
-            player.sendMessage(Text.translatable("text.spmhelper.SPmHAPI_ErrorConnectingServer"));
+            SocketClient listener = new SocketClient(180, client.player);
+            webSocket = HttpClient.newHttpClient()
+                    .newWebSocketBuilder()
+                    .buildAsync(URI.create("wss://api.spmhelper.ru/api/authorize/ws"), listener)
+                    .join();
+            webSocket.sendText(json.toString(), true);
         } catch (IllegalStateException Exception) {
             player.sendMessage(Text.translatable("text.spmhelper.SPmHAPI_ErrorConnectingWebSocket"));
         } catch (Exception e) {

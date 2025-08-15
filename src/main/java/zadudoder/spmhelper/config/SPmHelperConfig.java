@@ -36,7 +36,7 @@ public class SPmHelperConfig implements ConfigData {
         return API_TOKEN;
     }
 
-    public void setAPI_TOKEN(String TOKEN) {
+    public void setToken(String TOKEN) {
         this.API_TOKEN = TOKEN;
     }
 

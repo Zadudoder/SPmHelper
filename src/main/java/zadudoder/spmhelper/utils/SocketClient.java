@@ -2,82 +2,72 @@ package zadudoder.spmhelper.utils;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 
-import java.net.URI;
-import java.util.concurrent.CompletableFuture;
+import java.net.http.WebSocket;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.CountDownLatch;
 
-public class SocketClient extends WebSocketClient {
-    private final CompletableFuture<String> responseFuture = new CompletableFuture<>();
-    private Runnable onOpenCallback;
-    private ClientPlayerEntity clientPlayer;
+public class SocketClient implements WebSocket.Listener {
+    private final CountDownLatch latch;
+    private final StringBuilder aggregatedText = new StringBuilder();
+    private final ClientPlayerEntity clientPlayer;
 
-    public SocketClient(URI serverUri) {
-        super(serverUri);
+    public SocketClient(int latch, ClientPlayerEntity clientPlayer) {
+        this.latch = new CountDownLatch(latch);
+        this.clientPlayer = clientPlayer;
     }
 
     @Override
-    public void onOpen(ServerHandshake serverHandshake) {
-        if (onOpenCallback != null) {
-            onOpenCallback.run(); // Уведомляем, что соединение открыто
-        }
-
+    public void onOpen(WebSocket webSocket) {
+        //System.out.println("🔵 Соединение установлено");
+        webSocket.request(1); // Запрашиваем первое сообщение
     }
 
     @Override
-    public void onMessage(String message) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        JsonObject responseJson = JsonParser.parseString(message).getAsJsonObject();
-        System.out.println(responseJson.toString());
-        if (responseJson.has("auth_url")) {
-            clientPlayer.sendMessage(Text.translatable("text.spmhelper.WebSocketClient_OpenURL"));
-            String authUrl = responseJson.get("auth_url").getAsString();
-            client.execute(() -> {
-                Util.getOperatingSystem().open(authUrl);
-            });
-            clientPlayer.sendMessage(Text.translatable("text.spmhelper.WebSocketClient_WaitingAuth"));
-        } else if (responseJson.has("token")) {
-            SPmHelperConfig.get().setAPI_TOKEN(responseJson.get("token").getAsString());
-            AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
-            clientPlayer.sendMessage(Text.translatable("text.spmhelper.WebSocketClient_TokenWritten"));
-            safeClose();
-        } else if (responseJson.has("error")) {
-            if (responseJson.get("error").getAsString().equals("Авторизация отклонена игроком")) {
-                clientPlayer.sendMessage(Text.translatable("text.spmhelper.WebSocketClient_AuthorizationCancelledByYou"));
-            } else {
-                clientPlayer.sendMessage(Text.translatable("text.spmhelper.WebSocketClient_FailedToGetLink"));
+    public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
+        //System.out.println("📨 Получено сообщение: " + data);
+        JsonObject responseJson = JsonParser.parseString(data.toString()).getAsJsonObject();
+        if (last) {
+            if (responseJson.has("auth_url")) {
+                clientPlayer.sendMessage(Text.translatable("text.spmhelper.WebSocketClient_OpenURL"));
+                String authUrl = responseJson.get("auth_url").getAsString();
+                MinecraftClient.getInstance().execute(() -> {
+                    Util.getOperatingSystem().open(authUrl);
+                });
+                clientPlayer.sendMessage(Text.translatable("text.spmhelper.WebSocketClient_WaitingAuth"));
+            } else if (responseJson.has("token")) {
+                SPmHelperConfig.get().setToken(responseJson.get("token").getAsString());
+                clientPlayer.sendMessage(Text.translatable("text.spmhelper.WebSocketClient_TokenWritten"));
+                SPmHelperApi.webSocket.abort();
+            } else if (responseJson.has("error")) {
+                if (responseJson.get("error").getAsString().equals("Authorization denied by user")) {
+                    clientPlayer.sendMessage(Text.translatable("text.spmhelper.WebSocketClient_AuthorizationCancelledByYou"));
+                } else {
+                    clientPlayer.sendMessage(Text.translatable("text.spmhelper.WebSocketClient_FailedToGetLink"));
+                }
+                SPmHelperApi.webSocket.abort();
             }
-            safeClose();
         }
+        aggregatedText.setLength(0);
+        webSocket.request(1);
+        return null;
     }
 
     @Override
-    public void onClose(int i, String s, boolean b) {
+    public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
+        //System.out.println("🔴 Соединение закрыто: " + statusCode + " - " + reason);
+        latch.countDown();
+        return null;
     }
 
     @Override
-    public void onError(Exception e) {
-        responseFuture.completeExceptionally(e);
-    }
-
-    public void setOnOpenCallback(Runnable callback) {
-        this.onOpenCallback = callback;
-    }
-
-    public void setClientPlayer(ClientPlayerEntity client) {
-        this.clientPlayer = client;
-    }
-
-    private void safeClose() {
-        if (isOpen()) {
-            close();
-        }
+    public void onError(WebSocket webSocket, Throwable error) {
+        error.printStackTrace();
+        latch.countDown(); // Разблокируем основной поток
     }
 }
