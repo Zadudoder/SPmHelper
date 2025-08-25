@@ -163,7 +163,7 @@ public class Settings extends Screen {
     }
 
     private String getCardButtonText(String name) {
-        return name + " | " + SPmHelperConfig.get().getCard(name).number;
+        return name + " | " + SPmHelperConfig.get().getCard(name).getNumber();
     }
 
     private void selectCard(String card) {

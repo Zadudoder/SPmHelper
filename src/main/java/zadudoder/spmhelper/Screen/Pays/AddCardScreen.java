@@ -35,7 +35,7 @@ public class AddCardScreen extends Screen {
             if (id == null) {
                 this.client.player.sendMessage(Text.translatable("text.spmhelper.status_FeedBackMessageCaseDefault"));
             } else {
-                SPmHelperConfig.get().addCard(id, token, name); //Добавление карты
+                SPmHelperConfig.get().addCard(id, token); //Добавление карты
                 this.client.player.sendMessage(Text.translatable("text.spmhelper.addCard_AcceptFeedBack"));
             }
             this.close();

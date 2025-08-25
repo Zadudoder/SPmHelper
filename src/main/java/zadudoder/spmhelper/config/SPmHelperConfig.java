@@ -3,8 +3,8 @@ package zadudoder.spmhelper.config;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
+import net.r4mble.types.Card;
 import zadudoder.spmhelper.utils.ScreenType;
-import zadudoder.spmhelper.utils.types.Card;
 import zadudoder.spmhelper.utils.types.VoiceType;
 
 import java.util.HashMap;
@@ -36,8 +36,8 @@ public class SPmHelperConfig implements ConfigData {
         return API_TOKEN;
     }
 
-    public void setToken(String TOKEN) {
-        this.API_TOKEN = TOKEN;
+    public void setToken(String token) {
+        this.API_TOKEN = token;
     }
 
     public Card getCard(String name) {
@@ -48,19 +48,19 @@ public class SPmHelperConfig implements ConfigData {
         return cards;
     }
 
-    public void addCard(String id, String token, String cardName) {
+    public void addCard(String id, String token) {
         Card card = new Card(id, token);
-        cards.put(cardName, card);
+        cards.put(card.getName(), card);
         if (getMainCard() == null) {
-            setMainCard(cardName);
+            setMainCard(card.getName());
         }
         AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
     }
 
     public void renameCard(String cardName, String newCardName) {
-        Card cardInfo = getCard(cardName);
+        Card card = getCard(cardName);
         cards.remove(cardName);
-        cards.put(newCardName, cardInfo);
+        cards.put(newCardName, card);
         if (mainCardName.equals(cardName)) {
             mainCardName = newCardName;
         }

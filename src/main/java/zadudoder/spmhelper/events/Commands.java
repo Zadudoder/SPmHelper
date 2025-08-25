@@ -8,12 +8,12 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
+import net.r4mble.SPWorldsAPI;
 import zadudoder.spmhelper.Screen.Calls.ServiceAcceptScreen;
 import zadudoder.spmhelper.Screen.Pays.AddCardScreen;
 import zadudoder.spmhelper.Screen.Pays.PayScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.tutorial.TutorialManager;
-import zadudoder.spmhelper.utils.SPWorldsApi;
 import zadudoder.spmhelper.utils.SPmHelperApi;
 import zadudoder.spmhelper.utils.types.Service;
 
@@ -61,10 +61,8 @@ public class Commands {
                                                         String token = StringArgumentType.getString(context, "token");
                                                         String name = StringArgumentType.getString(context, "name");
 
-                                                        if (SPWorldsApi.getAuthStatus(id, token) == 200) {
-                                                            MinecraftClient.getInstance().send(() -> {
-                                                                MinecraftClient.getInstance().setScreen(new AddCardScreen(id, token, name));
-                                                            });
+                                                        if (SPWorldsAPI.getAuthStatus(id, token) == 200) {
+                                                            MinecraftClient.getInstance().send(() -> MinecraftClient.getInstance().setScreen(new AddCardScreen(id, token, name)));
                                                         } else {
                                                             context.getSource().sendFeedback(Text.translatable("text.spmhelper.TokenOrIdIsIncorrect"));
                                                         }
@@ -194,9 +192,7 @@ public class Commands {
                                     .executes(context -> {
                                         String nickname = StringArgumentType.getString(context, Text.translatable("text.spmhelper.argumentForPayment.NickOrNumCard").getString());
                                         int amount = IntegerArgumentType.getInteger(context, Text.translatable("text.spmhelper.argumentForPayment.Amount").getString());
-                                        MinecraftClient.getInstance().send(() -> {
-                                            MinecraftClient.getInstance().setScreen(new PayScreen(nickname, amount));
-                                        });
+                                        MinecraftClient.getInstance().send(() -> MinecraftClient.getInstance().setScreen(new PayScreen(nickname, amount)));
                                         return 1;
                                     })
                             ).executes(context -> {
@@ -236,9 +232,7 @@ public class Commands {
                                 return 0;
                             }
                             String comment = StringArgumentType.getString(context, Text.translatable("text.spmhelper.argumentForCalls.Comms").getString());
-                            MinecraftClient.getInstance().send(() -> {
-                                MinecraftClient.getInstance().setScreen(new ServiceAcceptScreen(service, comment, context.getSource().getPlayer()));
-                            });
+                            MinecraftClient.getInstance().send(() -> MinecraftClient.getInstance().setScreen(new ServiceAcceptScreen(service, comment, context.getSource().getPlayer())));
                             return 0;
                         })
                 )

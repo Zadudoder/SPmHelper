@@ -18,6 +18,7 @@ repositories {
     // for more information about repositories.
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases/" }
+    maven { url 'https://jitpack.io' }
 }
 
 fabricApi {
@@ -40,6 +41,7 @@ dependencies {
     include "com.googlecode.soundlibs:tritonus-share:0.3.7.4"
     include implementation("com.google.zxing:core:3.5.1")
     include implementation("com.google.zxing:javase:3.5.1")
+    include implementation("com.github.R4mBLeR:SPWorldsAPI:1.0.5-SNAPSHOT")
 }
 
 processResources {

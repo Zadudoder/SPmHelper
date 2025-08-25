@@ -1,6 +1,7 @@
 package zadudoder.spmhelper.Screen.Pays;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -11,12 +12,14 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import net.r4mble.SPWorldsAPI;
+import net.r4mble.types.BaseCard;
+import net.r4mble.types.Card;
 import zadudoder.spmhelper.Screen.MainScreen;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.Misc;
-import zadudoder.spmhelper.utils.SPWorldsApi;
-import zadudoder.spmhelper.utils.types.BaseCard;
-import zadudoder.spmhelper.utils.types.Card;
+
+import java.net.http.HttpResponse;
 
 
 @Environment(EnvType.CLIENT)
@@ -200,93 +203,87 @@ public class PayScreen extends Screen {
 
 
     private void processTransfer() {
-        try {
-            Card senderCard = SPmHelperConfig.get().getMainCard();
-            if (senderCard == null) {
-                setStatus(Text.translatable("text.spmhelper.pays_processTransfer_senderCardNull").getString(), 0xFF5555);
-                return;
-            }
-            String receiverCardNumber;
-            if (SPmHelperConfig.get().paymentWithNick) {
-                receiverCardNumber = selectedReceiverCard;
+        Card sender = SPmHelperConfig.get().getMainCard();
+        if (sender == null) {
+            setStatus(Text.translatable("text.spmhelper.pays_processTransfer_senderCardNull").getString(), 0xFF5555);
+            return;
+        }
+        String receiverCardNumber;
+        if (SPmHelperConfig.get().paymentWithNick) {
+            receiverCardNumber = selectedReceiverCard;
+        } else {
+            receiverCardNumber = receiverCardOrNameField.getText().trim();
+        }
+        if (receiverCardNumber == null) {
+            setStatus(Text.translatable("text.spmhelper.pays_processTransfer_receiverCardNumberNull").getString(), 0xFF5555);
+            return;
+        }
+        if (amountField.getText().isEmpty()) {
+            setStatus(Text.translatable("text.spmhelper.pays_processTransfer_amountFieldNull").getString(), 0xFF5555);
+            return;
+        }
+        if (!Misc.isNumeric(amountField.getText())) {
+            setStatus(Text.translatable("text.spmhelper.pays_processTransfer_amountFieldRandomSymbol").getString(), 0xFF5555);
+            return;
+        }
+        int amount = Integer.parseInt(amountField.getText());
+
+        if (amount <= 0) {
+            setStatus(Text.translatable("text.spmhelper.pays_processTransfer_amountField<0").getString(), 0xFF5555);
+            return;
+        }
+
+        if (sender.getBalance() < amount) {
+            setStatus(Text.translatable("text.spmhelper.pays_processTransfer_Balance<Amount").getString(), 0xFF5555);
+            return;
+        }
+
+        String comment = commentField.getText();
+        if (SPmHelperConfig.get().numberOfCardInComment) {
+            comment = commentField.getText() + " " + receiverCardNumber;
+        }
+
+        if ((MinecraftClient.getInstance().getSession().getUsername().length() + commentField.getText().length()) > 32) {
+            setStatus(String.format(Text.translatable("text.spmhelper.pays_processTransfer_CommentIsLong").getString(), (30 - MinecraftClient.getInstance().getSession().getUsername().length())), 0xFF5555);
+            return;
+        }
+
+        if (SPmHelperConfig.get().numberOfCardInComment && (MinecraftClient.getInstance().getSession().getUsername().length() + commentField.getText().length()) + receiverCardNumber.length() > 32) {
+            setStatus(String.format(Text.translatable("text.spmhelper.pays_processTransfer_CommentIsLong").getString(), (29 - MinecraftClient.getInstance().getSession().getUsername().length()) - receiverCardNumber.length()), 0xFF5555);
+            return;
+        }
+        if (comment.isEmpty()) {
+            comment = " ";
+        }
+        // Создаем перевод: senderCard -> receiverCard
+        HttpResponse<String> response = sender.makeTransfer(receiverCardNumber, amount, comment);
+        JsonObject json = JsonParser.parseString(response.body()).getAsJsonObject();
+        if (json.has("error")) {
+            String error = json.get("error").toString();
+            if (error.contains("receiverIsSender")) {
+                setStatus(Text.translatable("text.spmhelper.pays_processTransfer_ReceiverIsSender").getString(), 0xFF5555);
+            } else if (error.contains("receiverCardNotFound")) {
+                setStatus(Text.translatable("text.spmhelper.pays_processTransfer_ReceiverCardNotFound").getString(), 0xFF5555);
             } else {
-                receiverCardNumber = receiverCardOrNameField.getText().trim();
+                setStatus(String.format(Text.translatable("text.spmhelper.pays_processTransfer_ErrorAPI").getString(), json.get("error").getAsString()), 0xFF5555);
             }
-            if (receiverCardNumber.isEmpty()) {
-                setStatus(Text.translatable("text.spmhelper.pays_processTransfer_receiverCardNumberNull").getString(), 0xFF5555);
-                return;
-            }
-            if (amountField.getText().isEmpty()) {
-                setStatus(Text.translatable("text.spmhelper.pays_processTransfer_amountFieldNull").getString(), 0xFF5555);
-                return;
-            }
-            if (!Misc.isNumeric(amountField.getText())) {
-                setStatus(Text.translatable("text.spmhelper.pays_processTransfer_amountFieldRandomSymbol").getString(), 0xFF5555);
-                return;
-            }
-            int amount = Integer.parseInt(amountField.getText());
-
-            if (amount <= 0) {
-                setStatus(Text.translatable("text.spmhelper.pays_processTransfer_amountField<0").getString(), 0xFF5555);
-                return;
-            }
-
-            if (SPWorldsApi.getBalance(senderCard) < amount) {
-                setStatus(Text.translatable("text.spmhelper.pays_processTransfer_Balance<Amount").getString(), 0xFF5555);
-                return;
-            }
-
-            String comment = commentField.getText();
-            if (SPmHelperConfig.get().numberOfCardInComment) {
-                comment = commentField.getText() + " " + receiverCardNumber;
-            }
-
-            if ((MinecraftClient.getInstance().getSession().getUsername().length() + commentField.getText().length()) > 32) {
-                setStatus(String.format(Text.translatable("text.spmhelper.pays_processTransfer_CommentIsLong").getString(), (30 - MinecraftClient.getInstance().getSession().getUsername().length())), 0xFF5555);
-                return;
-            }
-
-            if (SPmHelperConfig.get().numberOfCardInComment && (MinecraftClient.getInstance().getSession().getUsername().length() + commentField.getText().length()) + receiverCardNumber.length() > 32) {
-                setStatus(String.format(Text.translatable("text.spmhelper.pays_processTransfer_CommentIsLong").getString(), (29 - MinecraftClient.getInstance().getSession().getUsername().length()) - receiverCardNumber.length()), 0xFF5555);
-                return;
-            }
-
-            // Создаем перевод: senderCard -> receiverCard
-            JsonObject response = SPWorldsApi.createTransfer(
-                    senderCard,
-                    receiverCardNumber,
-                    amount,
-                    comment
-
-            );
-            if (response.has("error")) {
-                String error = response.get("error").toString();
-                if (error.contains("receiverIsSender")) {
-                    setStatus(Text.translatable("text.spmhelper.pays_processTransfer_ReceiverIsSender").getString(), 0xFF5555);
-                } else if (error.contains("receiverCardNotFound")) {
-                    setStatus(Text.translatable("text.spmhelper.pays_processTransfer_ReceiverCardNotFound").getString(), 0xFF5555);
-                } else {
-                    setStatus(String.format(Text.translatable("text.spmhelper.pays_processTransfer_ErrorAPI").getString(), response.get("error").getAsString()), 0xFF5555);
-                }
-            } else {
-                setStatus(String.format(Text.translatable("text.spmhelper.pays.Successfully").getString(), amount), 0x55FF55);
-            }
-
-        } catch (Exception e) {
-            setStatus(String.format(Text.translatable("text.spmhelper.pays_processTransfer_Error").getString(), e.getMessage()), 0xFF5555);
+        } else {
+            setStatus(String.format(Text.translatable("text.spmhelper.pays.Successfully").getString(), amount), 0x55FF55);
         }
     }
 
     private void loadSenderCard() {
-        String cardName = SPmHelperConfig.get().getMainCardName();
         Card senderCard = SPmHelperConfig.get().getMainCard();
-
-        JsonObject cardInfo = SPWorldsApi.getCardInfo(senderCard);
-
-        if (cardInfo.has("error")) {
+        if (senderCard == null) {
+            setStatus(Text.translatable("text.spmhelper.pays_loadSenderCard_ErrorLoadingCard").getString(), 0xFF5555);
+            return;
+        }
+        Integer balance = senderCard.getBalance();
+        if (balance == null) {
             setStatus(Text.translatable("text.spmhelper.pays_loadSenderCard_ErrorLoadingCard").getString(), 0xFF5555);
         } else {
-            setStatus(String.format(Text.translatable("text.spmhelper.pays.CurrentBalance").getString(), cardName, cardInfo.get("balance").getAsString()), 0x55FF55);
+            String cardName = SPmHelperConfig.get().getMainCardName();
+            setStatus(String.format(Text.translatable("text.spmhelper.pays.CurrentBalance").getString(), cardName, balance), 0x55FF55);
         }
     }
 
@@ -313,7 +310,9 @@ public class PayScreen extends Screen {
                 setStatus(Text.translatable("text.spmhelper.pays_toggleRecieverCards_PlayerNotEntry").getString(), 0xFF5555);
                 return;
             }
-            BaseCard[] cards = SPWorldsApi.getCards(receiverCardOrNameField.getText());
+            Card mainCard = SPmHelperConfig.get().getMainCard();
+            SPWorldsAPI spWorldsAPI = new SPWorldsAPI(mainCard.getId(), mainCard.getToken());
+            BaseCard[] cards = spWorldsAPI.getCardsByPlayerName(receiverCardOrNameField.getText());
             if (cards == null || cards.length == 0) {
                 setStatus(Text.translatable("text.spmhelper.pays_toggleRecieverCards_PlayerNotOrNoCard").getString(), 0xFF5555);
                 return;
@@ -341,7 +340,7 @@ public class PayScreen extends Screen {
 
 
     private String getCardButtonText(String name) {
-        return name + " | " + SPmHelperConfig.get().getCard(name).number;
+        return name + " | " + SPmHelperConfig.get().getCard(name).getNumber();
     }
 
     private String getCardButtonText(BaseCard card) {
@@ -350,7 +349,7 @@ public class PayScreen extends Screen {
 
     private void selectCard(String card) {
         SPmHelperConfig.get().setMainCard(card);
-        setStatus(String.format(Text.translatable("text.spmhelper.pays.CurrentBalance").getString(), card, SPWorldsApi.getBalance(SPmHelperConfig.get().getMainCard())), 0x55FF55);
+        setStatus(String.format(Text.translatable("text.spmhelper.pays.CurrentBalance").getString(), card, SPmHelperConfig.get().getMainCard().getBalance()), 0x55FF55);
         cardsExpanded = false;
         updateCardsVisibility();
         selectedCard = card;
