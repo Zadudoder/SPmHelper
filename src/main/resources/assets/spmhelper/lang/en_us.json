@@ -9,15 +9,13 @@
   "key.spmhelper.scan_qr_code": "Scan QR code",
   "text.spmhelper.config.mainCategory": "Main mod settings",
   "text.spmhelper.config.navCategory": "SPmHelperNav settings",
-
   "text.spmhelper.option.enableMenuButton": "Enable SPmHelper button in main menu: ",
-  "text.spmhelper.option.enableSPmHelperNav" : "Enable SPmHelperNav:",
+  "text.spmhelper.option.enableSPmHelperNav": "Enable SPmHelperNav:",
   "text.spmhelper.option.defaultScreen": "Select which screen the button will lead to: ",
   "text.spmhelper.option.numberOfCardInComment": "Show the card number in comments?",
   "text.spmhelper.option.SPmHelperNavX": "SPmHelperNav X-axis position (width):",
   "text.spmhelper.option.SPmHelperNavY": "SPmHelperNav Y-axis position (height):",
   "text.spmhelper.option.SPmHelperNavScale": "SPmHelperNav scale:",
-
   "text.spmhelper.screen_type.main": "Main screen",
   "text.spmhelper.screen_type.settings": "Settings",
   "text.spmhelper.screen_type.pay": "Payment",
@@ -26,7 +24,6 @@
   "text.spmhelper.screen_type.laws": "Laws",
   "text.spmhelper.current_screen": "SPmHelper — ",
   "text.spmhelper.select_screen": "Select screen: %s",
-
   "text.spmhelper.calls_calls_TextFieldWidget": "Enter a comment for the call:",
   "text.spmhelper.calls_detective": "Detective",
   "text.spmhelper.calls_fsb": "FSS",
@@ -39,35 +36,27 @@
   "text.spmhelper.calls_callService_NotHasToken": "⬇ You must sign up first ⬇",
   "text.spmhelper.calls_callService_CommentIsEmpty": "Error: enter comment!",
   "text.spmhelper.calls_callService_SendRequest": "Sending request...",
-
   "text.spmhelper.calls_callService_WasCalled_GUIDE": "Guide was called!",
   "text.spmhelper.calls_callService_WasCalled_DETECTIVE": "Detective was called!",
   "text.spmhelper.calls_callService_WasCalled_FSB": "Fsb was called!",
   "text.spmhelper.calls_callService_WasCalled_BANKER": "Banker was called!",
   "text.spmhelper.calls_callService_ErrorSendingCall": "Couldn't send call",
-
   "text.spmhelper.calls_callServiceChat_WasCalled_GUIDE": "§a[SPmHelper]: Guide was called!",
   "text.spmhelper.calls_callServiceChat_WasCalled_DETECTIVE": "§a[SPmHelper]: Detective was called!",
   "text.spmhelper.calls_callServiceChat_WasCalled_FSB": "§a[SPmHelper]: FSB was called!",
   "text.spmhelper.calls_callServiceChat_WasCalled_BANKER": "§a[SPmHelper]: Banker was called!",
   "text.spmhelper.calls_callServiceChat_ErrorSendingCall": "§c[SPmHelper]: Couldn't send call",
-
   "text.spmhelper.calls_render_SendCoordinates": "Send coordinates:",
   "text.spmhelper.calls_render_SendCoordinatesAndPlayerPos": "Coordinates: X:%d Y:%d Z:%d",
   "text.spmhelper.calls_render_Comment": "Comment:",
   "text.spmhelper.calls_render_EnterTextHere": "Enter text here",
-
   "text.spmhelper.SAScalls_coordinatesCheckbox": "Specify coordinates?",
-
   "text.spmhelper.laws_InDevelopment": "Channel with laws is in development",
-
   "text.spmhelper.maps_InDevelopment": "Channel with map is in development",
-
   "text.spmhelper.addCard_AcceptButton": "Accept",
   "text.spmhelper.addCard_AcceptFeedBack": "§a[SPmHelper]: Card successfully linked!",
   "text.spmhelper.addCard_DeclineButton": "Decline",
   "text.spmhelper.addCard_DoYouWantAdd": "Would you like to add card %s ?",
-
   "text.spmhelper.pays_cardNumberButton": "Card",
   "text.spmhelper.pays_nickNameButton": "Nickname",
   "text.spmhelper.pays_SelectСard": "Select card ⬇",
@@ -103,13 +92,11 @@
   "text.spmhelper.pays_toggleRecieverCards_LinkOneCard": "At least one card must be linked",
   "text.spmhelper.pays_toggleRecieverCards_PlayerNotEntry": "Player name is required",
   "text.spmhelper.pays_toggleRecieverCards_PlayerNotOrNoCard": "Player doesn't exist or has no cards",
-
   "text.spmhelper.mainMenu_ButtonLabels.payment": "Payment",
   "text.spmhelper.mainMenu_ButtonLabels.map": "Card",
   "text.spmhelper.mainMenu_ButtonLabels.settings": "Settings",
   "text.spmhelper.mainMenu_ButtonLabels.calls": "Calls",
   "text.spmhelper.mainMenu_ButtonLabels.laws": "Laws",
-
   "text.spmhelper.settings_SelectCard": "Select card ⬇",
   "text.spmhelper.settings_Delete": "Delete",
   "text.spmhelper.settings_DeleteSuccess": "✔ Card successfully deleted!",
@@ -124,42 +111,33 @@
   "text.spmhelper.settings_SelectedForPayment": "\" Selected for payment!",
   "text.spmhelper.settings_Login": "Log in",
   "text.spmhelper.settings_NoLinkedCard": "No cards linked!",
-
   "text.spmhelper.SPmHAPI_GettingLink": "§a[SPmHelper]: Receiving log in link",
   "text.spmhelper.SPmHAPI_ErrorConnectingServer": "§c[SPmHelper]: Couldn't connect to server",
   "text.spmhelper.SPmHAPI_ErrorConnectingWebSocket": "§c[SPmHelper]: Couldn't connect to WebSocket",
   "text.spmhelper.SPmHAPI_ErrorServer": "§c[SPmHelper]: Server error",
-
   "text.spmhelper.WebSocketClient_OpenURL": "§a[SPmHelper]: Opening log in link",
   "text.spmhelper.WebSocketClient_WaitingAuth": "§a[SPmHelper]: Awaiting log in",
   "text.spmhelper.WebSocketClient_AuthorizationCancelledByYou": "§c[SPmHelper]: Log in cancelled",
   "text.spmhelper.WebSocketClient_FailedToGetLink": "§c[SPmHelper]: Failed to get log in link",
   "text.spmhelper.WebSocketClient_TokenWritten": "§a[SPmHelper]: You have successfully logged in.",
-
   "text.spmhelper.updateMod_message_firstPart": "[SPmHelper]: Update available! Your version: ",
   "text.spmhelper.updateMod_message_betweenPart": ". New version: ",
   "text.spmhelper.updateMod_message_lastPart": ". Click here to go to Modrinth. ",
-
   "text.spmhelper.auth_FeedBackMessage": "§a[SPmHelper]: Token is active! No need for new authorization.",
   "text.spmhelper.status_FeedBackMessageCase200": "§a[SPmHelper]: Token is working",
   "text.spmhelper.status_FeedBackMessageCase400": "§c[SPmHelper]: Token is invalid or missing",
   "text.spmhelper.status_FeedBackMessageCase401": "§c[SPmHelper]: Token is missing.",
   "text.spmhelper.status_FeedBackMessageCaseDefault": "§c[SPmHelper]: API Error: ",
-
-
   "text.spmhelper.notEnteredAmount": "§c[SPmHelper]: You didn't enter the amount",
   "text.spmhelper.notEnteredNickOrCardNum": "§c[SPmHelper]: You didn't enter a nickname or card number",
   "text.spmhelper.enterComment": "§c[SPmHelper]: Enter a comment",
-
   "text.spmhelper.argumentForPayment.NickOrNumCard": "Nickname or card number",
   "text.spmhelper.argumentForPayment.Amount": "Amount",
   "text.spmhelper.argumentForCalls.Comms": "сomment",
-
   "text.spmhelper.DoYouWantCall_guide": "Confirmation of the guide's call",
   "text.spmhelper.DoYouWantCall_banker": "Confirmation of banker's call",
   "text.spmhelper.DoYouWantCall_detective": "Confirmation of the detective's call",
   "text.spmhelper.DoYouWantCall_fsb": "Confirmation of FSB call",
-
   "text.spmhelper.followTheLink": "§aProceed",
   "text.spmhelper.cancel": "§cCancel",
   "text.spmhelper.AcceptLinkClick": "Do you want to visit this link:",
@@ -169,8 +147,6 @@
   "text.spmhelper.QRCodeNotFound": "[QR Scanner]: §cQR code not found",
   "text.spmhelper.error": "[QR Scanner]: §cError: %s",
   "text.spmhelper.qrscanner.hover_tip": "§eClick to open link",
-
-
   "text.spmhelper.branch_name.red": "Red",
   "text.spmhelper.branch_name.blue": "Blue",
   "text.spmhelper.branch_name.green": "Green",
@@ -179,5 +155,6 @@
   "text.spmhelper.branch_name.orange": "Orange",
   "text.spmhelper.branch_name.lime": "Lime",
   "text.spmhelper.branch_name.cyan": "Cyan",
-  "text.spmhelper.branch_name.hub": "Hub"
+  "text.spmhelper.branch_name.hub": "Hub",
+  "text.spmhelper.welcomeMessage": "§aWelcome to SPm!"
 }
