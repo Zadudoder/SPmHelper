@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
+import zadudoder.spmhelper.SPmHelper;
 import zadudoder.spmhelper.config.SPmHelperConfig;
 import zadudoder.spmhelper.utils.types.Service;
 
@@ -86,21 +87,24 @@ public class SPmHelperApi {
                 .exceptionally(e -> -1);
     }
 
-    public static JsonObject getModVersionInfo(int index) {
-        try {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(API_BASE + "/versions"))
-                    .build();
+    public static CompletableFuture<JsonObject> getModVersionInfoAsync(int index) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(API_BASE + "/versions"))
+                        .build();
 
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            return JsonParser.parseString(response.body()).getAsJsonArray().get(index).getAsJsonObject();
-        } catch (Exception ex) {
-            return null;
-        }
+                HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                return JsonParser.parseString(response.body()).getAsJsonArray().get(index).getAsJsonObject();
+            } catch (Exception ex) {
+                SPmHelper.LOGGER.error("Failed to fetch mod version info", ex);
+                return null;
+            }
+        });
     }
 
-    public static JsonObject getLastModVersionInfo() {
-        return getModVersionInfo(0);
+    public static CompletableFuture<JsonObject> getLastModVersionInfo() {
+        return getModVersionInfoAsync(0);
     }
 
     public static int getAPIStatus() {

@@ -55,22 +55,28 @@ public class ChatEventHandler {
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             client.execute(() -> {
                 if (Misc.isOnAllowedServer()) {
-                    String clientVersion = FabricLoader.getInstance().getModContainer(SPmHelper.MOD_ID).get().getMetadata().getVersion().toString();
-                    String lastVersion = SPmHelperApi.getLastModVersionInfo().get("version_number").getAsString();
+                    SPmHelperApi.getLastModVersionInfo().thenAccept(versionInfo -> {
+                        if (versionInfo != null) {
+                            String clientVersion = FabricLoader.getInstance().getModContainer(SPmHelper.MOD_ID).get().getMetadata().getVersion().toString();
+                            String lastVersion = versionInfo.get("version_number").getAsString();
 
-                    if (!clientVersion.equals(lastVersion)) {
-                        client.player.sendMessage(
-                                Text.translatable("text.spmhelper.updateMod_message_firstPart")
-                                        .formatted(Formatting.GREEN)
-                                        .styled(style -> style.withClickEvent(
-                                                new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/spmhelper/version/" + lastVersion)
-                                        ))
-                                        .append(Text.literal(clientVersion).formatted(Formatting.YELLOW))
-                                        .append(Text.translatable("text.spmhelper.updateMod_message_betweenPart"))
-                                        .append(Text.literal(lastVersion).formatted(Formatting.GREEN))
-                                        .append(Text.translatable("text.spmhelper.updateMod_message_lastPart"))
-                        );
-                    }
+                            if (!clientVersion.equals(lastVersion)) {
+                                client.execute(() -> {
+                                    client.player.sendMessage(
+                                            Text.translatable("text.spmhelper.updateMod_message_firstPart")
+                                                    .formatted(Formatting.GREEN)
+                                                    .styled(style -> style.withClickEvent(
+                                                            new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/spmhelper/version/" + lastVersion)
+                                                    ))
+                                                    .append(Text.literal(clientVersion).formatted(Formatting.YELLOW))
+                                                    .append(Text.translatable("text.spmhelper.updateMod_message_betweenPart"))
+                                                    .append(Text.literal(lastVersion).formatted(Formatting.GREEN))
+                                                    .append(Text.translatable("text.spmhelper.updateMod_message_lastPart"))
+                                    );
+                                });
+                            }
+                        }
+                    });
 
                     if (SPmHelperConfig.get().isFirstRun) {
                         client.player.sendMessage(Text.translatable("text.spmhelper.welcomeMessage"));
@@ -78,7 +84,6 @@ public class ChatEventHandler {
                         AutoConfig.getConfigHolder(SPmHelperConfig.class).save();
                     }
                 }
-
             });
         });
 
